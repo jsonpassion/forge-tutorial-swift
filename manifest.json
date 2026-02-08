@@ -1,0 +1,574 @@
+{
+  "title": "Swift 마스터 가이드",
+  "subtitle": "Swift 기초부터 앱스토어 런칭까지 완전 정복",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-08",
+  "language": "ko",
+  "author": "Jason",
+  "chapters": [
+    {
+      "id": "01-swift-basics",
+      "title": "Ch1. Swift 시작하기",
+      "description": "Swift 프로그래밍의 첫걸음",
+      "sections": [
+        {
+          "id": "01-introduction",
+          "title": "01. 개발 환경 설정",
+          "file": "01-swift-basics/01-introduction.md",
+          "description": "Xcode 설치, Playground, 첫 번째 프로그램 실행"
+        },
+        {
+          "id": "02-variables-constants",
+          "title": "02. 변수와 상수",
+          "file": "01-swift-basics/02-variables-constants.md",
+          "description": "var, let, 데이터 타입, Type Safety와 Type Inference"
+        },
+        {
+          "id": "03-collections",
+          "title": "03. 컬렉션 타입",
+          "file": "01-swift-basics/03-collections.md",
+          "description": "Array, Dictionary, Set의 활용"
+        },
+        {
+          "id": "04-control-flow",
+          "title": "04. 조건문과 반복문",
+          "file": "01-swift-basics/04-control-flow.md",
+          "description": "if, guard, switch, for-in, while 제어 흐름"
+        },
+        {
+          "id": "05-functions-closures",
+          "title": "05. 함수와 클로저",
+          "file": "01-swift-basics/05-functions-closures.md",
+          "description": "func 정의, 클로저 표현식, map/filter/reduce"
+        },
+        {
+          "id": "06-optionals",
+          "title": "06. 옵셔널",
+          "file": "01-swift-basics/06-optionals.md",
+          "description": "Optional, 바인딩, 체이닝, nil 안전성의 철학"
+        }
+      ]
+    },
+    {
+      "id": "02-swift-types",
+      "title": "Ch2. Swift 타입 시스템",
+      "description": "Swift의 강력한 타입 중심 설계",
+      "sections": [
+        {
+          "id": "01-struct-class",
+          "title": "01. 구조체와 클래스",
+          "file": "02-swift-types/01-struct-class.md",
+          "description": "struct vs class, 값 타입 vs 참조 타입"
+        },
+        {
+          "id": "02-properties-methods",
+          "title": "02. 프로퍼티와 메서드",
+          "file": "02-swift-types/02-properties-methods.md",
+          "description": "저장/연산 프로퍼티, 인스턴스/타입 메서드"
+        },
+        {
+          "id": "03-protocols-extensions",
+          "title": "03. 프로토콜과 익스텐션",
+          "file": "02-swift-types/03-protocols-extensions.md",
+          "description": "protocol, extension, 프로토콜 지향 프로그래밍"
+        },
+        {
+          "id": "04-enums-pattern",
+          "title": "04. 열거형과 패턴 매칭",
+          "file": "02-swift-types/04-enums-pattern.md",
+          "description": "enum, associated values, Swift의 강력한 switch"
+        },
+        {
+          "id": "05-generics-errors",
+          "title": "05. 제네릭과 에러 처리",
+          "file": "02-swift-types/05-generics-errors.md",
+          "description": "Generic 타입, Result, throw/try/catch"
+        }
+      ]
+    },
+    {
+      "id": "03-swiftui-start",
+      "title": "Ch3. SwiftUI 첫걸음",
+      "description": "선언형 UI의 세계로",
+      "sections": [
+        {
+          "id": "01-hello-swiftui",
+          "title": "01. Hello, SwiftUI!",
+          "file": "03-swiftui-start/01-hello-swiftui.md",
+          "description": "View 프로토콜, body, #Preview, 프로젝트 구조"
+        },
+        {
+          "id": "02-text-image",
+          "title": "02. 텍스트와 이미지",
+          "file": "03-swiftui-start/02-text-image.md",
+          "description": "Text, Image, 수정자(Modifier) 체이닝"
+        },
+        {
+          "id": "03-button-interaction",
+          "title": "03. 버튼과 인터랙션",
+          "file": "03-swiftui-start/03-button-interaction.md",
+          "description": "Button, Label, 액션 처리, buttonStyle"
+        },
+        {
+          "id": "04-layout",
+          "title": "04. 레이아웃 시스템",
+          "file": "03-swiftui-start/04-layout.md",
+          "description": "VStack, HStack, ZStack, Spacer, padding, frame"
+        },
+        {
+          "id": "05-lists-scroll",
+          "title": "05. 리스트와 스크롤",
+          "file": "03-swiftui-start/05-lists-scroll.md",
+          "description": "List, ForEach, ScrollView, LazyVStack"
+        }
+      ]
+    },
+    {
+      "id": "04-navigation-design",
+      "title": "Ch4. 화면 구성과 네비게이션",
+      "description": "멀티 화면 앱 만들기",
+      "sections": [
+        {
+          "id": "01-navigation-stack",
+          "title": "01. NavigationStack",
+          "file": "04-navigation-design/01-navigation-stack.md",
+          "description": "화면 전환, NavigationLink, toolbar, navigationTitle"
+        },
+        {
+          "id": "02-tab-modal",
+          "title": "02. TabView와 모달",
+          "file": "04-navigation-design/02-tab-modal.md",
+          "description": "탭 네비게이션, sheet, fullScreenCover, alert"
+        },
+        {
+          "id": "03-forms-input",
+          "title": "03. 폼과 사용자 입력",
+          "file": "04-navigation-design/03-forms-input.md",
+          "description": "TextField, SecureField, Toggle, Picker, Slider, Form"
+        },
+        {
+          "id": "04-sf-symbols",
+          "title": "04. SF Symbols과 에셋 관리",
+          "file": "04-navigation-design/04-sf-symbols.md",
+          "description": "SF Symbols 6, Asset Catalog, Color Set, 다크모드 대응"
+        },
+        {
+          "id": "05-liquid-glass",
+          "title": "05. iOS 26 Liquid Glass 디자인",
+          "file": "04-navigation-design/05-liquid-glass.md",
+          "description": "glassEffect, GlassEffectContainer, 머티리얼, 새로운 디자인 언어"
+        }
+      ]
+    },
+    {
+      "id": "05-state-management",
+      "title": "Ch5. 상태 관리",
+      "description": "SwiftUI 데이터 흐름의 핵심",
+      "sections": [
+        {
+          "id": "01-state-binding",
+          "title": "01. @State와 @Binding",
+          "file": "05-state-management/01-state-binding.md",
+          "description": "뷰 내부 상태, 부모-자식 간 양방향 바인딩"
+        },
+        {
+          "id": "02-observable",
+          "title": "02. @Observable 매크로",
+          "file": "05-state-management/02-observable.md",
+          "description": "Observation 프레임워크, 뷰 모델과의 연결"
+        },
+        {
+          "id": "03-environment",
+          "title": "03. @Environment와 앱 전역 상태",
+          "file": "05-state-management/03-environment.md",
+          "description": "@Environment, custom EnvironmentKey, 앱 설정 관리"
+        },
+        {
+          "id": "04-data-flow",
+          "title": "04. 데이터 흐름 설계",
+          "file": "05-state-management/04-data-flow.md",
+          "description": "단방향 데이터 흐름, Source of Truth, 상태 디버깅"
+        }
+      ]
+    },
+    {
+      "id": "06-swiftdata",
+      "title": "Ch6. SwiftData",
+      "description": "앱 데이터를 영구 저장하기",
+      "sections": [
+        {
+          "id": "01-swiftdata-intro",
+          "title": "01. SwiftData 시작하기",
+          "file": "06-swiftdata/01-swiftdata-intro.md",
+          "description": "@Model, ModelContainer, ModelContext 기초"
+        },
+        {
+          "id": "02-crud",
+          "title": "02. CRUD 구현",
+          "file": "06-swiftdata/02-crud.md",
+          "description": "데이터 생성, 읽기(@Query), 수정, 삭제"
+        },
+        {
+          "id": "03-relationships-query",
+          "title": "03. 관계와 고급 쿼리",
+          "file": "06-swiftdata/03-relationships-query.md",
+          "description": "@Relationship, Predicate, SortDescriptor, 필터링"
+        },
+        {
+          "id": "04-migration",
+          "title": "04. 마이그레이션과 버전 관리",
+          "file": "06-swiftdata/04-migration.md",
+          "description": "VersionedSchema, SchemaMigrationPlan"
+        },
+        {
+          "id": "05-cloudkit",
+          "title": "05. CloudKit 동기화",
+          "file": "06-swiftdata/05-cloudkit.md",
+          "description": "iCloud 자동 동기화, 충돌 해결, 오프라인 대응"
+        }
+      ]
+    },
+    {
+      "id": "07-networking",
+      "title": "Ch7. 네트워킹과 동시성",
+      "description": "서버와 통신하는 앱 만들기",
+      "sections": [
+        {
+          "id": "01-async-await",
+          "title": "01. async/await 기초",
+          "file": "07-networking/01-async-await.md",
+          "description": "Swift Concurrency, Task, 구조적 동시성"
+        },
+        {
+          "id": "02-urlsession",
+          "title": "02. URLSession과 REST API",
+          "file": "07-networking/02-urlsession.md",
+          "description": "GET/POST 요청, HTTP 상태 코드, 헤더 설정"
+        },
+        {
+          "id": "03-codable",
+          "title": "03. Codable과 JSON 파싱",
+          "file": "07-networking/03-codable.md",
+          "description": "JSON 디코딩/인코딩, CodingKeys, 중첩 구조 처리"
+        },
+        {
+          "id": "04-error-handling",
+          "title": "04. 네트워크 에러 핸들링",
+          "file": "07-networking/04-error-handling.md",
+          "description": "에러 타입 설계, 사용자 피드백, 재시도 로직"
+        },
+        {
+          "id": "05-api-project",
+          "title": "05. 실전 API 프로젝트",
+          "file": "07-networking/05-api-project.md",
+          "description": "공개 API로 완성하는 네트워크 앱 (검색, 페이징, 캐싱)"
+        }
+      ]
+    },
+    {
+      "id": "08-architecture",
+      "title": "Ch8. 아키텍처 패턴",
+      "description": "유지보수 가능한 앱 설계",
+      "sections": [
+        {
+          "id": "01-mvvm",
+          "title": "01. MVVM 패턴",
+          "file": "08-architecture/01-mvvm.md",
+          "description": "Model-View-ViewModel, SwiftUI에서의 MVVM 구현"
+        },
+        {
+          "id": "02-repository",
+          "title": "02. Repository 패턴",
+          "file": "08-architecture/02-repository.md",
+          "description": "데이터 소스 추상화, 프로토콜 기반 설계"
+        },
+        {
+          "id": "03-navigation-design",
+          "title": "03. 네비게이션 설계",
+          "file": "08-architecture/03-navigation-design.md",
+          "description": "Router 패턴, NavigationPath, 딥링크 대응"
+        },
+        {
+          "id": "04-dependency-injection",
+          "title": "04. 의존성 주입",
+          "file": "08-architecture/04-dependency-injection.md",
+          "description": "DI 원칙, Environment 활용, 테스트 용이성 확보"
+        }
+      ]
+    },
+    {
+      "id": "09-animation",
+      "title": "Ch9. 애니메이션과 인터랙션",
+      "description": "생동감 있는 사용자 경험",
+      "sections": [
+        {
+          "id": "01-basic-animation",
+          "title": "01. 기본 애니메이션",
+          "file": "09-animation/01-basic-animation.md",
+          "description": "withAnimation, 암시적/명시적 애니메이션, transition"
+        },
+        {
+          "id": "02-advanced-animation",
+          "title": "02. 고급 애니메이션",
+          "file": "09-animation/02-advanced-animation.md",
+          "description": "spring, keyframe, PhaseAnimator, 타이밍 커브"
+        },
+        {
+          "id": "03-gestures",
+          "title": "03. 제스처",
+          "file": "09-animation/03-gestures.md",
+          "description": "TapGesture, DragGesture, MagnifyGesture, 제스처 조합"
+        },
+        {
+          "id": "04-shapes-canvas",
+          "title": "04. Shape과 Canvas",
+          "file": "09-animation/04-shapes-canvas.md",
+          "description": "Path, 커스텀 Shape, Canvas 2D 렌더링"
+        },
+        {
+          "id": "05-transitions",
+          "title": "05. 전환 효과와 매칭",
+          "file": "09-animation/05-transitions.md",
+          "description": "matchedGeometryEffect, scrollTransition, 화면 전환"
+        }
+      ]
+    },
+    {
+      "id": "10-system-frameworks",
+      "title": "Ch10. 시스템 프레임워크 활용",
+      "description": "iOS의 풍부한 기능 연동",
+      "sections": [
+        {
+          "id": "01-image-camera",
+          "title": "01. 이미지와 카메라",
+          "file": "10-system-frameworks/01-image-camera.md",
+          "description": "AsyncImage, PhotosPicker, 카메라 캡처"
+        },
+        {
+          "id": "02-mapkit-location",
+          "title": "02. 지도와 위치",
+          "file": "10-system-frameworks/02-mapkit-location.md",
+          "description": "Map 뷰, CoreLocation, 위치 권한 처리"
+        },
+        {
+          "id": "03-notifications",
+          "title": "03. 알림",
+          "file": "10-system-frameworks/03-notifications.md",
+          "description": "로컬 알림, 예약 알림, 알림 액션과 카테고리"
+        },
+        {
+          "id": "04-sharing-deeplink",
+          "title": "04. 공유와 딥링크",
+          "file": "10-system-frameworks/04-sharing-deeplink.md",
+          "description": "ShareLink, Universal Links, URL Scheme, Transferable"
+        }
+      ]
+    },
+    {
+      "id": "11-advanced-swiftui",
+      "title": "Ch11. 고급 SwiftUI",
+      "description": "SwiftUI의 숨겨진 힘",
+      "sections": [
+        {
+          "id": "01-custom-layout",
+          "title": "01. Custom Layout",
+          "file": "11-advanced-swiftui/01-custom-layout.md",
+          "description": "Layout 프로토콜, 플로우 레이아웃, 적응형 배치"
+        },
+        {
+          "id": "02-viewbuilder",
+          "title": "02. ViewBuilder와 제네릭 뷰",
+          "file": "11-advanced-swiftui/02-viewbuilder.md",
+          "description": "@ViewBuilder, 커스텀 컨테이너, Result Builder"
+        },
+        {
+          "id": "03-preference-geometry",
+          "title": "03. PreferenceKey와 GeometryReader",
+          "file": "11-advanced-swiftui/03-preference-geometry.md",
+          "description": "자식→부모 데이터 전달, 레이아웃 측정, 스크롤 감지"
+        },
+        {
+          "id": "04-uikit-bridge",
+          "title": "04. UIKit 브릿지",
+          "file": "11-advanced-swiftui/04-uikit-bridge.md",
+          "description": "UIViewRepresentable, UIViewControllerRepresentable, Coordinator"
+        }
+      ]
+    },
+    {
+      "id": "12-testing-quality",
+      "title": "Ch12. 테스트와 품질",
+      "description": "신뢰할 수 있는 앱 만들기",
+      "sections": [
+        {
+          "id": "01-unit-test",
+          "title": "01. Unit Test",
+          "file": "12-testing-quality/01-unit-test.md",
+          "description": "XCTest 기초, 테스트 작성법, Mocking"
+        },
+        {
+          "id": "02-swift-testing",
+          "title": "02. Swift Testing 프레임워크",
+          "file": "12-testing-quality/02-swift-testing.md",
+          "description": "#expect, @Test, @Suite, 차세대 테스트"
+        },
+        {
+          "id": "03-ui-test",
+          "title": "03. UI Test",
+          "file": "12-testing-quality/03-ui-test.md",
+          "description": "XCUITest, 자동화 시나리오, 접근성 ID 활용"
+        },
+        {
+          "id": "04-accessibility",
+          "title": "04. 접근성과 국제화",
+          "file": "12-testing-quality/04-accessibility.md",
+          "description": "VoiceOver, Dynamic Type, String Catalogs, 현지화"
+        }
+      ]
+    },
+    {
+      "id": "13-performance",
+      "title": "Ch13. 성능과 최적화",
+      "description": "매끄러운 사용자 경험을 위한 최적화",
+      "sections": [
+        {
+          "id": "01-concurrency-deep",
+          "title": "01. Swift Concurrency 심화",
+          "file": "13-performance/01-concurrency-deep.md",
+          "description": "Actor, Sendable, TaskGroup, AsyncStream"
+        },
+        {
+          "id": "02-swiftui-optimization",
+          "title": "02. SwiftUI 렌더링 최적화",
+          "file": "13-performance/02-swiftui-optimization.md",
+          "description": "불필요한 뷰 업데이트 방지, body 최적화, Equatable"
+        },
+        {
+          "id": "03-memory-arc",
+          "title": "03. 메모리 관리와 ARC",
+          "file": "13-performance/03-memory-arc.md",
+          "description": "ARC 동작 원리, 순환 참조, weak/unowned, 메모리 릭 탐지"
+        },
+        {
+          "id": "04-instruments",
+          "title": "04. Instruments 프로파일링",
+          "file": "13-performance/04-instruments.md",
+          "description": "Time Profiler, Allocations, Leaks, 앱 시작 시간 분석"
+        }
+      ]
+    },
+    {
+      "id": "14-appstore",
+      "title": "Ch14. 앱스토어 출시",
+      "description": "앱을 세상에 내놓기",
+      "sections": [
+        {
+          "id": "01-app-icon-assets",
+          "title": "01. 앱 아이콘과 스크린샷",
+          "file": "14-appstore/01-app-icon-assets.md",
+          "description": "Icon Composer, 앱 미리보기, 스크린샷 제작"
+        },
+        {
+          "id": "02-certificates",
+          "title": "02. 인증서와 프로비저닝",
+          "file": "14-appstore/02-certificates.md",
+          "description": "개발자 계정, Certificate, Provisioning Profile, Code Signing"
+        },
+        {
+          "id": "03-app-store-connect",
+          "title": "03. App Store Connect",
+          "file": "14-appstore/03-app-store-connect.md",
+          "description": "앱 등록, 메타데이터, 가격 및 지역 설정"
+        },
+        {
+          "id": "04-review-guidelines",
+          "title": "04. 심사 가이드라인",
+          "file": "14-appstore/04-review-guidelines.md",
+          "description": "흔한 리젝 사유, 심사 대응 전략, 이의 제기"
+        },
+        {
+          "id": "05-post-launch",
+          "title": "05. 출시 후 운영",
+          "file": "14-appstore/05-post-launch.md",
+          "description": "App Analytics, 크래시 리포트, ASO, 업데이트 전략"
+        }
+      ]
+    },
+    {
+      "id": "15-app-extensions",
+      "title": "Ch15. 앱 확장 기능",
+      "description": "앱 경험을 넘어서",
+      "sections": [
+        {
+          "id": "01-widgetkit",
+          "title": "01. WidgetKit",
+          "file": "15-app-extensions/01-widgetkit.md",
+          "description": "홈 화면 위젯, Timeline Provider, 인터랙티브 위젯"
+        },
+        {
+          "id": "02-live-activities",
+          "title": "02. Live Activities와 Dynamic Island",
+          "file": "15-app-extensions/02-live-activities.md",
+          "description": "실시간 정보 표시, ActivityKit, 잠금화면 업데이트"
+        },
+        {
+          "id": "03-app-intents",
+          "title": "03. App Intents와 Shortcuts",
+          "file": "15-app-extensions/03-app-intents.md",
+          "description": "Siri 통합, 단축어, 음성 명령 지원"
+        },
+        {
+          "id": "04-storekit",
+          "title": "04. In-App Purchase",
+          "file": "15-app-extensions/04-storekit.md",
+          "description": "StoreKit 2, 구독 모델, 결제 처리와 영수증 검증"
+        }
+      ]
+    },
+    {
+      "id": "16-trends",
+      "title": "Ch16. 최신 기술과 트렌드",
+      "description": "Swift 생태계의 현재와 미래",
+      "sections": [
+        {
+          "id": "01-swift6",
+          "title": "01. Swift 6와 Concurrency 안전",
+          "file": "16-trends/01-swift6.md",
+          "description": "Strict Concurrency, Sendable 준수, 마이그레이션 전략"
+        },
+        {
+          "id": "02-visionos",
+          "title": "02. visionOS와 공간 컴퓨팅",
+          "file": "16-trends/02-visionos.md",
+          "description": "RealityKit, 3D 콘텐츠, 공간 UI 기초"
+        },
+        {
+          "id": "03-ai-ml",
+          "title": "03. AI와 머신러닝 통합",
+          "file": "16-trends/03-ai-ml.md",
+          "description": "Core ML, Create ML, Foundation Models, Apple Intelligence"
+        },
+        {
+          "id": "04-ecosystem",
+          "title": "04. Swift 생태계 전망",
+          "file": "16-trends/04-ecosystem.md",
+          "description": "SPM, 서버 사이드 Swift, 멀티플랫폼, Swift Evolution"
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "papers": {
+      "description": "Swift 공식 문서와 WWDC 세션",
+      "file": "resources/essential-papers.md"
+    },
+    "datasets": {
+      "description": "챕터별 예제 프로젝트",
+      "file": "resources/datasets.md"
+    },
+    "tools": {
+      "description": "개발 도구와 유용한 라이브러리",
+      "file": "resources/tools.md"
+    }
+  }
+}
