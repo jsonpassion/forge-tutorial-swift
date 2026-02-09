@@ -1,109 +1,157 @@
-# 01. 앱 아이콘과 스크린샷
+# 앱 아이콘과 스크린샷
 
 > Icon Composer, 앱 미리보기, 스크린샷 제작
 
 ## 개요
 
-이 섹션에서 배울 내용을 2-3문장으로 요약합니다.
+앱스토어에서 사용자가 가장 먼저 보는 것은 코드가 아닙니다. **아이콘과 스크린샷**이죠. 아무리 기능이 뛰어난 앱이라도 첫인상이 좋지 않으면 다운로드 버튼을 누르지 않습니다. 이번 섹션에서는 Xcode 26의 Icon Composer로 멋진 아이콘을 만들고, 전환율을 높이는 스크린샷을 제작하는 방법을 배웁니다.
 
-**선수 지식**: (이전 섹션에서 배운 내용)
+**선수 지식**: [Instruments 프로파일링](../13-performance/04-instruments.md)
 **학습 목표**:
-- 목표 1
-- 목표 2
-- 목표 3
+- Icon Composer로 다크 모드/틴트 대응 앱 아이콘을 만들 수 있다
+- App Store 스크린샷 규격과 효과적인 구성 전략을 이해할 수 있다
+- 앱 미리보기 영상의 제작 기준을 알 수 있다
 
 ## 왜 알아야 할까?
 
-이 개념이 왜 중요한지, 실제 어디에 쓰이는지 동기부여를 작성합니다.
+사용자는 앱스토어 검색 결과에서 약 **7초** 안에 다운로드 여부를 결정합니다. 이 짧은 시간에 판단의 근거가 되는 건? 바로 아이콘과 처음 3장의 스크린샷이에요. 잘 만든 스크린샷은 전환율을 **20~35%** 끌어올린다는 연구 결과도 있습니다. 코드만큼이나 비주얼 에셋에 공을 들여야 하는 이유입니다.
 
 ## 핵심 개념
 
-### 개념 1: 소제목
+### 개념 1: 앱 아이콘 — 1024px 하나면 충분합니다
 
-> 💡 **비유**: 일상적 비유로 개념을 소개합니다.
+> 💡 **비유**: 앱 아이콘은 **명함**입니다. 작은 크기에 당신의 앱이 무엇인지를 담아야 하죠. 명함이 구겨져 있거나 읽기 어려우면 신뢰를 잃는 것처럼, 아이콘도 명확하고 깔끔해야 합니다.
 
-기술적 설명을 작성합니다.
+Apple은 **1024×1024px** 마스터 아이콘 하나만 제출하면 됩니다. 시스템이 자동으로 모든 크기로 축소해줘요.
 
+| 플랫폼 | 크기 | 용도 |
+|---------|------|------|
+| iPhone | 180×180 px | 홈 화면 |
+| iPhone | 120×120 px | Spotlight 검색 |
+| iPad Pro | 167×167 px | 홈 화면 |
+| iPad | 152×152 px | 홈 화면 |
+| Apple Watch | 172×172 px | 홈 화면 |
 
-[1;38;5;196mWelcome to Swift![0m
+**아이콘 기술 요구사항:**
 
-[1mSubcommands:[0m
+- **PNG 포맷**, 정사각형
+- **투명도 금지** — 모든 픽셀이 불투명해야 합니다
+- **sRGB 색상 공간** (Display P3 광색역도 지원)
+- **모서리를 직접 둥글리지 마세요** — Apple이 자동으로 squircle 마스크(약 20% 반경)를 적용합니다
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+### 개념 2: Icon Composer — Xcode 26의 새 도구
 
-  Use [1m`swift --version`[0m for Swift version information.
+> 💡 **비유**: Icon Composer는 **포토샵의 레이어 패널**과 비슷합니다. 배경, 전경, 앞면을 겹쳐서 깊이감 있는 아이콘을 만들 수 있죠. 특히 Liquid Glass 효과가 적용된 아이콘을 만들 때 필수입니다.
 
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
+Xcode 26에서 도입된 Icon Composer는 **레이어 기반** 아이콘 디자인 도구입니다. 최대 4개 레이어를 지원하며, 각 레이어에 유리 효과와 깊이감을 줄 수 있어요.
 
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+**Icon Composer 사용 방법:**
 
-### 개념 2: 소제목
+1. Xcode에서 **File → New → Icon Composer**로 `.icon` 파일 생성
+2. 배경 레이어(Back), 전경 레이어(Front) 등 레이어 구성
+3. Glass Effect 토글로 Liquid Glass 느낌 적용
+4. 다크 모드/틴트 모드 대응 — Appearance 설정에서 각 모드별 색상 지정
+5. `.icon` 파일을 앱 디렉토리 루트에 배치 (Assets 폴더 안이 아닌 옆)
 
-> 💡 **비유**: 일상적 비유로 개념을 소개합니다.
+> ⚠️ **흔한 오해**: "SVG로 가져오면 항상 잘 된다" — 디자인 도구에서 내보낸 SVG에 보이지 않는 `<rect>` 요소가 포함되면 Glass 효과가 제대로 표시되지 않습니다. 문제가 생기면 SVG를 텍스트 에디터로 열어 불필요한 요소를 제거하거나, PNG 포맷을 사용하세요.
 
-기술적 설명을 작성합니다.
+**다크 모드 아이콘 팁:**
 
+- Icon Composer는 일반 모드의 색상 밝기를 기반으로 모노크롬 밝기를 자동 계산합니다
+- 초록색이 많은 아이콘은 모노크롬에서 과도하게 회색으로 보일 수 있어요
+- 모노크롬 모드에서 별도의 fill 색상을 지정하면 해결됩니다
 
-[1;38;5;196mWelcome to Swift![0m
+### 개념 3: App Store 스크린샷 — 첫 3장이 승부처
 
-[1mSubcommands:[0m
+> 💡 **비유**: 스크린샷은 **쇼윈도 디스플레이**입니다. 매장 안에 아무리 좋은 상품이 있어도, 쇼윈도에 매력적으로 진열되어 있지 않으면 고객은 지나칩니다.
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+App Store 스크린샷은 최대 **10장**까지 등록할 수 있지만, 검색 결과에서 보이는 **첫 3장**이 가장 중요합니다.
 
-  Use [1m`swift --version`[0m for Swift version information.
+**필수 스크린샷 사양:**
 
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
+| 디바이스 | 해상도 | 비고 |
+|----------|--------|------|
+| iPhone 16 Pro Max (6.9") | 1320×2868 px | 필수 |
+| iPhone 16 Pro (6.3") | 1206×2622 px | 선택 |
+| iPad Pro 13" | 2064×2752 px | iPad 앱 시 필수 |
 
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+**효과적인 스크린샷 구성 전략 (Value → Usage → Trust):**
+
+1. **가치 제안** (1~2장): 앱의 핵심 가치를 한눈에 보여주기
+2. **사용 시나리오** (3~5장): 주요 기능이 실제로 작동하는 모습
+3. **신뢰 구축** (6~8장): 평점, 수상 내역, 언론 보도 등
+
+> 🔥 **실무 팁**: 각 스크린샷에 **짧은 설명 문구**를 오버레이하세요. "AI가 자동으로 정리해줍니다", "3초만에 일정 등록" 같은 구체적인 문구가 전환율에 큰 영향을 줍니다. Apple의 Product Page Optimization으로 A/B 테스트도 가능해요.
+
+### 개념 4: 앱 미리보기 영상
+
+앱 미리보기는 **15~30초** 길이의 짧은 영상으로, 자동 재생되어 스크린샷보다 더 강한 인상을 줍니다.
+
+| 항목 | 요구사항 |
+|------|----------|
+| 길이 | 15~30초 |
+| 해상도 | 스크린샷과 동일 |
+| 개수 | 최대 3개 |
+| 내용 | 앱 내 화면 녹화 기반 |
+
+**시뮬레이터에서 스크린샷/영상 캡처:**
+
+```swift
+// 터미널에서 시뮬레이터 스크린샷 캡처
+// xcrun simctl io booted screenshot screenshot.png
+
+// 상태바를 깔끔하게 설정 (시간 9:41, 배터리 100%)
+// xcrun simctl status_bar booted override \
+//   --time "9:41" --batteryLevel 100 --batteryState charged
+
+// 영상 녹화 (Ctrl+C로 종료)
+// xcrun simctl io booted recordVideo preview.mp4
+```
+
+> 💡 **알고 계셨나요?**: Apple 공식 스크린샷에서 시간이 항상 "9:41"인 이유는 2007년 Steve Jobs가 처음 iPhone을 발표한 시간이 오전 9:41이었기 때문입니다. 이후 Apple 제품 이미지의 전통이 되었죠.
 
 ## 실습: 직접 해보기
 
+기존 프로젝트에 아이콘 에셋을 설정하는 체크리스트입니다.
 
-[1;38;5;196mWelcome to Swift![0m
+**앱 아이콘 제작 체크리스트:**
 
-[1mSubcommands:[0m
+- [ ] 1024×1024px PNG 파일 준비 (투명도 없음)
+- [ ] Icon Composer로 `.icon` 파일 생성 (Xcode 26+)
+- [ ] 다크 모드 / 틴트 모드 대응 확인
+- [ ] 작은 크기(29×29)에서도 식별 가능한지 확인
+- [ ] App Store Connect에 업로드
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+**스크린샷 제작 체크리스트:**
 
-  Use [1m`swift --version`[0m for Swift version information.
-
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
-
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+- [ ] iPhone 16 Pro Max (6.9") 해상도 스크린샷 최소 3장
+- [ ] iPad Pro 13" 스크린샷 (iPad 지원 시)
+- [ ] 각 스크린샷에 설명 문구 오버레이
+- [ ] 첫 번째 스크린샷이 앱의 핵심 가치를 전달하는지 확인
+- [ ] 상태바 깔끔하게 설정 (`xcrun simctl status_bar`)
 
 ## 더 깊이 알아보기
 
-역사적 에피소드, WWDC 세션, Swift Evolution 프로포절 등을 소개합니다.
-
-## 흔한 오해와 팁
-
-> ⚠️ **흔한 오해**: 초보자가 자주 혼동하는 개념
-
-> 🔥 **실무 팁**: 실전에서 유용한 노하우
+iOS 앱 아이콘의 역사는 Apple 디자인 철학의 변천사이기도 합니다. 2007년 초대 iPhone의 아이콘은 **스큐어모피즘(Skeuomorphism)** 스타일이었어요. 실제 물건처럼 보이도록 질감, 그림자, 반사를 넣었죠. 2013년 iOS 7에서 Jony Ive가 **플랫 디자인**으로 대전환을 이뤘고, 이때 둥근 모서리도 정원(circle)에서 **연속 곡률(squircle)**로 바뀌었습니다. 그리고 2025년 iOS 26에서 **Liquid Glass** 디자인 언어가 도입되면서, Icon Composer라는 레이어 기반 도구가 등장했습니다. 아이콘이 단순한 2D 이미지에서 깊이감 있는 3D 오브젝트로 진화한 거죠.
 
 ## 핵심 정리
 
 | 개념 | 설명 |
 |------|------|
-| 핵심1 | 한 줄 정리 |
-| 핵심2 | 한 줄 정리 |
+| 1024×1024 마스터 아이콘 | 하나만 제출하면 시스템이 모든 크기로 자동 축소 |
+| Icon Composer | Xcode 26의 레이어 기반 아이콘 디자인 도구 |
+| squircle 마스크 | Apple이 자동 적용하는 연속 곡률 모서리 |
+| 스크린샷 첫 3장 | 검색 결과에서 보이는 가장 중요한 장수 |
+| 앱 미리보기 | 15~30초 자동 재생 영상, 최대 3개 |
+| xcrun simctl | 터미널에서 시뮬레이터 스크린샷/영상 캡처 |
 
 ## 다음 섹션 미리보기
 
-다음으로 [02. 인증서와 프로비저닝](./02-certificates.md)에서 이어집니다.
+멋진 아이콘과 스크린샷을 준비했으니, 이제 앱을 실제 기기에서 테스트하고 배포하기 위한 준비가 필요합니다. [인증서와 프로비저닝](./02-certificates.md)에서 개발자 계정, 인증서, 프로비저닝 프로파일의 관계를 이해해봅시다.
 
 ## 참고 자료
 
-- [Apple 공식 문서](https://developer.apple.com/) - 설명
+- [Human Interface Guidelines - App Icons](https://developer.apple.com/design/human-interface-guidelines/app-icons) - 앱 아이콘 디자인 공식 가이드
+- [App Store Product Page](https://developer.apple.com/app-store/product-page/) - 스크린샷 및 미리보기 공식 가이드
+- [Icon Composer 소개 - Fatbobman](https://fatbobman.com/en/posts/icon-composer-tackling-challenges/) - Icon Composer 실전 팁
+- [App Store Screenshot Best Practices - SplitMetrics](https://splitmetrics.com/blog/app-store-screenshots-aso-guide/) - 스크린샷 ASO 가이드

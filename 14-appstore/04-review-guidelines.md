@@ -1,109 +1,160 @@
-# 04. 심사 가이드라인
+# 심사 가이드라인
 
 > 흔한 리젝 사유, 심사 대응 전략, 이의 제기
 
 ## 개요
 
-이 섹션에서 배울 내용을 2-3문장으로 요약합니다.
+앱을 심사에 제출하면 Apple 리뷰 팀이 **안전성, 성능, 비즈니스, 디자인, 법률** 5개 영역에서 앱을 검토합니다. 심사 과정에서 리젝(Rejection)을 받으면 당황스럽겠지만, 대부분은 흔한 사유로 인해 발생하며 쉽게 해결할 수 있습니다. 이번 섹션에서는 자주 발생하는 리젝 사유를 미리 파악하고, 대응 전략을 배웁니다.
 
-**선수 지식**: (이전 섹션에서 배운 내용)
+**선수 지식**: [App Store Connect](./03-app-store-connect.md)
 **학습 목표**:
-- 목표 1
-- 목표 2
-- 목표 3
+- App Store Review Guidelines의 5대 영역을 이해할 수 있다
+- 흔한 리젝 사유를 미리 방지할 수 있다
+- 리젝 시 Resolution Center와 이의 제기를 활용할 수 있다
 
 ## 왜 알아야 할까?
 
-이 개념이 왜 중요한지, 실제 어디에 쓰이는지 동기부여를 작성합니다.
+심사에서 리젝되면 최소 며칠의 시간이 낭비됩니다. 수정하고 다시 제출하고, 또 기다리고... 특히 출시 일정이 정해져 있을 때 리젝은 치명적이죠. 하지만 리젝 사유의 **40%가 가이드라인 2.1(앱 완성도)** 관련이라는 사실을 알면, 미리 대비할 수 있습니다. "한 번에 통과"가 목표입니다.
 
 ## 핵심 개념
 
-### 개념 1: 소제목
+### 개념 1: 심사 프로세스 — 생각보다 빠릅니다
 
-> 💡 **비유**: 일상적 비유로 개념을 소개합니다.
+> 💡 **비유**: App Store 심사는 **건축물 준공 검사**와 같습니다. 건물(앱)이 안전 기준(가이드라인)을 충족하는지 검사하고, 통과하면 입주(출시) 허가를 내주는 거죠.
 
-기술적 설명을 작성합니다.
+| 항목 | 내용 |
+|------|------|
+| 심사 기간 | 제출의 **90%가 24시간 이내** 완료 |
+| 심사 대상 | 앱, 앱 업데이트, 인앱 구매, 인앱 이벤트 |
+| 결과 통보 | 이메일 + App Store Connect 알림 |
+| 긴급 심사 | Critical bug fix 또는 이벤트 연관 앱에 한해 요청 가능 |
 
+### 개념 2: 5대 심사 영역
 
-[1;38;5;196mWelcome to Swift![0m
+| 영역 | 핵심 내용 | 주요 가이드라인 |
+|------|-----------|----------------|
+| **1. Safety** | 유해 콘텐츠 차단, 아동 보호, 데이터 보안 | 1.1~1.7 |
+| **2. Performance** | 앱 완성도, 정확한 메타데이터, 하드웨어 호환성 | 2.1~2.5 |
+| **3. Business** | 인앱 구매 정책, 구독, 결제 | 3.1~3.2 |
+| **4. Design** | 최소 기능 요구, 카피캣 금지, 스팸 방지 | 4.1~4.10 |
+| **5. Legal** | 개인정보 보호, 지적재산권, 도박/VPN 규제 | 5.1~5.5 |
 
-[1mSubcommands:[0m
+### 개념 3: 가장 흔한 리젝 사유 TOP 7
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+> 💡 **비유**: 리젝 사유를 미리 아는 건 **시험 족보를 구하는 것**과 같습니다. 어떤 문제가 자주 나오는지 알면 합격률이 크게 올라가죠.
 
-  Use [1m`swift --version`[0m for Swift version information.
+**1. 가이드라인 2.1 — 앱 완성도 (리젝의 40%!)**
 
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
+- 크래시 또는 버그 발생
+- 끊어진 링크 (개인정보 처리방침 URL 포함)
+- 플레이스홀더 콘텐츠가 남아있음
+- 데모 계정이나 특수 설정 정보 미제공
 
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+**2. 가이드라인 2.3 — 정확한 메타데이터**
 
-### 개념 2: 소제목
+- 스크린샷이 실제 앱 화면과 다름
+- 앱 설명이 실제 기능과 불일치
+- 앱 이름에 키워드를 과도하게 채움 (30자 제한)
 
-> 💡 **비유**: 일상적 비유로 개념을 소개합니다.
+**3. 가이드라인 4.2 — 최소 기능**
 
-기술적 설명을 작성합니다.
+- 웹사이트를 WebView로 감싼 것에 불과한 앱
+- 지속적 가치가 부족한 앱
+- 너무 단순하거나 틈새가 좁은 앱
 
+**4. 가이드라인 5.1.1 — 데이터 수집과 저장**
 
-[1;38;5;196mWelcome to Swift![0m
+- 개인정보 처리방침 누락 또는 불충분
+- 권한 요청 시 사유 설명(purpose string) 누락
+- 불필요한 데이터 접근 요청
 
-[1mSubcommands:[0m
+**5. 가이드라인 3.1.1 — 인앱 구매**
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+- 디지털 콘텐츠 잠금 해제에 외부 결제 사용
+- 인앱 구매 안내 없이 유료 기능 제공
 
-  Use [1m`swift --version`[0m for Swift version information.
+**6. 가이드라인 4.1/4.3 — 카피캣과 스팸**
 
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
+- 기존 앱을 모방한 디자인이나 기능
+- 동일한 앱을 여러 번 제출 (Bundle ID만 다르게)
 
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+**7. 가이드라인 5.1 — 개인정보 보호**
+
+- App Tracking Transparency 미적용
+- Privacy Manifest 누락 (서드파티 SDK 포함)
+
+### 개념 4: 리젝 대응 — Resolution Center
+
+리젝을 받으면 App Store Connect의 **Resolution Center**에서 Apple 리뷰 팀과 소통할 수 있습니다.
+
+**대응 방법:**
+
+1. **리젝 사유 확인**: 어떤 가이드라인을 위반했는지 구체적으로 확인
+2. **문제 수정**: 가이드라인에 맞게 수정
+3. **답변 작성**: Resolution Center에서 수정 내용을 설명하고 재제출
+4. **버그 수정 심사**: 버그 수정 업데이트 시, 추가로 발견된 문제는 다음 업데이트에서 해결 가능 (안전/법적 문제 제외)
+
+### 개념 5: 이의 제기(Appeal)
+
+앱의 기능이나 콘셉트가 오해받았다고 판단되면 **App Review Board**에 이의를 제기할 수 있습니다.
+
+| 항목 | 내용 |
+|------|------|
+| 이의 제기 횟수 | 리젝 건당 **1회만** 가능 |
+| 제출 방법 | Apple Developer 사이트에서 Appeal 양식 작성 |
+| 필수 내용 | 앱이 가이드라인을 준수하는 구체적 이유 |
+| 주의사항 | 추가 정보 요청에 먼저 응답한 후 이의 제기 |
+
+> ⚠️ **흔한 오해**: "이의 제기하면 불이익을 받는다" — 아닙니다. Apple은 이의 제기를 정당한 개발자 권리로 인정합니다. 다만 이의 제기보다는 가이드라인에 맞게 수정하는 것이 대부분 빠른 해결책이에요.
 
 ## 실습: 직접 해보기
 
+심사 제출 전 점검 체크리스트입니다.
 
-[1;38;5;196mWelcome to Swift![0m
+**심사 전 필수 체크리스트:**
 
-[1mSubcommands:[0m
-
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
-
-  Use [1m`swift --version`[0m for Swift version information.
-
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
-
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+- [ ] 최신 iOS에서 모든 기능 테스트 완료
+- [ ] 크래시/버그 없음 확인
+- [ ] 모든 링크 정상 작동 (개인정보 처리방침 URL, 지원 URL)
+- [ ] 플레이스홀더 콘텐츠 제거 (임시 이미지, Lorem ipsum 등)
+- [ ] 스크린샷이 실제 앱 화면과 일치
+- [ ] 앱 설명이 실제 기능을 정확히 반영
+- [ ] 데모 계정 정보를 App Review Notes에 기재
+- [ ] 권한 요청 시 사유 설명(purpose string) 작성
+- [ ] Privacy Manifest 포함 (서드파티 SDK 확인)
+- [ ] 인앱 구매가 있다면 스크린샷/설명에 명시
+- [ ] Human Interface Guidelines 준수
 
 ## 더 깊이 알아보기
 
-역사적 에피소드, WWDC 세션, Swift Evolution 프로포절 등을 소개합니다.
+App Store 심사의 역사에는 유명한 에피소드가 많습니다. 2008년 초기에는 심사 기준이 불명확해서 개발자들 사이에 불만이 컸어요. 가장 유명한 사건 중 하나는 **Google Voice** 앱이 리젝된 것입니다(2009년). Apple이 "iPhone의 기본 기능을 대체한다"는 이유로 거부했는데, 이 사건은 FCC(미국 연방통신위원회)의 조사까지 이어졌죠. 결국 Apple은 심사 과정의 투명성을 높이기 시작했고, 2010년에 처음으로 **공식 Review Guidelines 문서**를 공개했습니다.
+
+2024~2025년에는 EU의 DMA(디지털 시장법)에 따라 유럽에서의 사이드로딩과 대체 결제 수단이 허용되면서, 심사 가이드라인에도 변화가 생겼습니다. 미국에서도 법원 판결에 따라 외부 결제 링크에 대한 가이드라인이 추가되었어요.
 
 ## 흔한 오해와 팁
 
-> ⚠️ **흔한 오해**: 초보자가 자주 혼동하는 개념
+> 🔥 **실무 팁**: 심사에 평균 24시간이 걸리지만, **긴급 심사(Expedited Review)**를 요청할 수도 있습니다. 크리티컬 버그 수정이나 시간에 민감한 이벤트 앱의 경우에만 가능하며, Apple Developer 사이트에서 요청할 수 있어요.
 
-> 🔥 **실무 팁**: 실전에서 유용한 노하우
+> 💡 **알고 계셨나요?**: Apple은 **App Review Appointment** 서비스도 제공합니다. 30분 화상 상담으로 심사 가이드라인에 대한 궁금증을 미리 해결할 수 있어요. 앱을 제출하기 전에 활용하면 리젝 확률을 크게 줄일 수 있습니다.
 
 ## 핵심 정리
 
 | 개념 | 설명 |
 |------|------|
-| 핵심1 | 한 줄 정리 |
-| 핵심2 | 한 줄 정리 |
+| 5대 심사 영역 | Safety, Performance, Business, Design, Legal |
+| 가이드라인 2.1 | 앱 완성도 — 리젝의 40%를 차지하는 가장 흔한 사유 |
+| Resolution Center | 리젝 시 Apple 리뷰 팀과 소통하는 채널 |
+| Appeal | App Review Board에 이의 제기 (건당 1회) |
+| Expedited Review | 긴급 상황 시 빠른 심사 요청 |
+| 24시간 이내 | 심사 제출의 90%가 처리되는 시간 |
 
 ## 다음 섹션 미리보기
 
-다음으로 [05. 출시 후 운영](./05-post-launch.md)에서 이어집니다.
+심사를 통과하고 App Store에 앱이 올라갔습니다! 하지만 출시는 끝이 아니라 시작이에요. [출시 후 운영](./05-post-launch.md)에서 App Analytics, 크래시 리포트, ASO, 업데이트 전략을 배워 앱을 성장시켜봅시다.
 
 ## 참고 자료
 
-- [Apple 공식 문서](https://developer.apple.com/) - 설명
+- [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) - 공식 심사 가이드라인 전문
+- [Common App Rejections](https://developer.apple.com/distribute/app-review/) - Apple이 정리한 흔한 리젝 사유
+- [Requesting an Expedited App Review](https://developer.apple.com/contact/app-store/?topic=expedite) - 긴급 심사 요청
+- [App Review Appointments](https://developer.apple.com/events/) - 심사 관련 상담 예약

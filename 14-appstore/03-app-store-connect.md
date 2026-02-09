@@ -1,109 +1,156 @@
-# 03. App Store Connect
+# App Store Connect
 
 > 앱 등록, 메타데이터, 가격 및 지역 설정
 
 ## 개요
 
-이 섹션에서 배울 내용을 2-3문장으로 요약합니다.
+App Store Connect는 앱의 **관제탑**입니다. 앱을 등록하고, 메타데이터를 작성하고, 가격을 설정하고, TestFlight로 베타 테스트를 진행하고, 최종적으로 심사에 제출하는 모든 과정이 여기서 이루어집니다. 이번 섹션에서는 앱 등록부터 심사 제출까지의 전체 워크플로우를 배웁니다.
 
-**선수 지식**: (이전 섹션에서 배운 내용)
+**선수 지식**: [인증서와 프로비저닝](./02-certificates.md)
 **학습 목표**:
-- 목표 1
-- 목표 2
-- 목표 3
+- App Store Connect에서 새 앱을 등록할 수 있다
+- 전환율을 높이는 메타데이터를 작성할 수 있다
+- TestFlight로 베타 테스트를 진행할 수 있다
 
 ## 왜 알아야 할까?
 
-이 개념이 왜 중요한지, 실제 어디에 쓰이는지 동기부여를 작성합니다.
+코드를 다 짰다고 끝이 아닙니다. App Store Connect에서 메타데이터를 잘 작성하는 것은 ASO(App Store Optimization)의 핵심이에요. 앱 이름, 부제목, 키워드, 설명 — 이 필드들이 검색 노출과 다운로드 전환율을 좌우합니다. 또한 TestFlight 베타 테스트를 제대로 활용하면 출시 전에 버그를 잡고 사용자 피드백을 받을 수 있죠.
 
 ## 핵심 개념
 
-### 개념 1: 소제목
+### 개념 1: 새 앱 등록하기
 
-> 💡 **비유**: 일상적 비유로 개념을 소개합니다.
+> 💡 **비유**: App Store Connect에서 앱을 등록하는 건 **사업자 등록**과 비슷합니다. 상호명(앱 이름), 업종(카테고리), 사업자번호(Bundle ID)를 정하고 신고하는 거죠.
 
-기술적 설명을 작성합니다.
+**앱 등록 시 필요한 정보:**
 
+| 필드 | 제한 | 설명 |
+|------|------|------|
+| 앱 이름 | 최대 30자 | App Store에 표시되는 이름 |
+| 부제목(Subtitle) | 최대 30자 | 앱 이름 아래 표시되는 한 줄 설명 |
+| Bundle ID | 변경 불가 | Xcode 프로젝트와 동일해야 함 |
+| SKU | 변경 불가 | 내부 관리용 고유 ID |
+| 기본 언어 | 변경 가능 | 앱의 주 사용 언어 |
+| 카테고리 | 1차 필수, 2차 선택 | 게임과 스티커는 하위 카테고리도 선택 |
 
-[1;38;5;196mWelcome to Swift![0m
+### 개념 2: 메타데이터 — 검색과 전환의 핵심
 
-[1mSubcommands:[0m
+> 💡 **비유**: 메타데이터는 **이력서**입니다. 채용 담당자(사용자)가 이력서를 보고 면접(다운로드) 여부를 결정하죠. 핵심 역량(키워드)을 잘 배치하고, 자기소개서(설명)에서 차별점을 어필해야 합니다.
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+| 필드 | 글자 수 | ASO 중요도 | 설명 |
+|------|---------|-----------|------|
+| 앱 이름 | 30자 | 매우 높음 | 검색 키워드 2~3배 가중치 |
+| 부제목 | 30자 | 매우 높음 | 핵심 기능/가치 한 줄 요약 |
+| 키워드 | 100자 | 높음 | 쉼표로 구분, 공백 최소화 |
+| 홍보 문구 | 170자 | 중간 | 심사 없이 언제든 수정 가능 |
+| 설명 | 4,000자 | 낮음 (검색에 미포함) | 상세 기능 설명 |
+| 새로운 기능 | 4,000자 | 낮음 | 업데이트 내용 |
 
-  Use [1m`swift --version`[0m for Swift version information.
+> 🔥 **실무 팁**: 키워드 100자를 최대한 활용하세요. 앱 이름이나 부제목에 이미 포함된 단어는 키워드에 중복 등록할 필요 없습니다. 쉼표 뒤 공백도 불필요해요. "메모,일기,노트,기록" 이렇게 빈틈없이 채우세요.
 
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
+### 개념 3: 가격과 배포 지역
 
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+Apple은 2023년 가격 체계를 대폭 업그레이드하여 **900개 이상의 가격 포인트**를 제공합니다.
 
-### 개념 2: 소제목
+| 가격 범위 | 증가 단위 |
+|-----------|-----------|
+| ~$10 | $0.10 단위 |
+| $10~$50 | $0.50 단위 |
+| $50~$200 | $1.00 단위 |
+| $200~$1,000 | $5.00 단위 |
 
-> 💡 **비유**: 일상적 비유로 개념을 소개합니다.
+**글로벌 가격 균등화**: 기준 국가를 설정하면 Apple이 175개 국가/43개 통화에 맞춰 현지 관행에 따른 가격을 자동 설정합니다.
 
-기술적 설명을 작성합니다.
+### 개념 4: 개인정보 보호 — Privacy Nutrition Labels
 
+App Store Connect에서 앱이 수집하는 데이터를 **영양 성분표** 형태로 공개해야 합니다.
 
-[1;38;5;196mWelcome to Swift![0m
+**선언해야 하는 데이터 유형:**
 
-[1mSubcommands:[0m
+- **연락처 정보**: 이름, 이메일, 전화번호
+- **위치**: 정밀 위치, 대략적 위치
+- **식별자**: 사용자 ID, 기기 ID
+- **사용 데이터**: 앱 상호작용, 광고 데이터
+- **진단**: 크래시 데이터, 성능 데이터
 
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
+**데이터 사용 목적도 명시해야 합니다:**
 
-  Use [1m`swift --version`[0m for Swift version information.
+- 서드파티 광고, 개발자 마케팅, 분석, 제품 개인화, 앱 기능
 
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
+> ⚠️ **흔한 오해**: "우리 앱은 데이터를 수집하지 않아요" — 서드파티 SDK(Firebase, AdMob 등)가 수집하는 데이터도 개발자 책임입니다. 사용 중인 SDK의 Privacy Manifest를 반드시 확인하세요. 2024년 5월부터 Apple은 주요 서드파티 SDK에 대해 Privacy Manifest 제출을 의무화했습니다.
 
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+### 개념 5: TestFlight — 출시 전 베타 테스트
+
+> 💡 **비유**: TestFlight는 **시식 코너**입니다. 정식 판매(App Store 출시) 전에 고객에게 맛보기를 제공하고 피드백을 받는 거죠.
+
+| 구분 | 내부 테스트 | 외부 테스트 |
+|------|------------|------------|
+| 대상 | 팀 멤버 (최대 100명) | 외부 사용자 (최대 10,000명) |
+| 심사 | 불필요 | Beta App Review 필요 |
+| 빌드 만료 | 90일 | 90일 |
+| 초대 방법 | 이메일 | 이메일 또는 공개 링크 |
+
+**빌드 업로드 방법:**
+
+1. **Xcode**: Product → Archive → Distribute App → App Store Connect
+2. **Transporter 앱**: `.ipa` 파일을 드래그 앤 드롭으로 업로드
+3. **App Store Connect API**: CI/CD 파이프라인에서 자동화 (WWDC 2025에서 Build Upload API 추가)
+
+### 개념 6: WWDC 2025 — App Store Connect 새 기능
+
+WWDC 2025에서 App Store Connect에 주요 업데이트가 발표되었습니다.
+
+| 기능 | 설명 |
+|------|------|
+| **Webhooks API** | 빌드 상태 변경, 심사 완료 등 이벤트를 실시간 알림 |
+| **Build Upload API** | API로 빌드 업로드 자동화 (Xcode 없이) |
+| **Feedback API** | TestFlight 피드백을 프로그래밍 방식으로 수집 |
+| **LLM 검색 태그** | 머신러닝이 앱 메타데이터에서 검색 태그 자동 생성 |
+| **커스텀 제품 페이지 키워드** | 맞춤 제품 페이지에 검색 키워드 연결 가능 |
 
 ## 실습: 직접 해보기
 
+App Store Connect에서 앱을 등록하는 체크리스트입니다.
 
-[1;38;5;196mWelcome to Swift![0m
+**앱 등록 체크리스트:**
 
-[1mSubcommands:[0m
-
-  [1mswift build[0m      Build Swift packages
-  [1mswift package[0m    Create and work on packages
-  [1mswift run[0m        Run a program from a package
-  [1mswift test[0m       Run package tests
-  [1mswift repl[0m       Experiment with Swift code interactively
-
-  Use [1m`swift --version`[0m for Swift version information.
-
-  Use [1m`swift --help`[0m for descriptions of available options and flags.
-
-  Use [1m`swift help <subcommand>`[0m for more information about a subcommand.
+- [ ] [App Store Connect](https://appstoreconnect.apple.com)에 로그인
+- [ ] 앱 → "+" → 새로운 앱 클릭
+- [ ] 플랫폼, 앱 이름, 기본 언어, Bundle ID, SKU 입력
+- [ ] 카테고리 선택 (1차 필수, 2차 선택)
+- [ ] 앱 설명, 키워드, 홍보 문구 작성
+- [ ] 스크린샷 및 앱 미리보기 업로드
+- [ ] 개인정보 보호 정보 작성
+- [ ] 가격 및 배포 지역 설정
+- [ ] 연령 등급 질문 답변
+- [ ] Xcode에서 Archive → App Store Connect에 빌드 업로드
+- [ ] TestFlight 내부 테스트 → 외부 테스트
+- [ ] 심사 제출
 
 ## 더 깊이 알아보기
 
-역사적 에피소드, WWDC 세션, Swift Evolution 프로포절 등을 소개합니다.
+App Store Connect의 전신은 **iTunes Connect**입니다. 2008년 App Store가 열릴 때 iTunes의 하위 서비스로 시작했고, 이름 그대로 iTunes에 종속된 구조였죠. 2018년 WWDC에서 **App Store Connect**로 리브랜딩되면서 독립적인 플랫폼으로 거듭났습니다. 이때 iOS/iPadOS용 App Store Connect 앱도 출시되어, 심사 상태를 iPhone에서 실시간으로 확인할 수 있게 되었어요.
 
-## 흔한 오해와 팁
-
-> ⚠️ **흔한 오해**: 초보자가 자주 혼동하는 개념
-
-> 🔥 **실무 팁**: 실전에서 유용한 노하우
+2023년에는 가격 체계가 대폭 개편되어 기존 87개 가격 포인트에서 **900개 이상**으로 확대되었습니다. $0.29부터 $10,000까지 세밀하게 가격을 설정할 수 있게 된 거죠. 이전에는 $0.99, $1.99, $2.99... 이런 고정 가격만 가능했는데, 이제는 $1.49, $3.79 같은 유연한 가격도 가능합니다.
 
 ## 핵심 정리
 
 | 개념 | 설명 |
 |------|------|
-| 핵심1 | 한 줄 정리 |
-| 핵심2 | 한 줄 정리 |
+| App Store Connect | 앱 등록, 메타데이터 관리, 심사 제출의 중앙 플랫폼 |
+| 메타데이터 | 앱 이름(30자), 부제목(30자), 키워드(100자), 설명(4,000자) |
+| Privacy Labels | 앱이 수집하는 데이터와 용도를 투명하게 공개 |
+| TestFlight | 내부(100명) / 외부(10,000명) 베타 테스트 서비스 |
+| 900+ 가격 포인트 | 175개국 43개 통화에 걸쳐 세밀한 가격 설정 |
+| Webhooks API | 빌드 상태, 심사 완료 등 이벤트 실시간 알림 (2025) |
 
 ## 다음 섹션 미리보기
 
-다음으로 [04. 심사 가이드라인](./04-review-guidelines.md)에서 이어집니다.
+App Store Connect에서 앱을 등록하고 심사에 제출했습니다. 하지만 심사를 통과하지 못하면 모든 노력이 물거품이 되죠. [심사 가이드라인](./04-review-guidelines.md)에서 흔한 리젝 사유와 대응 전략을 미리 파악해봅시다.
 
 ## 참고 자료
 
-- [Apple 공식 문서](https://developer.apple.com/) - 설명
+- [App Store Connect Help](https://developer.apple.com/help/app-store-connect/) - 공식 도움말
+- [What's New in App Store Connect - WWDC25](https://developer.apple.com/videos/play/wwdc2025/) - 2025 새 기능
+- [App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi) - API 자동화 문서
+- [Set a Price - Apple Developer](https://developer.apple.com/help/app-store-connect/manage-app-pricing/set-a-price/) - 가격 설정 가이드
