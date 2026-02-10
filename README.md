@@ -1,6 +1,6 @@
-# Swift 마스터 가이드
+# 2026: Swift 완전 정복
 
-> Swift 기초부터 앱스토어 런칭까지 완전 정복
+> iOS 26 & Swift 6 시대의 앱 개발 A to Z
 
 **16챕터 73섹션**으로 구성된 A-to-Z Swift & SwiftUI 튜토리얼입니다.
 iOS 26+ / SwiftUI / Liquid Glass / Swift 6 기준으로 작성되었습니다.

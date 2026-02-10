@@ -33,7 +33,7 @@ struct BasicShareView: View {
     var body: some View {
         VStack(spacing: 20) {
             // 가장 간단한 형태 — 문자열 공유
-            ShareLink(item: "Swift 마스터 가이드로 iOS 개발 배우는 중!")
+            ShareLink(item: "2026: Swift 완전 정복으로 iOS 개발 배우는 중!")
 
             // 커스텀 레이블로 버튼 꾸미기
             ShareLink(

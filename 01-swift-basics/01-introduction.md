@@ -183,7 +183,7 @@ struct ContentView: View {
                 .foregroundStyle(.orange)
 
             // 나만의 인사말
-            Text("Swift 마스터 가이드")
+            Text("2026: Swift 완전 정복")
                 .font(.title)
                 .fontWeight(.bold)
 
