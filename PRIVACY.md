@@ -1,6 +1,6 @@
 # 개인정보 처리방침
 
-**2026: Swift 완전 정복** (이하 "앱")은 사용자의 개인정보를 소중히 여기며, 다음과 같은 방침을 따릅니다.
+**Forge: Swift** (이하 "앱")은 사용자의 개인정보를 소중히 여기며, 다음과 같은 방침을 따릅니다.
 
 **최종 수정일**: 2026-02-11
 
@@ -42,4 +42,4 @@
 
 개인정보 처리방침에 관한 문의 사항이 있으시면 아래로 연락해 주세요.
 
-- GitHub Issues: [프로젝트 저장소](https://github.com)
+- GitHub PR: [forge-tutorial-swift](https://github.com/jsonpassion/forge-tutorial-swift/)
