@@ -346,6 +346,19 @@ do {
 }
 ```
 
+```output
+💾 저장: [name] = 민수
+💾 저장: [age] = 25
+💾 저장: [skills] = ["Swift", "SwiftUI"]
+
+📋 사용자 정보:
+  이름: 민수
+  나이: 25
+  스킬: Swift, SwiftUI
+
+❌ 'address' 키를 찾을 수 없습니다
+```
+
 ## 더 깊이 알아보기
 
 ### Swift 6의 Typed Throws

@@ -49,7 +49,7 @@ nil
 
 옵셔널에서 값을 꺼내려면 **언래핑(Unwrapping)** 이 필요합니다. 가장 안전한 방법은 `if let`과 `guard let`입니다.
 
-```swift
+```run:swift
 let userInput: String? = "42"
 
 // if let — 값이 있으면 블록 안에서 사용
@@ -71,7 +71,7 @@ if let userInput {
 입력값: 42
 ```
 
-```swift
+```run:swift
 // guard let — 값이 없으면 빠져나가기
 func processAge(input: String?) {
     guard let text = input else {
@@ -105,7 +105,7 @@ processAge(input: "25")     // "✅ 나이: 25세"
 
 `!`를 붙이면 옵셔널을 강제로 벗길 수 있지만, 값이 `nil`이면 **앱이 즉시 크래시**합니다.
 
-```swift
+```run:swift
 let possibleNumber: String? = "123"
 let number = Int(possibleNumber!)!   // ⚠️ 위험! nil이면 크래시
 
@@ -125,7 +125,7 @@ if let text = possibleNumber, let number = Int(text) {
 
 > 💡 **비유**: 옵셔널 체이닝은 **도미노**와 같습니다. 중간에 하나라도 `nil`이면 거기서 멈추고 전체 결과가 `nil`이 됩니다. 크래시 없이요!
 
-```swift
+```run:swift
 // 중첩된 옵셔널 접근
 struct Address {
     var city: String
@@ -188,7 +188,7 @@ print(result)  // "기본값"
 
 사용자 프로필을 안전하게 처리하는 코드를 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 사용자 프로필 데이터 (일부 정보가 없을 수 있습니다)
@@ -227,6 +227,31 @@ for (index, profile) in profiles.enumerated() {
         print("  도메인: \(domain)")
     }
 }
+```
+
+```output
+📋 사용자 프로필 조회
+────────────────────────
+
+[1번 사용자]
+  이름: 민수
+  이메일: minsu@email.com
+  전화: 010-1234-5678
+  도메인: email.com
+
+[2번 사용자]
+  이름: 지영
+  이메일: 미등록
+  전화: 010-9876-5432
+
+[3번 사용자]
+  이름: 현우
+  이메일: hyunwoo@email.com
+  전화: 미등록
+  도메인: email.com
+
+[4번 사용자]
+  ❌ 이름 없음 — 건너뜀
 ```
 
 ## 더 깊이 알아보기

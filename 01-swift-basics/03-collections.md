@@ -24,7 +24,7 @@
 
 Array(배열)는 **같은 타입의 값을 순서대로** 저장합니다. 가장 자주 쓰는 컬렉션이에요.
 
-```swift
+```run:swift
 // 배열 생성
 var fruits = ["사과", "바나나", "딸기"]
 let numbers = [1, 2, 3, 4, 5]
@@ -63,7 +63,7 @@ true
 
 Dictionary(딕셔너리)는 **키(Key)와 값(Value)의 쌍**으로 데이터를 저장합니다. 순서가 없는 대신, 키로 빠르게 값을 찾을 수 있어요.
 
-```swift
+```run:swift
 // 딕셔너리 생성 — [키 타입: 값 타입]
 var scores: [String: Int] = [
     "민수": 95,
@@ -101,7 +101,7 @@ print(scores.count)
 
 Set(집합)은 **같은 타입의 고유한 값**만 저장합니다. 순서가 없고, 중복이 자동으로 제거됩니다.
 
-```swift
+```run:swift
 // Set 생성
 var genres: Set<String> = ["액션", "코미디", "SF", "액션"]
 print(genres.count)     // 3 — 중복 "액션"이 제거됨!
@@ -144,7 +144,7 @@ true
 
 Playground에서 간단한 장바구니를 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 장바구니 (Array) — 같은 상품을 여러 개 담을 수 있습니다
@@ -171,12 +171,28 @@ for item in cart {
     total += price
 }
 print("💰 총 금액: \(total)원")
+```
 
+```output
+🛒 장바구니: ["아이폰 케이스", "충전 케이블", "보호 필름", "에어팟 케이스"]
+총 4개 상품
+  아이폰 케이스: 25000원
+  충전 케이블: 15000원
+  보호 필름: 12000원
+  에어팟 케이스: 18000원
+💰 총 금액: 70000원
+```
+
+```run:swift
 // 찜한 카테고리 (Set) — 중복 없이 관리
 var wishCategories: Set<String> = ["전자기기", "액세서리"]
 wishCategories.insert("전자기기")    // 이미 있으므로 추가 안 됨
 wishCategories.insert("음식")
 print("❤️ 관심 카테고리: \(wishCategories)")
+```
+
+```output
+❤️ 관심 카테고리: ["전자기기", "음식", "액세서리"]
 ```
 
 ## 더 깊이 알아보기

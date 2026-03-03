@@ -50,7 +50,7 @@ printStars(count: 5)  // "⭐⭐⭐⭐⭐"
 
 Swift 함수의 특별한 점은 **매개변수에 레이블(label)** 이 있다는 거예요. 이 덕분에 함수를 호출할 때 "무엇을 넘기는지" 바로 알 수 있습니다.
 
-```swift
+```run:swift
 // 외부 레이블과 내부 이름을 따로 지정
 func sendMessage(to recipient: String, content message: String) {
     print("\(recipient)에게: \(message)")
@@ -86,7 +86,7 @@ Grande 라떼 주문 완료!
 
 클로저(Closure)는 **이름 없이 정의하는 함수**입니다. 코드 블록을 변수에 저장하거나, 다른 함수에 전달할 수 있어요.
 
-```swift
+```run:swift
 // 일반 함수
 func square(number: Int) -> Int {
     return number * number
@@ -175,7 +175,7 @@ print(result)       // 220 (4+16+36+64+100)
 
 실생활에 가까운 예제를 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 쇼핑몰 상품 데이터
@@ -220,6 +220,31 @@ print("\n🏷️ 10% 할인 적용:")
 for (name, price) in products {
     print("  \(name): \(price)원 → \(tenPercentOff(price))원")
 }
+```
+
+```output
+📦 부가세 포함 가격:
+  맥북 프로: 3289000원
+  아이패드: 1419000원
+  에어팟: 273900원
+  아이폰 케이스: 53900원
+  Apple Watch: 658900원
+  매직 키보드: 493900원
+
+💰 50만원 이하:
+  에어팟: 249000원
+  아이폰 케이스: 49000원
+  매직 키보드: 449000원
+
+🧮 전체 합계: 5626000원
+
+🏷️ 10% 할인 적용:
+  맥북 프로: 2990000원 → 2691000원
+  아이패드: 1290000원 → 1161000원
+  에어팟: 249000원 → 224100원
+  아이폰 케이스: 49000원 → 44100원
+  Apple Watch: 599000원 → 539100원
+  매직 키보드: 449000원 → 404100원
 ```
 
 ## 더 깊이 알아보기

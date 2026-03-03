@@ -44,7 +44,7 @@ if temperature > 30 {
 
 Swift의 `if`문에서 주의할 점 하나! 조건에 **괄호`()`가 필수가 아닙니다**. C나 Java에서 오신 분들은 `if (temperature > 30)` 처럼 쓰는 게 습관이겠지만, Swift에서는 괄호 없이 `if temperature > 30` 이 더 자연스러운 스타일이에요.
 
-```swift
+```run:swift
 // 여러 조건을 AND(&&), OR(||)로 조합
 let age = 20
 let hasTicket = true
@@ -70,7 +70,7 @@ if age >= 19, hasTicket {
 
 `guard`는 **조건이 거짓일 때 조기 탈출(early exit)** 하는 구문입니다. `if`와 반대로 생각하면 편해요.
 
-```swift
+```run:swift
 func processOrder(itemCount: Int) {
     // guard: 조건이 거짓이면 else 블록 실행 후 함수 종료
     guard itemCount > 0 else {
@@ -97,7 +97,7 @@ processOrder(itemCount: 3)   // "✅ 3개 상품을 주문합니다."
 
 > 💡 **비유**: `switch`는 **자동 분류기**입니다. 편지를 넣으면 우편번호에 따라 자동으로 올바른 칸에 배분되죠. 여러 경우를 한눈에 정리할 수 있습니다.
 
-```swift
+```run:swift
 let dayOfWeek = "수요일"
 
 switch dayOfWeek {
@@ -120,7 +120,7 @@ default:                     // 나머지 모든 경우
 
 Swift의 `switch`는 다른 언어와 크게 다른 점이 있어요. **`break`를 쓸 필요가 없습니다!** C나 Java에서는 `break`를 빼먹으면 다음 case로 떨어지는(fall-through) 버그가 생기는데, Swift는 매칭된 case만 실행하고 자동으로 빠져나옵니다.
 
-```swift
+```run:swift
 // 범위(Range)도 사용 가능합니다
 let score = 85
 
@@ -148,7 +148,7 @@ B학점 👍
 
 > 💡 **비유**: `for-in`은 **컨베이어 벨트**입니다. 벨트 위의 물건이 하나씩 지나가면서 각각에 대해 작업을 수행하는 거죠.
 
-```swift
+```run:swift
 // 배열 순회
 let fruits = ["사과", "바나나", "딸기", "포도"]
 
@@ -174,7 +174,26 @@ for (index, fruit) in fruits.enumerated() {
 }
 ```
 
-```swift
+```output
+🍎 사과을(를) 씻고 있어요...
+🍎 바나나을(를) 씻고 있어요...
+🍎 딸기을(를) 씻고 있어요...
+🍎 포도을(를) 씻고 있어요...
+1번째 반복
+2번째 반복
+3번째 반복
+4번째 반복
+5번째 반복
+민수: 95점
+지영: 88점
+현우: 72점
+1번: 사과
+2번: 바나나
+3번: 딸기
+4번: 포도
+```
+
+```run:swift
 // where 절로 필터링하며 반복
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -228,7 +247,7 @@ repeat {
 
 간단한 성적 처리 프로그램을 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 학생 성적 데이터
@@ -276,6 +295,20 @@ print("─────────────────")
 let average = totalScore / studentScores.count
 print("📊 평균: \(average)점")
 print("합격: \(passCount)명 / 불합격: \(failCount)명")
+```
+
+```output
+📋 성적표
+─────────────────
+✅ 민수: 95점 — A등급
+✅ 지영: 88점 — B등급
+✅ 현우: 72점 — C등급
+✅ 수진: 91점 — A등급
+❌ 태호: 65점 — 과락
+✅ 예린: 83점 — B등급
+─────────────────
+📊 평균: 82점
+합격: 5명 / 불합격: 1명
 ```
 
 ## 더 깊이 알아보기
