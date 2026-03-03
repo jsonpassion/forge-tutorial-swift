@@ -51,6 +51,11 @@ swapValues(&s1, &s2)
 print(s1, s2)  // "세계" "안녕"
 ```
 
+```output
+20 10
+세계 안녕
+```
+
 `<T>`에서 `T`는 **타입 매개변수(Type Parameter)** 입니다. "어떤 타입이든 들어올 수 있다"는 뜻이에요. 함수가 호출될 때 T가 구체적인 타입으로 결정됩니다.
 
 ### 개념 2: 제네릭 타입 만들기
@@ -89,6 +94,11 @@ stringStack.push("B")
 print(stringStack.top!)     // "B"
 ```
 
+```output
+3
+B
+```
+
 ### 개념 3: 타입 제약 (Type Constraint)
 
 "아무 타입이나 다 되는 건 아니고, 특정 능력이 있는 타입만 허용"할 때 타입 제약을 사용합니다.
@@ -106,8 +116,15 @@ func findMinimum<T: Comparable>(_ array: [T]) -> T? {
 }
 
 print(findMinimum([3, 1, 4, 1, 5])!)      // 1
-print(findMinimum(["바나나", "사과", "딸기"])!)  // "바나나" (사전순)
+print(findMinimum(["바나나", "사과", "딸기"])!)  // "사과" (사전순)
+```
 
+```output
+1
+사과
+```
+
+```swift
 // 여러 제약 조합도 가능
 func printSorted<T: Comparable & CustomStringConvertible>(_ items: [T]) {
     let sorted = items.sorted()
@@ -162,6 +179,10 @@ do {
 }
 ```
 
+```output
+✅ 로그인 성공! 토큰: 토큰-ABC123
+```
+
 에러를 처리하는 세 가지 방법:
 
 ```swift
@@ -176,7 +197,14 @@ do {
 // 방법 2: try? — 에러 시 nil 반환 (옵셔널)
 let token = try? login(username: "admin", password: "1234")
 print(token ?? "로그인 실패")   // "토큰-ABC123"
+```
 
+```output
+에러 발생: emptyUsername
+토큰-ABC123
+```
+
+```swift
 // 방법 3: try! — 에러 시 크래시 (100% 확신할 때만!)
 // let token = try! login(username: "", password: "")  // 💥 크래시!
 ```
@@ -229,6 +257,11 @@ do {
 } catch {
     print("에러: \(error)")
 }
+```
+
+```output
+✅ 이름: 사용자42
+사용자42
 ```
 
 ## 실습: 직접 해보기

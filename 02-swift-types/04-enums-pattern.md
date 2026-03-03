@@ -48,7 +48,10 @@ case .south: print("⬇️ 남쪽")
 case .east:  print("➡️ 동쪽")
 case .west:  print("⬅️ 서쪽")
 }
-// ➡️ 동쪽
+```
+
+```output
+➡️ 동쪽
 ```
 
 여기서 핵심은, `switch`가 **모든 case를 다루지 않으면 컴파일 에러**가 난다는 점입니다. `east`를 빠뜨렸다면 Swift가 "이 경우를 처리하지 않았어!"라고 경고해 줘요.
@@ -66,7 +69,7 @@ enum HTTPMethod: String {
     case delete = "DELETE"
 }
 
-print(HTTPMethod.post.rawValue)   // "GET"
+print(HTTPMethod.post.rawValue)   // "POST"
 
 // Int 원시 값 — 자동으로 0, 1, 2... 할당
 enum Planet: Int {
@@ -81,6 +84,11 @@ print(Planet.earth.rawValue)   // 3
 // 원시 값으로 enum 생성 (옵셔널 반환!)
 let planet = Planet(rawValue: 3)   // Optional(Planet.earth)
 let unknown = Planet(rawValue: 99)  // nil
+```
+
+```output
+POST
+3
 ```
 
 ### 개념 3: 연관 값 (Associated Value) — enum의 진짜 힘
@@ -110,6 +118,10 @@ case .loading(let progress):
 }
 ```
 
+```output
+✅ 성공! 상태 코드: 200, 데이터: 0바이트
+```
+
 ```swift
 // 실전 활용: 결제 수단
 enum PaymentMethod {
@@ -134,7 +146,10 @@ func processPayment(_ method: PaymentMethod, amount: Int) {
 }
 
 processPayment(.creditCard(number: "1234567890123456", expiry: "12/26"), amount: 50000)
-// 💳 카드 ****-****-****-3456로 50000원 결제
+```
+
+```output
+💳 카드 ****-****-****-3456로 50000원 결제
 ```
 
 ### 개념 4: 패턴 매칭 — switch를 넘어서
@@ -179,8 +194,11 @@ let results: [NetworkResult] = [
 for case .success(_, let code) in results {
     print("성공 응답: \(code)")
 }
-// 성공 응답: 200
-// 성공 응답: 201
+```
+
+```output
+성공 응답: 200
+성공 응답: 201
 ```
 
 ### 개념 5: enum에 메서드와 연산 프로퍼티 추가
@@ -216,7 +234,10 @@ enum Compass {
 
 let dir = Compass.east
 print("\(dir.emoji) 반대 방향: \(dir.opposite().emoji)")
-// ➡️ 반대 방향: ⬅️
+```
+
+```output
+➡️ 반대 방향: ⬅️
 ```
 
 ```swift
@@ -232,11 +253,14 @@ print("난이도 선택지:")
 for difficulty in Difficulty.allCases {
     print("  - \(difficulty.rawValue)")
 }
-// 난이도 선택지:
-//   - 쉬움
-//   - 보통
-//   - 어려움
-//   - 전문가
+```
+
+```output
+난이도 선택지:
+  - 쉬움
+  - 보통
+  - 어려움
+  - 전문가
 ```
 
 ## 실습: 직접 해보기
@@ -357,7 +381,10 @@ case .some(let value):
 case .none:
     print("이름 없음")
 }
-// 이름: 민수
+```
+
+```output
+이름: 민수
 ```
 
 `if let name = name`은 사실 `if case .some(let name) = name`의 문법적 설탕인 셈이죠. Swift의 많은 핵심 기능이 enum 위에 세워져 있다는 사실이 놀랍지 않나요?

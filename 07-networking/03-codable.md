@@ -59,6 +59,11 @@ let jsonString = String(data: encoded, encoding: .utf8)!
 print(jsonString)  // {"id":1,"name":"김스위프트","email":"swift@example.com","isActive":true}
 ```
 
+```output
+김스위프트
+{"id":1,"name":"김스위프트","email":"swift@example.com","isActive":true}
+```
+
 > 💡 **알고 계셨나요?**: `Codable`은 Swift 4(2017년)에서 **SE-0166** 프로포절을 통해 도입되었습니다. Itai Ferber, Michael LeHew, Tony Parker가 설계했는데, 이들은 "Swift 네이티브한 직렬화 솔루션"을 목표로 했습니다. 그 전에는 Objective-C의 `NSCoding`이나 수동 JSON 파싱에 의존해야 했죠. `Codable` 덕분에 Swift는 JSON 처리가 가장 편한 언어 중 하나가 되었습니다.
 
 ### 개념 2: URLSession + Codable — 황금 조합
@@ -154,6 +159,12 @@ let article = try JSONDecoder().decode(Article.self, from: json)
 print(article.subtitle)      // nil
 print(article.thumbnailUrl)  // nil
 print(article.viewCount)     // 1500
+```
+
+```output
+nil
+nil
+1500
 ```
 
 > ⚠️ **흔한 오해**: "JSON에 필드가 없으면 항상 에러가 난다" — 아닙니다! Swift 프로퍼티를 **옵셔널(`?`)**로 선언하면, JSON에 해당 키가 없거나 `null`이어도 정상적으로 디코딩됩니다. 반대로 옵셔널이 아닌 프로퍼티의 키가 JSON에 없으면 `DecodingError.keyNotFound` 에러가 발생합니다.

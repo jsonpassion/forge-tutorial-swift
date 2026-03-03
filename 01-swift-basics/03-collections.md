@@ -47,6 +47,14 @@ print(fruits.isEmpty)              // 비어있는지 확인
 print(fruits.contains("바나나"))    // 특정 값 포함 여부
 ```
 
+```output
+사과
+바나나
+3
+false
+true
+```
+
 > ⚠️ **흔한 오해**: "배열의 첫 번째 요소는 1번이다" — 프로그래밍에서 인덱스는 **0부터** 시작합니다. `fruits[1]`은 두 번째 요소예요. 존재하지 않는 인덱스에 접근하면 앱이 크래시하니 주의하세요!
 
 ### 개념 2: Dictionary — 키로 찾는 저장소
@@ -78,9 +86,11 @@ scores["현우"] = 85                 // 기존 값 수정
 scores["민수"] = nil                // 키-값 쌍 삭제
 
 // 유용한 프로퍼티
-print(scores.count)                 // 항목 수
-print(scores.keys)                  // 모든 키
-print(scores.values)                // 모든 값
+print(scores.count)
+```
+
+```output
+3
 ```
 
 > 💡 **알고 계셨나요?**: Dictionary에서 값을 조회하면 `Optional`이 반환됩니다. 해당 키가 없을 수도 있기 때문이죠. Optional에 대해서는 [옵셔널](./06-optionals.md) 섹션에서 자세히 다룹니다. 지금은 "키가 없으면 `nil`이 온다" 정도만 알아두세요.
@@ -94,23 +104,30 @@ Set(집합)은 **같은 타입의 고유한 값**만 저장합니다. 순서가 
 ```swift
 // Set 생성
 var genres: Set<String> = ["액션", "코미디", "SF", "액션"]
-print(genres)           // {"코미디", "SF", "액션"} — 중복 "액션" 제거!
-print(genres.count)     // 3
+print(genres.count)     // 3 — 중복 "액션"이 제거됨!
 
 // 값 추가/삭제
 genres.insert("로맨스")
 genres.remove("SF")
 
 // 포함 여부 확인 — Set이 가장 빠릅니다!
-print(genres.contains("액션"))   // true
+print(genres.contains("액션"))
 
 // 집합 연산 — 수학 시간의 그 집합 연산!
 let a: Set = [1, 2, 3, 4, 5]
 let b: Set = [3, 4, 5, 6, 7]
 
-print(a.union(b))           // 합집합: {1, 2, 3, 4, 5, 6, 7}
-print(a.intersection(b))    // 교집합: {3, 4, 5}
-print(a.subtracting(b))     // 차집합: {1, 2}
+print(a.union(b))           // 합집합
+print(a.intersection(b))    // 교집합
+print(a.subtracting(b))     // 차집합
+```
+
+```output
+3
+true
+[1, 2, 3, 4, 5, 6, 7]
+[3, 4, 5]
+[1, 2]
 ```
 
 ### 어떤 컬렉션을 쓸까?
@@ -168,13 +185,18 @@ print("❤️ 관심 카테고리: \(wishCategories)")
 
 Swift의 Array, Dictionary, Set은 모두 **값 타입(Value Type)** 입니다. 이게 무슨 뜻이냐면, 컬렉션을 다른 변수에 대입하면 **복사본**이 만들어진다는 뜻이에요.
 
-```swift
+```run:swift
 var original = [1, 2, 3]
 var copy = original       // 복사본 생성
 copy.append(4)
 
-print(original)  // [1, 2, 3] — 원본은 변하지 않음!
-print(copy)      // [1, 2, 3, 4]
+print(original)  // 원본은 변하지 않음!
+print(copy)
+```
+
+```output
+[1, 2, 3]
+[1, 2, 3, 4]
 ```
 
 이건 다른 언어(Java, Python 등)와 크게 다른 점입니다. 대부분의 언어에서 배열은 참조 타입이라 복사본을 수정하면 원본도 바뀌거든요. Swift의 이 설계 덕분에 "내가 넘긴 배열을 누군가 몰래 수정했네?" 같은 버그를 걱정할 필요가 없습니다.

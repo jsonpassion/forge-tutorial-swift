@@ -78,7 +78,7 @@ Playground를 만들어 봅시다:
 
 첫 번째 코드를 작성해 볼까요?
 
-```swift
+```run:swift
 import Foundation
 
 // 🎉 첫 번째 Swift 코드!
@@ -92,6 +92,12 @@ print("Swift는 올해로 \(swiftAge)살입니다!")
 // 변수에 이름을 저장하고 인사해 봅시다
 var myName = "개발자"
 print("\(myName)님, Swift 세계에 오신 걸 환영합니다! 🚀")
+```
+
+```output
+안녕하세요, Swift!
+Swift는 올해로 12살입니다!
+개발자님, Swift 세계에 오신 걸 환영합니다! 🚀
 ```
 
 코드를 입력한 후 좌측 하단의 **▶ 실행 버튼**을 누르거나, 단축키 **⇧⌘↩** (Shift + Command + Return)을 누르면 결과가 즉시 우측에 표시됩니다.

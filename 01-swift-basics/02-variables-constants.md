@@ -111,7 +111,7 @@ city = "부산"        // ✅ 같은 String 타입이므로 OK
 
 변수 값을 문자열 안에 자연스럽게 넣는 방법입니다. `\(변수명)` 형식을 사용합니다.
 
-```swift
+```run:swift
 let name = "민수"
 let age = 28
 
@@ -125,13 +125,18 @@ let quantity = 3
 print("총 금액: \(price * quantity)원")  // "총 금액: 45000원"
 ```
 
+```output
+민수님은 28세입니다.
+총 금액: 45000원
+```
+
 > 💡 **알고 계셨나요?**: 다른 언어에서는 문자열을 합칠 때 `"이름: " + name + ", 나이: " + String(age)` 처럼 복잡하게 써야 하는 경우가 많은데, Swift의 `\()` 문법은 훨씬 직관적이고 읽기 쉽습니다. 심지어 `\()` 안에 함수 호출이나 복잡한 표현식도 넣을 수 있어요.
 
 ## 실습: 직접 해보기
 
 Playground를 열고 자기 소개 프로그램을 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 내 정보를 상수와 변수로 선언합니다
@@ -156,6 +161,16 @@ print("아, 정확히는 \(favoriteLanguage)요! 😄")
 print("myName의 타입: \(type(of: myName))")      // String
 print("birthYear의 타입: \(type(of: birthYear))")  // Int
 print("myAge의 타입: \(type(of: myAge))")          // Int
+```
+
+```output
+👋 안녕하세요!
+저는 여러분의 이름이고, 28살입니다.
+요즘 Swift를 배우고 있어요!
+아, 정확히는 SwiftUI요! 😄
+myName의 타입: String
+birthYear의 타입: Int
+myAge의 타입: Int
 ```
 
 ## 더 깊이 알아보기

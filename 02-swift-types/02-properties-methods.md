@@ -39,6 +39,10 @@ song.isFavorite = true
 print("\(song.title) — 재생 \(song.playCount)회")  // "Dynamite — 재생 1회"
 ```
 
+```output
+Dynamite — 재생 1회
+```
+
 ### 개념 2: 연산 프로퍼티 (Computed Property)
 
 > 💡 **비유**: 연산 프로퍼티는 **체온계**입니다. 체온을 저장하고 있는 게 아니라, 측정할 때마다 **계산해서** 알려주는 거죠.
@@ -73,6 +77,12 @@ rect.width = 20
 print(rect.area)          // 100.0 — 자동으로 새 값 계산!
 ```
 
+```output
+50.0
+10.0 × 5.0 (넓이: 50.0)
+100.0
+```
+
 연산 프로퍼티는 `get`과 `set`을 모두 가질 수 있습니다.
 
 ```swift
@@ -94,6 +104,11 @@ print(temp.fahrenheit)    // 212.0
 
 temp.fahrenheit = 32      // set이 호출됨
 print(temp.celsius)       // 0.0
+```
+
+```output
+212.0
+0.0
 ```
 
 > 🔥 **실무 팁**: "이 값을 저장해야 할까, 계산해야 할까?" 고민된다면 — **다른 프로퍼티로부터 유도할 수 있다면 연산 프로퍼티**를 쓰세요. 넓이 = 가로 × 세로처럼요. 데이터 불일치를 방지할 수 있습니다.
@@ -125,13 +140,15 @@ struct GamePlayer {
 
 var player = GamePlayer(name: "민수")
 player.score = 50
-// ⏳ 민수의 점수가 0에서 50으로 변경 예정
-// ✅ 민수의 점수가 0에서 50로 변경됨
-
 player.score = 120
-// ⏳ 민수의 점수가 50에서 120으로 변경 예정
-// ✅ 민수의 점수가 50에서 120로 변경됨
-// 🎉 민수님이 100점을 돌파했습니다!
+```
+
+```output
+⏳ 민수의 점수가 0에서 50으로 변경 예정
+✅ 민수의 점수가 0에서 50로 변경됨
+⏳ 민수의 점수가 50에서 120으로 변경 예정
+✅ 민수의 점수가 50에서 120로 변경됨
+🎉 민수님이 100점을 돌파했습니다!
 ```
 
 > 💡 **알고 계셨나요?**: SwiftUI의 `@State`와 `@Observable`은 프로퍼티 감시자와 비슷한 원리를 사용합니다. 값이 변경되면 시스템에 알려서 화면을 다시 그리게 하는 거죠. 이 메커니즘을 이해하면 [상태 관리](../05-state-management/01-state-binding.md) 챕터가 훨씬 쉬워집니다.
@@ -158,8 +175,12 @@ var processor = DataProcessor(fileName: "report.csv")
 print("프로세서 생성 완료")       // 아직 loadedData는 초기화되지 않음
 
 print(processor.loadedData)      // 이 시점에서야 로딩 시작!
-// 💾 report.csv 데이터를 로딩 중...
-// ["데이터1", "데이터2", "데이터3"]
+```
+
+```output
+프로세서 생성 완료
+💾 report.csv 데이터를 로딩 중...
+["데이터1", "데이터2", "데이터3"]
 ```
 
 > ⚠️ **흔한 오해**: "`lazy`는 `let`에도 쓸 수 있다" — `lazy`는 반드시 `var`에만 사용할 수 있습니다. 초기에는 값이 없다가 나중에 채워지니까 변경 가능해야 하기 때문이에요.
@@ -186,6 +207,12 @@ struct AppConfig {
 print(AppConfig.appName)      // "Swift 마스터"
 AppConfig.incrementLaunch()   // "Swift 마스터 v1.0.0 — 1번째 실행"
 AppConfig.incrementLaunch()   // "Swift 마스터 v1.0.0 — 2번째 실행"
+```
+
+```output
+Swift 마스터
+Swift 마스터 v1.0.0 — 1번째 실행
+Swift 마스터 v1.0.0 — 2번째 실행
 ```
 
 ```swift

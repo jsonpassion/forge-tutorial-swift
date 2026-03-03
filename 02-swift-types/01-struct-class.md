@@ -43,6 +43,13 @@ print(user1.name)   // "민수" — 원본은 그대로!
 print(user2.name)   // "지영" — 복사본만 변경됨
 ```
 
+```output
+민수
+25
+민수
+지영
+```
+
 구조체의 핵심은 **값 타입(Value Type)** 이라는 것입니다. 변수에 대입하거나 함수에 전달하면 **복사본**이 만들어져요. 앞서 [컬렉션 타입](../01-swift-basics/03-collections.md)에서 배운 Array, Dictionary도 사실 구조체입니다!
 
 ### 개념 2: 클래스(class) 기본
@@ -71,6 +78,11 @@ account2.balance = 50000
 
 print(account1.balance)   // 50000 — 원본도 바뀌었습니다!
 print(account2.balance)   // 50000 — 같은 객체를 보고 있으니까요
+```
+
+```output
+50000
+50000
 ```
 
 클래스는 **참조 타입(Reference Type)** 입니다. 변수에 대입하면 값을 복사하는 게 아니라, **같은 객체를 가리키는 참조(포인터)를 공유**합니다.
@@ -134,6 +146,11 @@ print(counter.count)   // 2
 
 counter.reset()
 print(counter.count)   // 0
+```
+
+```output
+2
+0
 ```
 
 > ⚠️ **흔한 오해**: "`let` 구조체에서 `mutating` 메서드를 호출할 수 있다" — 불가능합니다! `let`으로 선언한 구조체는 변경할 수 없으므로 `mutating` 메서드를 호출하면 컴파일 에러가 납니다.
@@ -256,6 +273,11 @@ let c = Account(owner: "민수", balance: 1000)
 
 print(a === b)   // true  — 같은 객체
 print(a === c)   // false — 값은 같지만 다른 객체
+```
+
+```output
+true
+false
 ```
 
 > 💡 **알고 계셨나요?**: Swift의 `String`은 struct입니다! C++이나 Java에서 문자열이 참조 타입인 것과 대조적이죠. 그래서 문자열을 함수에 넘겨도 원본이 변경될 걱정이 없습니다. 내부적으로는 Copy-On-Write 최적화로 성능도 챙겼어요.

@@ -23,7 +23,7 @@ SwiftUI에서 버튼을 만들 때 `Button("탭하세요") { /* 여기 */ }` 이
 
 > 💡 **비유**: 함수는 **자판기**입니다. 돈(매개변수)을 넣고 버튼을 누르면, 정해진 과정을 거쳐 음료(반환값)가 나옵니다. 한번 만들어 놓으면 누구든 같은 방식으로 사용할 수 있죠.
 
-```swift
+```run:swift
 // 기본 함수 정의
 func greet(name: String) -> String {
     return "안녕하세요, \(name)님!"
@@ -39,6 +39,11 @@ func printStars(count: Int) {
     print(stars)
 }
 printStars(count: 5)  // "⭐⭐⭐⭐⭐"
+```
+
+```output
+안녕하세요, 민수님!
+⭐⭐⭐⭐⭐
 ```
 
 ### 개념 2: 매개변수 레이블
@@ -67,6 +72,12 @@ orderCoffee(menu: "아메리카노")                // "Regular 아메리카노 
 orderCoffee(menu: "라떼", size: "Grande")      // "Grande 라떼 주문 완료!"
 ```
 
+```output
+지영에게: 내일 회의 있어요
+Regular 아메리카노 주문 완료!
+Grande 라떼 주문 완료!
+```
+
 > 💡 **알고 계셨나요?**: Swift의 매개변수 레이블은 **Objective-C**의 전통에서 왔습니다. Objective-C는 메서드 이름이 매우 길어서 `[string insertString:aString atIndex:loc]` 같은 형태였는데, Swift는 이 "읽히는 코드" 철학을 이어받으면서도 더 깔끔하게 만들었어요.
 
 ### 개념 3: 클로저 — 이름 없는 함수
@@ -88,6 +99,11 @@ let squareClosure = { (number: Int) -> Int in
 
 print(square(number: 5))       // 25
 print(squareClosure(5))        // 25
+```
+
+```output
+25
+25
 ```
 
 Swift에서는 클로저를 **점점 짧게 줄여 쓸 수 있습니다**. 이 축약 과정을 알아두면 다른 사람의 코드를 읽을 때 큰 도움이 됩니다.
@@ -123,15 +139,12 @@ let sorted5 = numbers.sorted { $0 < $1 }
 
 이 세 가지 함수는 컬렉션을 다루는 가장 우아한 방법입니다. for-in 반복문 없이도 강력한 데이터 처리가 가능해요.
 
-```swift
+```run:swift
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 // map: 모든 요소를 변환 — "각각에 대해 이렇게 바꿔줘"
 let doubled = numbers.map { $0 * 2 }
 print(doubled)      // [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
-
-let labels = numbers.map { "\($0)번" }
-print(labels)       // ["1번", "2번", ... "10번"]
 
 // filter: 조건에 맞는 요소만 선택 — "이 조건을 만족하는 것만 골라줘"
 let evens = numbers.filter { $0 % 2 == 0 }
@@ -147,6 +160,13 @@ let result = numbers
     .map { $0 * $0 }           // 제곱
     .reduce(0, +)              // 전부 합산
 print(result)       // 220 (4+16+36+64+100)
+```
+
+```output
+[2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+[2, 4, 6, 8, 10]
+55
+220
 ```
 
 > 💡 **비유**: `map`은 **변환 공장** (원재료 → 제품), `filter`는 **품질 검사** (합격품만 통과), `reduce`는 **포장** (여러 개를 하나로 묶는 것)입니다.
