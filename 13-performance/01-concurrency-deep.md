@@ -225,7 +225,7 @@ func trackLocation() async {
 
 Swift 5.9부터 추가된 `makeStream`으로 더 간결하게 만들 수 있습니다.
 
-```swift
+```run:swift
 // makeStream으로 continuation을 따로 관리
 let (stream, continuation) = AsyncStream.makeStream(of: Int.self)
 

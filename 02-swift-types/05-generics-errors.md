@@ -25,7 +25,7 @@
 
 제네릭이 없다면, 타입마다 같은 함수를 반복 작성해야 합니다.
 
-```swift
+```run:swift
 // 제네릭 없이 — 타입마다 함수를 따로 만들어야 합니다
 func swapInts(_ a: inout Int, _ b: inout Int) {
     let temp = a; a = b; b = temp
@@ -62,7 +62,7 @@ print(s1, s2)  // "세계" "안녕"
 
 함수뿐 아니라 struct, class, enum도 제네릭으로 만들 수 있습니다.
 
-```swift
+```run:swift
 // 제네릭 스택 (LIFO: Last In, First Out)
 struct Stack<Element> {
     private var items: [Element] = []
@@ -103,7 +103,7 @@ B
 
 "아무 타입이나 다 되는 건 아니고, 특정 능력이 있는 타입만 허용"할 때 타입 제약을 사용합니다.
 
-```swift
+```run:swift
 // Comparable을 따르는 타입만 허용 — 비교할 수 있어야 최솟값을 찾으니까요
 func findMinimum<T: Comparable>(_ array: [T]) -> T? {
     guard var minimum = array.first else { return nil }
@@ -140,7 +140,7 @@ func printSorted<T: Comparable & CustomStringConvertible>(_ items: [T]) {
 
 > 💡 **비유**: 에러 처리는 **보험**입니다. 사고가 안 나면 좋지만, 혹시 사고가 나면 보험이 피해를 줄여주죠. 코드에서도 "실패할 수 있는 작업"에 대해 미리 대비해두는 겁니다.
 
-```swift
+```run:swift
 // 1단계: 에러 타입 정의 (enum + Error 프로토콜)
 enum LoginError: Error {
     case emptyUsername
@@ -185,7 +185,7 @@ do {
 
 에러를 처리하는 세 가지 방법:
 
-```swift
+```run:swift
 // 방법 1: do-try-catch — 에러를 직접 처리
 do {
     let token = try login(username: "", password: "1234")
@@ -215,7 +215,7 @@ print(token ?? "로그인 실패")   // "토큰-ABC123"
 
 `Result`는 [앞서 배운 enum](./04-enums-pattern.md)으로 만들어진 타입입니다. 에러를 **값으로 다룰 수 있게** 해줍니다.
 
-```swift
+```run:swift
 enum DataError: Error {
     case notFound
     case invalidFormat
@@ -268,7 +268,7 @@ do {
 
 제네릭과 에러 처리를 결합한 간단한 데이터 저장소를 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 저장소 에러 타입

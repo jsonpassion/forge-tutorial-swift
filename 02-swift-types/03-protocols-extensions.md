@@ -23,7 +23,7 @@ SwiftUI의 `View` 프로토콜, SwiftData의 `@Model`, `Codable`, `Hashable`, `E
 
 > 💡 **비유**: 프로토콜은 **자격증**입니다. "운전면허가 있다"고 하면, 그 사람이 남자든 여자든, 학생이든 직장인이든 상관없이 "운전할 수 있다"는 능력이 보장되죠. 프로토콜도 마찬가지로, 타입이 특정 능력을 갖추고 있음을 보증합니다.
 
-```swift
+```run:swift
 // 프로토콜 정의 — "이런 것들을 할 수 있어야 한다"는 약속
 protocol Describable {
     var description: String { get }     // 읽기 가능한 프로퍼티
@@ -83,7 +83,7 @@ for item in items {
 
 > 💡 **비유**: 익스텐션은 **리모델링**입니다. 이미 지어진 집(기존 타입)에 방을 추가하거나 새 기능을 덧붙이는 것처럼, 원래 코드를 수정하지 않고 기능을 확장합니다.
 
-```swift
+```run:swift
 // Int에 새로운 기능 추가
 extension Int {
     var isEven: Bool {
@@ -118,7 +118,7 @@ true
 안녕!
 ```
 
-```swift
+```run:swift
 // String에 유용한 기능 추가
 extension String {
     var trimmed: String {
@@ -144,7 +144,7 @@ true
 
 프로토콜과 익스텐션을 결합하면, 프로토콜에 **기본 구현(default implementation)** 을 제공할 수 있습니다. 이게 Swift 프로토콜의 진짜 무기입니다.
 
-```swift
+```run:swift
 protocol Greetable {
     var name: String { get }
     func greet() -> String
@@ -187,7 +187,7 @@ print(teacher.greet())   // "안녕하세요, 김영희 선생님입니다." —
 
 Swift 표준 라이브러리에는 매우 유용한 프로토콜들이 내장되어 있습니다.
 
-```swift
+```run:swift
 // Equatable — == 비교 가능
 struct Point: Equatable {
     var x: Double
@@ -204,7 +204,7 @@ print(p1 == p2)   // true — 자동 비교
 true
 ```
 
-```swift
+```run:swift
 // Comparable — <, >, <=, >= 비교 가능
 struct Score: Comparable {
     var value: Int
@@ -241,7 +241,7 @@ print(jsonString)  // {"name":"민수","age":25,"email":"minsu@email.com"}
 
 여러 프로토콜을 동시에 요구하거나, 프로토콜 타입을 다룰 때의 문법입니다.
 
-```swift
+```run:swift
 protocol Identifiable {
     var id: String { get }
 }
@@ -281,7 +281,7 @@ func makeGreeting() -> some Describable {
 
 프로토콜을 활용한 간단한 도형 계산기를 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 도형 프로토콜 정의

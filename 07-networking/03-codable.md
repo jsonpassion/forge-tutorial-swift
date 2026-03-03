@@ -36,7 +36,7 @@ let json = """
 - **Decodable**: JSON → Swift (디코딩, 서버 응답 파싱)
 - **Encodable**: Swift → JSON (인코딩, 서버에 데이터 전송)
 
-```swift
+```run:swift
 // Codable = Decodable & Encodable
 struct User: Codable {
     let id: Int
@@ -141,7 +141,7 @@ let user = try decoder.decode(UserProfileSimple.self, from: jsonData)
 
 서버 응답에 특정 필드가 없거나 `null`인 경우를 처리하는 방법:
 
-```swift
+```run:swift
 struct Article: Codable {
     let id: Int
     let title: String

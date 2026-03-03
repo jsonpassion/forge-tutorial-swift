@@ -25,7 +25,7 @@ Swift는 **ARC(Automatic Reference Counting)**로 메모리를 관리합니다. 
 
 참조 타입(class)만 ARC의 관리 대상입니다. 값 타입(struct, enum)은 복사되므로 참조 카운트가 필요 없어요.
 
-```swift
+```run:swift
 class Person {
     let name: String
 
@@ -92,7 +92,7 @@ team = nil      // deinit 호출 안 됨 ⚠️
 
 순환 참조의 한쪽을 `weak` 또는 `unowned`로 바꾸면 됩니다.
 
-```swift
+```run:swift
 // ✅ weak으로 순환 참조 해결
 class Employee {
     let name: String
@@ -118,6 +118,11 @@ team?.leader = employee
 
 employee = nil  // "김개발 해제됨" ✅
 team = nil      // "팀 iOS팀 해제됨" ✅
+```
+
+```output
+김개발 해제됨
+팀 iOS팀 해제됨
 ```
 
 | 키워드 | 참조 카운트 | nil 가능 | 사용 시점 |

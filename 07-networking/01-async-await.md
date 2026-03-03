@@ -48,7 +48,7 @@ func fetchData() async -> Data {
 
 비동기 함수를 선언하고 호출하는 방법:
 
-```swift
+```run:swift
 // 1. async 함수 선언 — 반환 타입 앞에 async 키워드
 func fetchUserName() async -> String {
     // 시간이 걸리는 작업을 시뮬레이션
@@ -164,7 +164,7 @@ struct SearchView: View {
 
 여러 비동기 작업을 **순차적**이 아닌 **동시에** 실행하고 싶다면 `async let`을 사용합니다:
 
-```swift
+```run:swift
 // 순차 실행 — 총 3초 소요
 func loadSequentially() async {
     let user = await fetchUser()       // 1초

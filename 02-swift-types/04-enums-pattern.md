@@ -23,7 +23,7 @@ Swift 앱을 만들다 보면 "몇 가지 정해진 경우 중 하나"를 표현
 
 > 💡 **비유**: 열거형은 **자판기의 버튼**입니다. 커피, 녹차, 주스 — 정해진 선택지만 있고, "피자"를 누를 수는 없죠. 유효한 값만 허용하는 것이 enum의 핵심입니다.
 
-```swift
+```run:swift
 // 기본 열거형 정의
 enum Direction {
     case north
@@ -60,7 +60,7 @@ case .west:  print("⬅️ 서쪽")
 
 각 case에 고정된 값을 부여할 수 있습니다.
 
-```swift
+```run:swift
 // String 원시 값
 enum HTTPMethod: String {
     case get = "GET"
@@ -97,7 +97,7 @@ POST
 
 연관 값을 쓰면 각 case가 **서로 다른 타입과 개수의 데이터**를 가질 수 있습니다.
 
-```swift
+```run:swift
 // 네트워크 응답 결과
 enum NetworkResult {
     case success(data: Data, statusCode: Int)
@@ -122,7 +122,7 @@ case .loading(let progress):
 ✅ 성공! 상태 코드: 200, 데이터: 0바이트
 ```
 
-```swift
+```run:swift
 // 실전 활용: 결제 수단
 enum PaymentMethod {
     case creditCard(number: String, expiry: String)
@@ -156,7 +156,7 @@ processPayment(.creditCard(number: "1234567890123456", expiry: "12/26"), amount:
 
 `switch` 말고도 다양한 방법으로 enum을 매칭할 수 있습니다.
 
-```swift
+```run:swift
 enum AppState {
     case loading
     case loaded(items: [String])
@@ -205,7 +205,7 @@ for case .success(_, let code) in results {
 
 Swift의 enum은 struct처럼 메서드와 연산 프로퍼티를 가질 수 있습니다.
 
-```swift
+```run:swift
 enum Compass {
     case north, south, east, west
 
@@ -240,7 +240,7 @@ print("\(dir.emoji) 반대 방향: \(dir.opposite().emoji)")
 ➡️ 반대 방향: ⬅️
 ```
 
-```swift
+```run:swift
 // CaseIterable — 모든 case를 순회
 enum Difficulty: String, CaseIterable {
     case easy = "쉬움"
@@ -267,7 +267,7 @@ for difficulty in Difficulty.allCases {
 
 자판기 시뮬레이터를 만들어 봅시다.
 
-```swift
+```run:swift
 import Foundation
 
 // 음료 종류
@@ -381,7 +381,7 @@ enum Optional<Wrapped> {
 
 그래서 옵셔널에 대해 switch를 쓸 수 있는 거예요:
 
-```swift
+```run:swift
 let name: String? = "민수"
 
 switch name {
