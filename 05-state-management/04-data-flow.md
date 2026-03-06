@@ -91,13 +91,13 @@ SwiftUI의 데이터 흐름은 기본적으로 **위에서 아래로** 흐릅니
 
 ```mermaid
 flowchart TD
-    subgraph 데이터흐름["📦 데이터 흐름 (위 → 아래)"]
+    subgraph 데이터흐름["📦 데이터 흐름 (위 -> 아래)"]
         direction TB
-        A["부모 뷰\n@State / @Observable"] -->|"프로퍼티 전달"| B["자식 뷰\n읽기 전용"]
-        A -->|"$binding 전달"| C["자식 뷰\n@Binding"]
-        A -->|".environment()"| D["하위 뷰 계층\n@Environment"]
+        A["부모 뷰<br/>@State / @Observable"] -->|"프로퍼티 전달"| B["자식 뷰<br/>읽기 전용"]
+        A -->|"$binding 전달"| C["자식 뷰<br/>@Binding"]
+        A -->|".environment()"| D["하위 뷰 계층<br/>@Environment"]
     end
-    subgraph 이벤트흐름["⚡ 이벤트 흐름 (아래 → 위)"]
+    subgraph 이벤트흐름["⚡ 이벤트 흐름 (아래 -> 위)"]
         direction BT
         E["버튼 탭 / 사용자 입력"] -->|"@Binding 값 변경"| F["부모 상태 업데이트"]
         G["클로저 콜백 호출"] -->|"onAction()"| F
@@ -207,16 +207,16 @@ struct TodoAppView: View {
 
 ```mermaid
 flowchart TD
-    Q1{"이 뷰가 데이터를\n만드나요?"}
-    Q1 -->|"예"| Q2{"값 타입?\n참조 타입?"}
+    Q1{"이 뷰가 데이터를<br/>만드나요?"}
+    Q1 -->|"예"| Q2{"값 타입?<br/>참조 타입?"}
     Q1 -->|"아니오"| Q4{"어떻게 받나요?"}
     Q2 -->|"값 타입"| R1["@State"]
-    Q2 -->|"참조 타입"| R2["@State +\n@Observable 클래스"]
-    R1 --> Q3{"자식에게\n전달 필요?"}
+    Q2 -->|"참조 타입"| R2["@State +<br/>@Observable 클래스"]
+    R1 --> Q3{"자식에게<br/>전달 필요?"}
     R2 --> Q3
     Q3 -->|"읽기만"| R3["일반 프로퍼티"]
-    Q3 -->|"읽기+쓰기\n값 타입"| R4["$로 @Binding 전달"]
-    Q3 -->|"읽기+쓰기\n참조 타입"| R5["객체 전달 +\n@Bindable"]
+    Q3 -->|"읽기+쓰기<br/>값 타입"| R4["$로 @Binding 전달"]
+    Q3 -->|"읽기+쓰기<br/>참조 타입"| R5["객체 전달 +<br/>@Bindable"]
     Q4 -->|"부모가 직접 전달"| Q5{"타입은?"}
     Q4 -->|"뷰 계층 어디서든"| R6["@Environment"]
     Q5 -->|"값 타입"| R7["@Binding"]
@@ -330,7 +330,7 @@ sequenceDiagram
     participant R as 렌더러
     U->>V: 버튼 탭
     V->>S: 상태 변경 (count += 1)
-    S-->>V: 변경 감지 → body 재호출
+    S-->>V: 변경 감지 -> body 재호출
     Note over V: _printChanges()로<br/>변경 원인 확인
     V->>D: 새 뷰 트리 전달
     D->>D: 이전 트리와 비교 (diff)
@@ -506,15 +506,15 @@ struct RecipeAppView: View {
 ```mermaid
 graph TD
     subgraph App["RecipeAppView"]
-        Store["@State RecipeStore\n(Source of Truth)"]
+        Store["@State RecipeStore<br/>(Source of Truth)"]
     end
     subgraph List["RecipeListView"]
         Env["@Environment RecipeStore"]
-        Search["@State searchText\n(로컬 상태)"]
+        Search["@State searchText<br/>(로컬 상태)"]
     end
     subgraph Row["RecipeRowView"]
-        Recipe["let recipe: Recipe\n(값 전달)"]
-        Callback["onToggleFavorite\n(클로저 콜백)"]
+        Recipe["let recipe: Recipe<br/>(값 전달)"]
+        Callback["onToggleFavorite<br/>(클로저 콜백)"]
     end
     Store -->|".environment()"| Env
     Env -->|"필요한 값만 전달"| Recipe
@@ -725,7 +725,7 @@ flowchart TD
         E2[".environment(showTimestamps)"]
     end
     subgraph ListView["MemoRowView"]
-        LM["let memo: Memo\n(값만 전달)"]
+        LM["let memo: Memo<br/>(값만 전달)"]
         LP["onPin 클로저"]
         LE["@Environment showTimestamps"]
     end

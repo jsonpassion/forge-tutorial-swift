@@ -63,14 +63,14 @@ struct ProductCard: View {
 ```mermaid
 flowchart TD
     subgraph COMBINE[".combine — 하나로 합침"]
-        C1["카드 뷰"] --> C2["VoiceOver 읽기:\n'상품명, 가격 10000원'"]
+        C1["카드 뷰"] --> C2["VoiceOver 읽기:<br/>'상품명, 가격 10000원'"]
     end
     subgraph CONTAIN[".contain — 개별 탐색"]
         D1["카드 뷰"] --> D2["VoiceOver: '상품명'"]
         D1 --> D3["VoiceOver: '가격 10000원'"]
     end
     subgraph IGNORE[".ignore — 자식 무시"]
-        E1["카드 뷰"] --> E2["직접 지정한\naccessibilityLabel만 읽기"]
+        E1["카드 뷰"] --> E2["직접 지정한<br/>accessibilityLabel만 읽기"]
     end
 ```
 
@@ -96,6 +96,20 @@ struct RatingView: View {
 ```
 
 ### 개념 2: Dynamic Type — 글꼴 크기 대응
+
+> 📊 **그림 4**: Dynamic Type 스케일링 흐름 — 시스템 설정에서 뷰 렌더링까지
+
+```mermaid
+flowchart LR
+    A["사용자 설정<br/>글꼴 크기 변경"] --> B["시스템 환경 변수<br/>dynamicTypeSize"]
+    B --> C{"뷰 타입"}
+    C -->|"텍스트 스타일<br/>.body, .headline"| D["자동 스케일링"]
+    C -->|"고정 크기<br/>.system(size: 16)"| E["스케일링 안 됨"]
+    C -->|"@ScaledMetric"| F["비율에 맞춰<br/>커스텀 스케일링"]
+    D --> G["적응형 레이아웃"]
+    F --> G
+```
+
 
 > 💡 **비유**: Dynamic Type은 **고무밴드 레이아웃**입니다. 글씨를 키워도 줄어도 레이아웃이 자연스럽게 늘어나거나 줄어들죠.
 
@@ -144,12 +158,12 @@ struct IconWithText: View {
 
 ```mermaid
 flowchart LR
-    A["Swift 코드\nText('환영합니다')"] -->|"자동 추출"| B["String Catalog\n(.xcstrings)"]
+    A["Swift 코드<br/>Text('환영합니다')"] -->|"자동 추출"| B["String Catalog<br/>(.xcstrings)"]
     B -->|"번역 입력"| C["언어별 번역"]
     C --> D["🇰🇷 한국어"]
     C --> E["🇺🇸 English"]
     C --> F["🇯🇵 日本語"]
-    D --> G["빌드 시\n로케일 자동 선택"]
+    D --> G["빌드 시<br/>로케일 자동 선택"]
     E --> G
     F --> G
     G --> H["현지화된 앱"]
@@ -207,15 +221,15 @@ Text(.greeting(name: username))  // 안전하게 인자 전달
 flowchart TD
     A["접근성 테스트"] --> B["수동 테스트"]
     A --> C["자동 테스트"]
-    B --> B1["VoiceOver로\n직접 탐색"]
-    B --> B2["Dynamic Type\n최대 크기 확인"]
-    B --> B3["Accessibility\nInspector 도구"]
-    C --> C1["performAccessibility\nAudit()"]
-    C --> C2["접근성 레이블\n값 검증"]
-    C1 --> D["접근성 문제\n자동 감지"]
+    B --> B1["VoiceOver로<br/>직접 탐색"]
+    B --> B2["Dynamic Type<br/>최대 크기 확인"]
+    B --> B3["Accessibility<br/>Inspector 도구"]
+    C --> C1["performAccessibility<br/>Audit()"]
+    C --> C2["접근성 레이블<br/>값 검증"]
+    C1 --> D["접근성 문제<br/>자동 감지"]
     C2 --> D
     B1 --> D
-    D --> E["Accessibility\nNutrition Labels 준비"]
+    D --> E["Accessibility<br/>Nutrition Labels 준비"]
 ```
 
 

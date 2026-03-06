@@ -28,8 +28,8 @@ flowchart LR
     subgraph WITH["테스트와 함께"]
         A2["코드 수정"] --> B2["Cmd+U 테스트 실행"]
         B2 --> C2{"통과?"}
-        C2 -->|"✅ Yes"| D2["안전하게 배포"]
-        C2 -->|"❌ No"| F2["즉시 수정"]
+        C2 -->|"O Yes"| D2["안전하게 배포"]
+        C2 -->|"X No"| F2["즉시 수정"]
         F2 --> A2
     end
 ```
@@ -154,8 +154,8 @@ func testFetchUser() async throws {
 
 ```mermaid
 flowchart TD
-    P["UserRepositoryProtocol\n(프로토콜)"] --> R["UserRepository\n(실제 구현)"]
-    P --> M["MockUserRepository\n(Mock 구현)"]
+    P["UserRepositoryProtocol<br/>(프로토콜)"] --> R["UserRepository<br/>(실제 구현)"]
+    P --> M["MockUserRepository<br/>(Mock 구현)"]
     VM["UserViewModel"] --> P
     R --> API["실제 서버 API"]
     M --> FD["가짜 데이터 반환"]

@@ -501,7 +501,7 @@ sequenceDiagram
     P->>C: ① 크기 제안 (Proposed Size)
     Note right of C: "200×200 공간이 있어"
     C->>C: ② 자기 크기 결정
-    Note right of C: Text → 콘텐츠 크기만<br/>Color → 제안 전부 사용
+    Note right of C: Text -> 콘텐츠 크기만<br/>Color -> 제안 전부 사용
     C->>P: ③ 결정된 크기 반환
     P->>P: ④ 자식 배치 (positioning)
     Note left of P: alignment 규칙에 따라<br/>자식의 위치를 결정

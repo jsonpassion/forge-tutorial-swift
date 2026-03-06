@@ -23,13 +23,13 @@
 
 ```mermaid
 graph TD
-    A["VersionedSchema\n(스키마 스냅샷)"] -->|"버전별 정의"| B["SchemaV1"]
+    A["VersionedSchema<br/>(스키마 스냅샷)"] -->|"버전별 정의"| B["SchemaV1"]
     A -->|"버전별 정의"| C["SchemaV2"]
     A -->|"버전별 정의"| D["SchemaV3"]
-    E["SchemaMigrationPlan\n(마이그레이션 계획)"] -->|"schemas 배열"| A
+    E["SchemaMigrationPlan<br/>(마이그레이션 계획)"] -->|"schemas 배열"| A
     E -->|"stages 배열"| F["MigrationStage"]
-    F --> G["lightweight\n(경량)"]
-    F --> H["custom\n(커스텀)"]
+    F --> G["lightweight<br/>(경량)"]
+    F --> H["custom<br/>(커스텀)"]
     E -->|"적용"| I["ModelContainer"]
 ```
 
@@ -174,7 +174,7 @@ struct MemoApp: App {
 ```mermaid
 flowchart TD
     A["스키마 변경 발생"] --> B{"변경 유형은?"}
-    B -->|"새 프로퍼티 추가\n(기본값 있음)"| C["경량 마이그레이션"]
+    B -->|"새 프로퍼티 추가<br/>(기본값 있음)"| C["경량 마이그레이션"]
     B -->|"새 모델 추가"| C
     B -->|"Optional로 변경"| C
     B -->|"프로퍼티 이름 변경"| D["커스텀 마이그레이션"]
@@ -183,8 +183,8 @@ flowchart TD
     B -->|"중복 데이터 제거"| D
     C --> E["MigrationStage.lightweight"]
     D --> F["MigrationStage.custom"]
-    F --> G["willMigrate 클로저\n(이전 버전 모델 사용)"]
-    F --> H["didMigrate 클로저\n(새 버전 모델 사용)"]
+    F --> G["willMigrate 클로저<br/>(이전 버전 모델 사용)"]
+    F --> H["didMigrate 클로저<br/>(새 버전 모델 사용)"]
 ```
 
 
@@ -287,8 +287,8 @@ static let migrateV2toV3 = MigrationStage.custom(
 
 ```mermaid
 flowchart LR
-    V1["V1\n초기 출시\nMemo: title, content"] -->|"경량 마이그레이션\n새 필드 추가"| V2["V2\nisPinned 추가\nTag 모델 추가"]
-    V2 -->|"커스텀 마이그레이션\n중복 태그 제거"| V3["V3\nTag에 unique 제약"]
+    V1["V1<br/>초기 출시<br/>Memo: title, content"] -->|"경량 마이그레이션<br/>새 필드 추가"| V2["V2<br/>isPinned 추가<br/>Tag 모델 추가"]
+    V2 -->|"커스텀 마이그레이션<br/>중복 태그 제거"| V3["V3<br/>Tag에 unique 제약"]
     style V1 fill:#f9f,stroke:#333
     style V2 fill:#bbf,stroke:#333
     style V3 fill:#bfb,stroke:#333

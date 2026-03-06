@@ -43,8 +43,8 @@ classDiagram
     }
     ActivityAttributes <|-- DeliveryAttributes : 준수
     DeliveryAttributes *-- ContentState : 내부 정의
-    note for DeliveryAttributes "정적 데이터\n생성 시 고정"
-    note for ContentState "동적 데이터\n실시간 업데이트"
+    note for DeliveryAttributes "정적 데이터<br/>생성 시 고정"
+    note for ContentState "동적 데이터<br/>실시간 업데이트"
 ```
 
 

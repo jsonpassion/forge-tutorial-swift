@@ -133,12 +133,12 @@ let concreteSize = proposal.replacingUnspecifiedDimensions(by: CGSize(width: 10,
 ```mermaid
 flowchart TD
     A["서브뷰 순회 시작"] --> B["서브뷰의 이상적 크기 측정"]
-    B --> C{"현재 줄에\n들어가는가?"}
+    B --> C{"현재 줄에<br/>들어가는가?"}
     C -- 예 --> D["현재 x 위치에 배치"]
-    C -- 아니오 --> E["다음 줄로 이동\ny += lineHeight + spacing\nx = 0"]
+    C -- 아니오 --> E["다음 줄로 이동<br/>y += lineHeight + spacing<br/>x = 0"]
     E --> D
-    D --> F["x += 너비 + spacing\nlineHeight 갱신"]
-    F --> G{"다음 서브뷰\n있는가?"}
+    D --> F["x += 너비 + spacing<br/>lineHeight 갱신"]
+    F --> G{"다음 서브뷰<br/>있는가?"}
     G -- 예 --> B
     G -- 아니오 --> H["최종 크기 반환"]
 ```
@@ -254,12 +254,12 @@ struct TagChip: View {
 
 ```mermaid
 flowchart LR
-    S["상태 변경\n(layoutMode)"] --> AL["AnyLayout\n타입 소거 래퍼"]
+    S["상태 변경<br/>(layoutMode)"] --> AL["AnyLayout<br/>타입 소거 래퍼"]
     AL --> V["VStackLayout"]
     AL --> H["HStackLayout"]
     AL --> R["RadialLayout"]
     AL --> F["FlowLayout"]
-    V --> CH["자식 뷰들\n(정체성 유지)"]
+    V --> CH["자식 뷰들<br/>(정체성 유지)"]
     H --> CH
     R --> CH
     F --> CH
@@ -325,13 +325,13 @@ struct AdaptiveLayoutDemo: View {
 
 ```mermaid
 flowchart TD
-    S["사용 가능한 공간 확인"] --> A{"후보 1\n들어가는가?"}
-    A -- 예 --> R1["후보 1 표시\n아이콘 + 전체 텍스트 + 화살표"]
-    A -- 아니오 --> B{"후보 2\n들어가는가?"}
-    B -- 예 --> R2["후보 2 표시\n아이콘 + 축약 텍스트"]
-    B -- 아니오 --> C{"후보 3\n들어가는가?"}
-    C -- 예 --> R3["후보 3 표시\n아이콘만"]
-    C -- 아니오 --> R4["마지막 후보\n무조건 표시"]
+    S["사용 가능한 공간 확인"] --> A{"후보 1<br/>들어가는가?"}
+    A -- 예 --> R1["후보 1 표시<br/>아이콘 + 전체 텍스트 + 화살표"]
+    A -- 아니오 --> B{"후보 2<br/>들어가는가?"}
+    B -- 예 --> R2["후보 2 표시<br/>아이콘 + 축약 텍스트"]
+    B -- 아니오 --> C{"후보 3<br/>들어가는가?"}
+    C -- 예 --> R3["후보 3 표시<br/>아이콘만"]
+    C -- 아니오 --> R4["마지막 후보<br/>무조건 표시"]
     style R1 fill:#d1fae5,stroke:#059669
     style R2 fill:#fef3c7,stroke:#d97706
     style R3 fill:#fee2e2,stroke:#dc2626

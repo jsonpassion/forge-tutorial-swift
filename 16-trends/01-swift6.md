@@ -96,9 +96,9 @@ flowchart LR
     subgraph Main["@MainActor 도메인"]
         M1["UI 상태"]
     end
-    도메인A -- "Sendable 값만\nawait로 전달" --> 도메인B
-    도메인B -- "Sendable 값만\nawait로 전달" --> Main
-    Main -- "Sendable 값만\nawait로 전달" --> 도메인A
+    도메인A -- "Sendable 값만<br/>await로 전달" --> 도메인B
+    도메인B -- "Sendable 값만<br/>await로 전달" --> Main
+    Main -- "Sendable 값만<br/>await로 전달" --> 도메인A
 ```
 
 
@@ -167,11 +167,11 @@ actor DataManager {
 
 ```mermaid
 flowchart TD
-    S1["1단계: Swift 5 모드 유지\nStrict Concurrency 경고 활성화"] --> S2["2단계: 모듈별 경고 수정\n말단 모듈 → 앱 타겟 순서"]
-    S2 --> S3["3단계: Swift 6 모드 전환\n경고 → 에러로 승격"]
+    S1["1단계: Swift 5 모드 유지<br/>Strict Concurrency 경고 활성화"] --> S2["2단계: 모듈별 경고 수정<br/>말단 모듈 -> 앱 타겟 순서"]
+    S2 --> S3["3단계: Swift 6 모드 전환<br/>경고 -> 에러로 승격"]
     S1 -.- N1["안전: 기존 동작 유지"]
-    S2 -.- N2["@MainActor, actor,\nSendable 적용"]
-    S3 -.- N3["데이터 경쟁\n컴파일 타임 차단"]
+    S2 -.- N2["@MainActor, actor,<br/>Sendable 적용"]
+    S3 -.- N3["데이터 경쟁<br/>컴파일 타임 차단"]
 ```
 
 
@@ -221,13 +221,13 @@ actor NetworkManager {
 ```mermaid
 stateDiagram-v2
     [*] --> GCD: ~2014
-    GCD: GCD/NSOperation\n수동 스레드 관리
+    GCD: GCD/NSOperation<br/>수동 스레드 관리
     GCD --> AsyncAwait: WWDC 2021
-    AsyncAwait: async/await + actor\n구조적 동시성 도입
+    AsyncAwait: async/await + actor<br/>구조적 동시성 도입
     AsyncAwait --> Swift6: 2024.09
-    Swift6: Swift 6.0 Strict Concurrency\n데이터 경쟁 = 컴파일 에러
+    Swift6: Swift 6.0 Strict Concurrency<br/>데이터 경쟁 = 컴파일 에러
     Swift6 --> Swift62: 2025 (Xcode 26)
-    Swift62: Swift 6.2 Approachable\n기본 @MainActor + @concurrent
+    Swift62: Swift 6.2 Approachable<br/>기본 @MainActor + @concurrent
 ```
 
 
@@ -294,11 +294,11 @@ flowchart TD
         A1["모든 코드"] --> A2{"격리 지정?"}
         A2 -- "@MainActor" --> A3["메인 스레드"]
         A2 -- "actor" --> A4["자체 격리"]
-        A2 -- "미지정" --> A5["nonisolated\n(임의 스레드)"]
+        A2 -- "미지정" --> A5["nonisolated<br/>(임의 스레드)"]
     end
     subgraph V62["Swift 6.2 모델"]
         direction TB
-        B1["모든 코드"] --> B2["기본: @MainActor\n(메인 스레드)"]
+        B1["모든 코드"] --> B2["기본: @MainActor<br/>(메인 스레드)"]
         B2 -- "@concurrent 명시" --> B3["백그라운드 스레드"]
         B2 -- "actor 선언" --> B4["자체 격리"]
     end

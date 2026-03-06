@@ -44,9 +44,9 @@ graph TD
 
 ```mermaid
 flowchart LR
-    A["Text\n'안녕하세요'"] --> B[".font(.title)\n폰트 적용"]
-    B --> C[".foregroundStyle(.blue)\n색상 적용"]
-    C --> D[".padding()\n여백 추가"]
+    A["Text<br/>'안녕하세요'"] --> B[".font(.title)<br/>폰트 적용"]
+    B --> C[".foregroundStyle(.blue)<br/>색상 적용"]
+    C --> D[".padding()<br/>여백 추가"]
     D --> E["최종 뷰"]
     style A fill:#e8f5e9
     style E fill:#e3f2fd
@@ -287,9 +287,9 @@ stateDiagram-v2
     empty --> failure: 네트워크 오류 / 잘못된 URL
     success --> [*]: 이미지 표시
     failure --> [*]: 에러 UI 표시
-    note right of empty: ProgressView\n(로딩 표시)
-    note right of success: image\n(.resizable 등 적용)
-    note right of failure: 대체 아이콘\n(exclamationmark)
+    note right of empty: ProgressView<br/>(로딩 표시)
+    note right of success: image<br/>(.resizable 등 적용)
+    note right of failure: 대체 아이콘<br/>(exclamationmark)
 ```
 
 

@@ -156,10 +156,10 @@ let sorted5 = numbers.sorted { $0 < $1 }
 
 ```mermaid
 flowchart TD
-    A["1단계: 전체 문법\n{ (a: Int, b: Int) -> Bool in return a < b }"] --> B["2단계: 타입 추론\n{ a, b in return a < b }"]
-    B --> C["3단계: 암시적 반환\n{ a, b in a < b }"]
-    C --> D["4단계: 단축 인자\n{ $0 < $1 }"]
-    D --> E["5단계: 후행 클로저\n.sorted { $0 < $1 }"]
+    A["1단계: 전체 문법<br/>{ (a: Int, b: Int) -> Bool in return a < b }"] --> B["2단계: 타입 추론<br/>{ a, b in return a < b }"]
+    B --> C["3단계: 암시적 반환<br/>{ a, b in a < b }"]
+    C --> D["4단계: 단축 인자<br/>{ $0 < $1 }"]
+    D --> E["5단계: 후행 클로저<br/>.sorted { $0 < $1 }"]
     style A fill:#e3f2fd,color:#000
     style E fill:#c8e6c9,color:#000
 ```
@@ -207,12 +207,12 @@ print(result)       // 220 (4+16+36+64+100)
 
 ```mermaid
 flowchart LR
-    A["원본 배열\n[1,2,3,4,5]"] --> B["filter\n조건 필터링"]
-    B --> C["[2, 4]\n짝수만"]
-    C --> D["map\n요소 변환"]
-    D --> E["[4, 16]\n제곱"]
-    E --> F["reduce\n하나로 합침"]
-    F --> G["20\n최종 값"]
+    A["원본 배열<br/>[1,2,3,4,5]"] --> B["filter<br/>조건 필터링"]
+    B --> C["[2, 4]<br/>짝수만"]
+    C --> D["map<br/>요소 변환"]
+    D --> E["[4, 16]<br/>제곱"]
+    E --> F["reduce<br/>하나로 합침"]
+    F --> G["20<br/>최종 값"]
     style B fill:#ffcc80,color:#000
     style D fill:#90caf9,color:#000
     style F fill:#a5d6a7,color:#000

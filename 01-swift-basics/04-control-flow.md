@@ -25,12 +25,12 @@
 flowchart TD
     A["제어 흐름"] --> B["조건문"]
     A --> C["반복문"]
-    B --> D["if/else\n기본 분기"]
-    B --> E["guard\n조기 탈출"]
-    B --> F["switch\n패턴 매칭"]
-    C --> G["for-in\n컬렉션 순회"]
-    C --> H["while\n조건 반복"]
-    C --> I["repeat-while\n최소 1회 실행"]
+    B --> D["if/else<br/>기본 분기"]
+    B --> E["guard<br/>조기 탈출"]
+    B --> F["switch<br/>패턴 매칭"]
+    C --> G["for-in<br/>컬렉션 순회"]
+    C --> H["while<br/>조건 반복"]
+    C --> I["repeat-while<br/>최소 1회 실행"]
 ```
 
 
@@ -108,7 +108,7 @@ flowchart LR
     end
     subgraph if문
         A2["if 조건 확인"] --> B2{"조건 충족?"}
-        B2 -->|true| C2["성공 로직\n(들여쓰기 깊어짐)"]
+        B2 -->|true| C2["성공 로직<br/>(들여쓰기 깊어짐)"]
         B2 -->|false| D2["실패 처리"]
     end
 ```
@@ -148,11 +148,11 @@ processOrder(itemCount: 3)   // "✅ 3개 상품을 주문합니다."
 ```mermaid
 flowchart TD
     A["switch 값 입력"] --> B{"case 1 매칭?"}
-    B -->|true| C["case 1 실행 → 자동 종료"]
+    B -->|true| C["case 1 실행 -> 자동 종료"]
     B -->|false| D{"case 2 매칭?"}
-    D -->|true| E["case 2 실행 → 자동 종료"]
+    D -->|true| E["case 2 실행 -> 자동 종료"]
     D -->|false| F{"case 3 매칭?"}
-    F -->|true| G["case 3 실행 → 자동 종료"]
+    F -->|true| G["case 3 실행 -> 자동 종료"]
     F -->|false| H["default 실행"]
     style C fill:#2d6a4f
     style E fill:#2d6a4f

@@ -25,8 +25,8 @@ Swift는 이제 iPhone 앱만을 위한 언어가 아닙니다. **서버**, **�
 ```mermaid
 flowchart LR
     A["Package.swift"] --> B["의존성 선언"]
-    B --> C["Swift Package Index\n10,000+ 패키지"]
-    C --> D["버전 해석\n(Semantic Versioning)"]
+    B --> C["Swift Package Index<br/>10,000+ 패키지"]
+    C --> D["버전 해석<br/>(Semantic Versioning)"]
     D --> E["소스 다운로드"]
     E --> F["컴파일 & 링크"]
     F --> G["앱 바이너리"]
@@ -80,10 +80,10 @@ let package = Package(
 
 ```mermaid
 flowchart TD
-    A["공유 Swift 패키지\nCodable 모델"] --> B["iOS 앱\n(SwiftUI)"]
-    A --> C["서버\n(Vapor / Hummingbird)"]
+    A["공유 Swift 패키지<br/>Codable 모델"] --> B["iOS 앱<br/>(SwiftUI)"]
+    A --> C["서버<br/>(Vapor / Hummingbird)"]
     B <-->|"JSON 통신"| C
-    C --> D["데이터베이스\n(PostgreSQL)"]
+    C --> D["데이터베이스<br/>(PostgreSQL)"]
     C --> E["외부 API"]
 ```
 
@@ -137,12 +137,12 @@ Swift의 ARC(자동 참조 카운팅)가 Java의 GC(가비지 컬렉션) 대비 
 
 ```mermaid
 graph TD
-    S["Swift 컴파일러"] --> A["Apple 플랫폼\niOS / macOS / visionOS"]
-    S --> B["Linux\n서버 / CLI"]
-    S --> C["Windows\n성장 중"]
-    S --> D["WebAssembly\nTier-1 (6.1~)"]
-    S --> E["Embedded\nSTM32 / ESP32"]
-    S --> F["Android\nSDK 프리뷰"]
+    S["Swift 컴파일러"] --> A["Apple 플랫폼<br/>iOS / macOS / visionOS"]
+    S --> B["Linux<br/>서버 / CLI"]
+    S --> C["Windows<br/>성장 중"]
+    S --> D["WebAssembly<br/>Tier-1 (6.1~)"]
+    S --> E["Embedded<br/>STM32 / ESP32"]
+    S --> F["Android<br/>SDK 프리뷰"]
     style A fill:#34C759,color:#fff
     style B fill:#34C759,color:#fff
     style C fill:#FF9500,color:#fff

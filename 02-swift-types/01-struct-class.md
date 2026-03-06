@@ -95,15 +95,15 @@ print(account2.balance)   // 50000 — 같은 객체를 보고 있으니까요
 flowchart LR
     subgraph 값타입["값 타입 (struct)"]
         direction TB
-        A1["var user1\n{name: 민수}"] -->|"var user2 = user1"| A2["var user2\n{name: 민수}"]
-        A2 -->|"user2.name = 지영"| A3["var user2\n{name: 지영}"]
+        A1["var user1<br/>{name: 민수}"] -->|"var user2 = user1"| A2["var user2<br/>{name: 민수}"]
+        A2 -->|"user2.name = 지영"| A3["var user2<br/>{name: 지영}"]
         A1 -.->|"원본 그대로"| A1
     end
     subgraph 참조타입["참조 타입 (class)"]
         direction TB
-        B1["let account1"] -->|"참조"| B3["힙 메모리\n{owner: 민수}"]
+        B1["let account1"] -->|"참조"| B3["힙 메모리<br/>{owner: 민수}"]
         B2["let account2"] -->|"같은 참조"| B3
-        B3 -->|"balance 변경"| B4["힙 메모리\n{balance: 50000}"]
+        B3 -->|"balance 변경"| B4["힙 메모리<br/>{balance: 50000}"]
     end
 ```
 
@@ -125,14 +125,14 @@ flowchart LR
 flowchart LR
     subgraph STACK["스택 Stack (빠름)"]
         direction TB
-        S1["user1: User\nname=민수, age=25"]
-        S2["user2: User\nname=지영, age=25"]
-        S3["account1: 참조 → 0x1A"]
-        S4["account2: 참조 → 0x1A"]
+        S1["user1: User<br/>name=민수, age=25"]
+        S2["user2: User<br/>name=지영, age=25"]
+        S3["account1: 참조 -> 0x1A"]
+        S4["account2: 참조 -> 0x1A"]
     end
     subgraph HEAP["힙 Heap (느림)"]
         direction TB
-        H1["0x1A: Account\nowner=민수\nbalance=50000\nrefCount=2"]
+        H1["0x1A: Account<br/>owner=민수<br/>balance=50000<br/>refCount=2"]
     end
     S3 -->|"참조"| H1
     S4 -->|"참조"| H1
@@ -173,8 +173,8 @@ stateDiagram-v2
 
     [*] --> normal: func description()
     [*] --> mut: mutating func increment()
-    normal --> readonly: self.count 읽기 ✅\nself.count = 1 ❌
-    mut --> replace: self.count += 1 ✅\n(내부적으로 self 재할당)
+    normal --> readonly: self.count 읽기 O<br/>self.count = 1 X
+    mut --> replace: self.count += 1 O<br/>(내부적으로 self 재할당)
 ```
 
 
@@ -218,18 +218,18 @@ Apple의 공식 가이드라인은 명확합니다: **기본적으로 struct를 
 
 ```mermaid
 flowchart TD
-    Q1{"여러 곳에서 같은 인스턴스를\n공유하고 수정해야 하나요?"}
+    Q1{"여러 곳에서 같은 인스턴스를<br/>공유하고 수정해야 하나요?"}
     Q1 -->|"예"| CLASS["class 사용"]
     Q1 -->|"아니오"| Q2{"상속이 필요한가요?"}
-    Q2 -->|"예"| Q3{"프로토콜로\n대체 가능한가요?"}
+    Q2 -->|"예"| Q3{"프로토콜로<br/>대체 가능한가요?"}
     Q3 -->|"예"| STRUCT["struct + protocol 사용"]
     Q3 -->|"아니오"| CLASS
-    Q2 -->|"아니오"| Q4{"Objective-C API와\n연동하나요?"}
+    Q2 -->|"아니오"| Q4{"Objective-C API와<br/>연동하나요?"}
     Q4 -->|"예"| CLASS
     Q4 -->|"아니오"| STRUCT
 
-    STRUCT["✅ struct 사용"]
-    CLASS["⚠️ class 사용"]
+    STRUCT["O struct 사용"]
+    CLASS["! class 사용"]
 
     style STRUCT fill:#34a853,color:#fff
     style CLASS fill:#fbbc04,color:#000

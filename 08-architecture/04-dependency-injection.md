@@ -26,12 +26,12 @@
 
 ```mermaid
 flowchart LR
-    subgraph before ["❌ 직접 생성"]
+    subgraph before ["X 직접 생성"]
         V1["ViewModel"] -->|직접 생성| R1["RealRepository"]
         R1 -->|직접 생성| N1["NetworkClient"]
         N1 -->|직접 생성| A1["AuthToken"]
     end
-    subgraph after ["✅ 의존성 주입"]
+    subgraph after ["O 의존성 주입"]
         EXT["외부(App/Test)"] -->|주입| V2["ViewModel"]
         EXT -->|주입| R2["Repository"]
         EXT -->|주입| N2["NetworkClient"]
@@ -133,11 +133,11 @@ SwiftUI의 `@Environment`는 뷰 계층 어디서든 의존성에 접근할 수 
 
 ```mermaid
 graph TD
-    APP["App\n.environment(repo)"] --> TAB["TabView"]
-    TAB --> LIST["ArticleListView\n@Environment 읽기 ✅"]
+    APP["App<br/>.environment(repo)"] --> TAB["TabView"]
+    TAB --> LIST["ArticleListView<br/>@Environment 읽기 O"]
     TAB --> SETTINGS["SettingsView"]
-    LIST --> DETAIL["DetailView\n@Environment 읽기 ✅"]
-    SETTINGS --> PROFILE["ProfileView\n@Environment 읽기 ✅"]
+    LIST --> DETAIL["DetailView<br/>@Environment 읽기 O"]
+    SETTINGS --> PROFILE["ProfileView<br/>@Environment 읽기 O"]
     style APP fill:#4CAF50,color:#fff
     style LIST fill:#2196F3,color:#fff
     style DETAIL fill:#2196F3,color:#fff

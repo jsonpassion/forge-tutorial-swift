@@ -29,9 +29,9 @@ Apple 생태계의 가장 큰 장점 중 하나는 기기 간 연속성입니다
 
 ```mermaid
 flowchart LR
-    A["1. Xcode Capability 추가\niCloud + Background Modes"] --> B["2. ModelConfiguration\ncloudKitDatabase 설정"]
-    B --> C["3. ModelContainer 생성\n앱에 연결"]
-    C --> D["✅ 자동 동기화 시작"]
+    A["1. Xcode Capability 추가<br/>iCloud + Background Modes"] --> B["2. ModelConfiguration<br/>cloudKitDatabase 설정"]
+    B --> C["3. ModelContainer 생성<br/>앱에 연결"]
+    C --> D["O 자동 동기화 시작"]
 ```
 
 
@@ -111,12 +111,12 @@ struct MemoApp: App {
 
 ```mermaid
 graph TD
-    A["CloudKit 호환 모델"] --> B["✅ 프로퍼티: 기본값 또는 Optional"]
-    A --> C["✅ 관계: 반드시 Optional"]
-    A --> D["✅ 삭제 규칙: cascade / nullify"]
-    A --> E["❌ @Attribute(.unique) 금지"]
-    A --> F["❌ .deny 삭제 규칙 금지"]
-    A --> G["❌ Non-optional 프로퍼티 금지"]
+    A["CloudKit 호환 모델"] --> B["O 프로퍼티: 기본값 또는 Optional"]
+    A --> C["O 관계: 반드시 Optional"]
+    A --> D["O 삭제 규칙: cascade / nullify"]
+    A --> E["X @Attribute(.unique) 금지"]
+    A --> F["X .deny 삭제 규칙 금지"]
+    A --> G["X Non-optional 프로퍼티 금지"]
 ```
 
 
@@ -251,7 +251,7 @@ sequenceDiagram
     participant iPad
     iPhone->>CloudKit서버: title = "회의록" (T1)
     iPad->>CloudKit서버: title = "미팅 노트" (T2)
-    Note over CloudKit서버: 충돌 감지!<br/>T2 > T1 → iPad 승리
+    Note over CloudKit서버: 충돌 감지!<br/>T2 > T1 -> iPad 승리
     CloudKit서버->>iPhone: title = "미팅 노트" (동기화)
     CloudKit서버->>iPad: 확인 완료
     Note over iPhone,iPad: 두 기기 모두<br/>"미팅 노트"로 통일

@@ -22,11 +22,11 @@ SwiftUI의 `@Binding`은 부모가 **미리 알고 있는** 값을 공유할 때
 
 ```mermaid
 flowchart LR
-    subgraph 일반["@Binding (부모→자식)"]
+    subgraph 일반["@Binding (부모->자식)"]
         P1["부모 뷰"] -->|"값 전달"| C1["자식 뷰"]
         C1 -->|"$binding 수정"| P1
     end
-    subgraph 프리퍼런스["PreferenceKey (자식→부모)"]
+    subgraph 프리퍼런스["PreferenceKey (자식->부모)"]
         C2["자식 뷰"] -->|"preference(key:value:)"| R["reduce로 취합"]
         R -->|"onPreferenceChange"| P2["부모 뷰"]
     end
@@ -48,7 +48,7 @@ sequenceDiagram
     C1->>R: preference(key: HeightKey, value: 50)
     C2->>R: preference(key: HeightKey, value: 80)
     R->>R: max(50, 80) = 80
-    R->>P: onPreferenceChange → 80
+    R->>P: onPreferenceChange -> 80
     P->>P: @State 업데이트
 ```
 
@@ -164,11 +164,11 @@ struct GeometryReaderDemo: View {
 
 ```mermaid
 flowchart TD
-    subgraph 위험["❌ 직접 사용"]
+    subgraph 위험["X 직접 사용"]
         GR1["GeometryReader"] --> V1["가용 공간 전체 차지"]
         V1 --> L1["레이아웃 깨짐"]
     end
-    subgraph 안전["✅ .background 안에 사용"]
+    subgraph 안전["O .background 안에 사용"]
         TV["원본 뷰"] --> BG[".background"]
         BG --> GR2["GeometryReader"]
         GR2 --> CL["Color.clear"]
@@ -284,13 +284,13 @@ struct ModernGeometryDemo: View {
 ```mermaid
 flowchart TD
     A["ScrollView
-.coordinateSpace(name: scroll)"] --> B["GeometryReader\n(height: 0 앵커)"]
+.coordinateSpace(name: scroll)"] --> B["GeometryReader<br/>(height: 0 앵커)"]
     B --> C["proxy.frame(in: .named(scroll)).minY"]
-    C --> D["ScrollOffsetKey\nPreferenceKey"]
+    C --> D["ScrollOffsetKey<br/>PreferenceKey"]
     D --> E["onPreferenceChange"]
     E --> F["@State scrollOffset 업데이트"]
     F --> G["headerOpacity 계산"]
-    G --> H["고정 헤더\n.opacity(headerOpacity)"]
+    G --> H["고정 헤더<br/>.opacity(headerOpacity)"]
 ```
 
 

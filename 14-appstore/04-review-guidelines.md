@@ -49,11 +49,11 @@ flowchart LR
 
 ```mermaid
 graph TD
-    A["App Store 심사"] --> B["1. Safety\n안전성"]
-    A --> C["2. Performance\n성능·완성도"]
-    A --> D["3. Business\n비즈니스·결제"]
-    A --> E["4. Design\n디자인·UX"]
-    A --> F["5. Legal\n법률·개인정보"]
+    A["App Store 심사"] --> B["1. Safety<br/>안전성"]
+    A --> C["2. Performance<br/>성능·완성도"]
+    A --> D["3. Business<br/>비즈니스·결제"]
+    A --> E["4. Design<br/>디자인·UX"]
+    A --> F["5. Legal<br/>법률·개인정보"]
     B --> B1["유해 콘텐츠 차단"]
     C --> C1["크래시·버그 검사"]
     D --> D1["인앱 구매 정책"]
@@ -120,12 +120,12 @@ graph TD
 
 ```mermaid
 flowchart TD
-    A["리젝 통보"] --> B["Resolution Center에서\n사유 확인"]
+    A["리젝 통보"] --> B["Resolution Center에서<br/>사유 확인"]
     B --> C{"수정 가능?"}
     C -->|예| D["문제 수정"]
     D --> E["답변 작성 + 재제출"]
     E --> F["재심사"]
-    C -->|"아니오\n(오해라고 판단)"| G["App Review Board\n이의 제기"]
+    C -->|"아니오<br/>(오해라고 판단)"| G["App Review Board<br/>이의 제기"]
     G --> H{"이의 결과"}
     H -->|승인| I["출시 허가"]
     H -->|기각| D

@@ -32,7 +32,7 @@
 flowchart LR
     subgraph OO["ObservableObject (이전)"]
         direction TB
-        P1["name 변경"] --> OW["objectWillChange\n전체 알림"]
+        P1["name 변경"] --> OW["objectWillChange<br/>전체 알림"]
         OW --> V1["뷰 A 업데이트"]
         OW --> V2["뷰 B 업데이트"]
         OW --> V3["뷰 C 업데이트"]
@@ -175,7 +175,7 @@ sequenceDiagram
 
     Note over V,S: 나중에 값 변경 시...
     S->>R: withMutation(keyPath: \.name)
-    R->>V: name이 바뀜 → 뷰 무효화
+    R->>V: name이 바뀜 -> 뷰 무효화
     V->>V: body 재계산
 ```
 
@@ -253,12 +253,12 @@ struct ParentView: View {
 
 ```mermaid
 flowchart TD
-    A["부모 뷰\n@State private var model"] -->|소유| M["@Observable 객체"]
-    A -->|"파라미터 전달"| B["자식 뷰 A\n@Bindable var model"]
-    A -->|"파라미터 전달"| C["자식 뷰 B\nvar model (읽기 전용)"]
-    A -->|".environment()"| D["깊은 자식 뷰\n@Environment 주입"]
-    B -->|"$model.property"| E["TextField, Toggle 등\n양방향 바인딩"]
-    C -->|"model.property"| F["Text 등\n읽기만"]
+    A["부모 뷰<br/>@State private var model"] -->|소유| M["@Observable 객체"]
+    A -->|"파라미터 전달"| B["자식 뷰 A<br/>@Bindable var model"]
+    A -->|"파라미터 전달"| C["자식 뷰 B<br/>var model (읽기 전용)"]
+    A -->|".environment()"| D["깊은 자식 뷰<br/>@Environment 주입"]
+    B -->|"$model.property"| E["TextField, Toggle 등<br/>양방향 바인딩"]
+    C -->|"model.property"| F["Text 등<br/>읽기만"]
     style A fill:#e8f0fe,stroke:#4285f4
     style M fill:#fff3cd,stroke:#ffc107
     style B fill:#d4edda,stroke:#28a745
@@ -474,9 +474,9 @@ struct ShoppingAppView: View {
 
 ```mermaid
 flowchart TD
-    S["ShoppingAppView\n@State cart = ShoppingCart()"] --> PL["ProductListView\n@Bindable var cart"]
-    S --> CV["CartView\n@Bindable var cart"]
-    PL -->|"cart.add(product)"| CART["ShoppingCart\n@Observable"]
+    S["ShoppingAppView<br/>@State cart = ShoppingCart()"] --> PL["ProductListView<br/>@Bindable var cart"]
+    S --> CV["CartView<br/>@Bindable var cart"]
+    PL -->|"cart.add(product)"| CART["ShoppingCart<br/>@Observable"]
     CV -->|"cart.remove / cart.clear"| CART
     CART -->|"items 변경 감지"| PL
     CART -->|"items, totalPrice 변경 감지"| CV

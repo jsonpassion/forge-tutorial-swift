@@ -71,7 +71,7 @@ flowchart TD
     D -- 아니오 --> F{"nil이면 어떻게?"}
     F -- 블록 안에서 처리 --> G["if let 바인딩"]
     F -- 함수에서 빠져나감 --> H["guard let 바인딩"]
-    F -- 절대 nil 아님 확신 --> I["! 강제 언래핑\n⚠️ 최후의 수단"]
+    F -- 절대 nil 아님 확신 --> I["! 강제 언래핑<br/>! 최후의 수단"]
 ```
 
 
@@ -161,7 +161,7 @@ flowchart LR
     B -- 예 --> C["Address 객체"]
     B -- 아니오 --> NIL1["nil 반환"]
     C -->|".zipCode?"| D{"zipCode 존재?"}
-    D -- 예 --> E["\"06100\""]
+    D -- 예 --> E["'06100'"]
     D -- 아니오 --> NIL2["nil 반환"]
     style NIL1 fill:#ff6b6b,color:#fff
     style NIL2 fill:#ff6b6b,color:#fff

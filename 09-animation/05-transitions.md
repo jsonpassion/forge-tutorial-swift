@@ -35,8 +35,8 @@ stateDiagram-v2
         [*] --> 확대뷰: 표시
         확대뷰: id=1, 큰 크기
     }
-    List --> Detail: 탭 → withAnimation\n위치/크기 보간
-    Detail --> List: 탭 → withAnimation\n역방향 보간
+    List --> Detail: 탭 -> withAnimation<br/>위치/크기 보간
+    Detail --> List: 탭 -> withAnimation<br/>역방향 보간
 ```
 
 
@@ -176,8 +176,8 @@ struct DetailZoomView: View {
 
 ```mermaid
 flowchart LR
-    A["topLeading\nphase.value = -1.0"] -->|스크롤 진입| B["identity\nphase.value = 0.0"]
-    B -->|스크롤 퇴장| C["bottomTrailing\nphase.value = 1.0"]
+    A["topLeading<br/>phase.value = -1.0"] -->|스크롤 진입| B["identity<br/>phase.value = 0.0"]
+    B -->|스크롤 퇴장| C["bottomTrailing<br/>phase.value = 1.0"]
     style A fill:#f9966b,color:#fff
     style B fill:#4CAF50,color:#fff
     style C fill:#f9966b,color:#fff
@@ -331,10 +331,10 @@ flowchart TD
     Q -->|SF Symbol 애니메이션| E["symbolEffect"]
     B -->|Yes| C[".navigationTransition(.zoom)"]
     B -->|No| A
-    A --- F["@Namespace + 같은 id\nif/else 전환 필수"]
-    C --- G[".matchedTransitionSource\n+ .navigationTransition"]
-    D --- H["phase.value로\n보간 효과 적용"]
-    E --- I[".bounce / .pulse\n.replace / .variableColor"]
+    A --- F["@Namespace + 같은 id<br/>if/else 전환 필수"]
+    C --- G[".matchedTransitionSource<br/>+ .navigationTransition"]
+    D --- H["phase.value로<br/>보간 효과 적용"]
+    E --- I[".bounce / .pulse<br/>.replace / .variableColor"]
 ```
 
 

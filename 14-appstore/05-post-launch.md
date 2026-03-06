@@ -54,9 +54,9 @@ App Store Connect의 App Analytics에서 확인할 수 있는 핵심 지표:
 flowchart TD
     A["앱 크래시 발생"] --> B["크래시 로그 수집"]
     B --> C{"감지 채널"}
-    C --> D["Xcode Organizer\n심볼리케이션 로그"]
-    C --> E["MetricKit\n24시간 주기 수집"]
-    C --> F["Firebase Crashlytics\n실시간 알림"]
+    C --> D["Xcode Organizer<br/>심볼리케이션 로그"]
+    C --> E["MetricKit<br/>24시간 주기 수집"]
+    C --> F["Firebase Crashlytics<br/>실시간 알림"]
     D --> G["원인 분석"]
     E --> G
     F --> G
@@ -119,11 +119,11 @@ class PerformanceReporter: NSObject, MXMetricManagerSubscriber {
 
 ```mermaid
 graph TD
-    A["App Store 검색 순위"] --> B["앱 이름\n가중치: ★★★"]
-    A --> C["부제목\n가중치: ★★★"]
-    A --> D["키워드 필드\n가중치: ★★"]
-    A --> E["리뷰/평점\n가중치: ★★"]
-    A --> F["설명\n가중치: ★(간접)"]
+    A["App Store 검색 순위"] --> B["앱 이름<br/>가중치: ★★★"]
+    A --> C["부제목<br/>가중치: ★★★"]
+    A --> D["키워드 필드<br/>가중치: ★★"]
+    A --> E["리뷰/평점<br/>가중치: ★★"]
+    A --> F["설명<br/>가중치: ★(간접)"]
     B --> G["전환율 영향"]
     C --> G
     F --> G
@@ -195,12 +195,12 @@ struct ContentView: View {
 
 ```mermaid
 flowchart LR
-    D1["Day 1\n1%"] --> D2["Day 2\n2%"]
-    D2 --> D3["Day 3\n5%"]
-    D3 --> D4["Day 4\n10%"]
-    D4 --> D5["Day 5\n20%"]
-    D5 --> D6["Day 6\n50%"]
-    D6 --> D7["Day 7\n100%"]
+    D1["Day 1<br/>1%"] --> D2["Day 2<br/>2%"]
+    D2 --> D3["Day 3<br/>5%"]
+    D3 --> D4["Day 4<br/>10%"]
+    D4 --> D5["Day 5<br/>20%"]
+    D5 --> D6["Day 6<br/>50%"]
+    D6 --> D7["Day 7<br/>100%"]
     D3 -.->|"크래시 급증 시"| STOP["배포 일시 중단"]
     STOP -.->|"핫픽스 후"| D3
 ```

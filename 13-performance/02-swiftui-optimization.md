@@ -35,9 +35,9 @@ SwiftUI는 뷰를 **두 가지 방법**으로 구분합니다.
 
 ```mermaid
 flowchart TD
-    A["상태 변경\n(@State, @Observable)"] --> D["해당 뷰 body 재호출"]
+    A["상태 변경<br/>(@State, @Observable)"] --> D["해당 뷰 body 재호출"]
     B["부모 파라미터 변경"] --> D
-    C["이벤트 소스\n(onReceive, onChange)"] --> D
+    C["이벤트 소스<br/>(onReceive, onChange)"] --> D
     D --> E{"이전 결과와 diff"}
     E -->|변경 있음| F["화면 다시 렌더링"]
     E -->|변경 없음| G["렌더링 건너뜀"]
@@ -85,10 +85,10 @@ struct ItemListView: View {
 
 ```mermaid
 flowchart LR
-    subgraph before["❌ 분해 전"]
-        P1["ProfileView\n(모든 상태)"] -->|name 변경| R1["전체 body 재계산"]
+    subgraph before["X 분해 전"]
+        P1["ProfileView<br/>(모든 상태)"] -->|name 변경| R1["전체 body 재계산"]
     end
-    subgraph after["✅ 분해 후"]
+    subgraph after["O 분해 후"]
         P2["ProfileView"] --> H["ProfileHeaderView"]
         P2 --> FC["FollowerCountView"]
         P2 --> EB["EditButtonView"]
@@ -165,7 +165,7 @@ struct FollowerCountView: View {
 ```mermaid
 flowchart TD
     subgraph old["ObservableObject"]
-        OO["UserSettings\nobjectWillChange"] -->|어떤 프로퍼티든 변경| V1["ThemeView 재계산"]
+        OO["UserSettings<br/>objectWillChange"] -->|어떤 프로퍼티든 변경| V1["ThemeView 재계산"]
         OO -->|어떤 프로퍼티든 변경| V2["FontView 재계산"]
         OO -->|어떤 프로퍼티든 변경| V3["NotificationView 재계산"]
     end
@@ -234,7 +234,7 @@ flowchart TD
     B --> C{"Equatable 준수?"}
     C -->|No| D["body 무조건 재호출"]
     C -->|Yes| E{"lhs == rhs?"}
-    E -->|같음| F["body 호출 건너뜀 ✅"]
+    E -->|같음| F["body 호출 건너뜀 O"]
     E -->|다름| G["body 재호출"]
 ```
 

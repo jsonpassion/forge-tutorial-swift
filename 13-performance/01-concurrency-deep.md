@@ -137,11 +137,11 @@ flowchart LR
         B1["var data = []"]
     end
     subgraph SAFE["Sendable 타입"]
-        S1["struct (값 타입) ✅"]
-        S2["final class + let ✅"]
+        S1["struct (값 타입) O"]
+        S2["final class + let O"]
     end
     subgraph UNSAFE["Non-Sendable"]
-        U1["class + var ❌"]
+        U1["class + var X"]
     end
     S1 -->|"경계 통과 가능"| ISO1
     S1 -->|"경계 통과 가능"| ISO2

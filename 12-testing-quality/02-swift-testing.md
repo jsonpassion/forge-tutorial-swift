@@ -121,11 +121,11 @@ import Testing
 ```mermaid
 flowchart TD
     A["검증 표현식 평가"] --> B{"결과가 true?"}
-    B -- "true" --> C["✅ 통과, 다음 줄 실행"]
+    B -- "true" --> C["O 통과, 다음 줄 실행"]
     B -- "false" --> D{"어떤 매크로?"}
-    D -- "#expect" --> E["❌ 실패 기록\n값 자동 출력"]
+    D -- "#expect" --> E["X 실패 기록<br/>값 자동 출력"]
     E --> F["⏩ 테스트 계속 진행"]
-    D -- "#require" --> G["❌ 실패 기록\n에러 throw"]
+    D -- "#require" --> G["X 실패 기록<br/>에러 throw"]
     G --> H["⛔ 테스트 즉시 중단"]
 ```
 

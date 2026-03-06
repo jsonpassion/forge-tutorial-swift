@@ -62,12 +62,12 @@ print(s1, s2)  // "세계" "안녕"
 
 ```mermaid
 flowchart TD
-    A["제네릭 함수\nswapValues<T>"] --> B["T = Int"]
+    A["제네릭 함수<br/>swapValues<T>"] --> B["T = Int"]
     A --> C["T = String"]
     A --> D["T = Double"]
-    B --> E["swapValues(&x, &y)\nInt 교환"]
-    C --> F["swapValues(&s1, &s2)\nString 교환"]
-    D --> G["swapValues(&d1, &d2)\nDouble 교환"]
+    B --> E["swapValues(&x, &y)<br/>Int 교환"]
+    C --> F["swapValues(&s1, &s2)<br/>String 교환"]
+    D --> G["swapValues(&d1, &d2)<br/>Double 교환"]
     style A fill:#f9a825,color:#000
     style B fill:#42a5f5,color:#fff
     style C fill:#66bb6a,color:#fff
@@ -228,7 +228,7 @@ flowchart TD
     START --> TRYQ["try?"]
     START --> TRYE["try!"]
     TRY -->|성공| S1["값 반환"]
-    TRY -->|실패| C1["catch 블록에서\n에러 처리"]
+    TRY -->|실패| C1["catch 블록에서<br/>에러 처리"]
     TRYQ -->|성공| S2["Optional(값)"]
     TRYQ -->|실패| C2["nil 반환"]
     TRYE -->|성공| S3["값 반환"]
@@ -275,8 +275,8 @@ print(token ?? "로그인 실패")   // "토큰-ABC123"
 ```mermaid
 flowchart LR
     F["함수 호출"] --> R["Result<Success, Failure>"]
-    R -->|".success"| S["성공 값 추출\nlet name = ..."]
-    R -->|".failure"| E["에러 값 추출\nlet error = ..."]
+    R -->|".success"| S["성공 값 추출<br/>let name = ..."]
+    R -->|".failure"| E["에러 값 추출<br/>let error = ..."]
     S --> U1["UI 업데이트"]
     E --> U2["에러 메시지 표시"]
     E --> U3["재시도 로직"]
@@ -338,6 +338,29 @@ do {
 ## 실습: 직접 해보기
 
 제네릭과 에러 처리를 결합한 간단한 데이터 저장소를 만들어 봅시다.
+
+> 📊 **그림 5**: TypedStorage의 제네릭 + 에러 처리 흐름
+
+```mermaid
+flowchart TD
+    A["save/load 호출"] --> B{"제네릭 타입 T 결정"}
+    B --> C["save(T, forKey)"]
+    B --> D["load(key, as: T.Type)"]
+    C --> E{"용량 초과?"}
+    E -->|Yes| F["throw storageFull"]
+    E -->|No| G["저장 성공"]
+    D --> H{"키 존재?"}
+    H -->|No| I["throw keyNotFound"]
+    H -->|Yes| J{"타입 일치?"}
+    J -->|No| K["throw typeMismatch"]
+    J -->|Yes| L["T 타입으로 반환"]
+    style F fill:#ef5350,color:#fff
+    style I fill:#ef5350,color:#fff
+    style K fill:#ef5350,color:#fff
+    style G fill:#66bb6a,color:#fff
+    style L fill:#66bb6a,color:#fff
+```
+
 
 ```run:swift
 import Foundation

@@ -35,7 +35,7 @@ flowchart TD
     C -->|404| J["notFound"]
     C -->|500~599| K["serverError"]
     H -->|실패| L["decodingFailed"]
-    H -->|성공| M["✅ 결과 반환"]
+    H -->|성공| M["O 결과 반환"]
 ```
 
 
@@ -168,9 +168,9 @@ extension NetworkError: LocalizedError {
 ```mermaid
 flowchart LR
     A["에러 발생"] --> B{"심각도 판단"}
-    B -->|"부분 실패\n(위젯 일부)"| C["인라인 메시지\n🔸 흐름 유지"]
-    B -->|"전체 실패\n(목록 비어있음)"| D["ContentUnavailableView\n🔶 전체 화면 안내"]
-    B -->|"치명적 에러\n(인증 만료 등)"| E["Alert\n🔴 즉시 주의 필요"]
+    B -->|"부분 실패<br/>(위젯 일부)"| C["인라인 메시지<br/>🔸 흐름 유지"]
+    B -->|"전체 실패<br/>(목록 비어있음)"| D["ContentUnavailableView<br/>🔶 전체 화면 안내"]
+    B -->|"치명적 에러<br/>(인증 만료 등)"| E["Alert<br/>X 즉시 주의 필요"]
 ```
 
 
@@ -339,13 +339,13 @@ sequenceDiagram
     participant App as 앱
     participant Server as 서버
     App->>Server: 1차 시도
-    Server--xApp: ❌ timeout
+    Server--xApp: X timeout
     Note right of App: 1초 대기
     App->>Server: 2차 시도
-    Server--xApp: ❌ serverError(503)
+    Server--xApp: X serverError(503)
     Note right of App: 2초 대기
     App->>Server: 3차 시도
-    Server-->>App: ✅ 200 OK + 데이터
+    Server-->>App: O 200 OK + 데이터
     Note over App,Server: 재시도는 isRetryable한 에러만 대상
 ```
 

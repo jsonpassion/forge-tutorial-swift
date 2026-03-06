@@ -23,11 +23,11 @@ flowchart LR
     C --> B
     A --> D["Product.purchase()"]
     D --> E["결제 시트"]
-    E --> F["Transaction\n(JWS 서명)"]
+    E --> F["Transaction<br/>(JWS 서명)"]
     F --> G["서명 검증"]
     G --> H["콘텐츠 전달"]
     H --> I["transaction.finish()"]
-    J["Transaction.updates"] -.->|"갱신/환불/\n다른 기기 구매"| A
+    J["Transaction.updates"] -.->|"갱신/환불/<br/>다른 기기 구매"| A
 ```
 
 
@@ -54,10 +54,10 @@ flowchart LR
 flowchart TD
     A["product.purchase() 호출"] --> B{"PurchaseResult"}
     B -->|".success"| C{"VerificationResult"}
-    B -->|".userCancelled"| D["사용자 취소\n→ nil 반환"]
-    B -->|".pending"| E["승인 대기\n(자녀 보호 등)"]
+    B -->|".userCancelled"| D["사용자 취소<br/>-> nil 반환"]
+    B -->|".pending"| E["승인 대기<br/>(자녀 보호 등)"]
     C -->|".verified"| F["검증 성공"]
-    C -->|".unverified"| G["검증 실패\n→ 에러 throw"]
+    C -->|".unverified"| G["검증 실패<br/>-> 에러 throw"]
     F --> H["콘텐츠 전달"]
     H --> I["transaction.finish()"]
     style F fill:#2d6,color:#fff

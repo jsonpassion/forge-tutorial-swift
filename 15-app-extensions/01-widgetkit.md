@@ -184,9 +184,9 @@ flowchart LR
         A2 --> A3["reloadTimelines 호출"]
     end
     subgraph SHARED["App Group 컨테이너"]
-        S1["UserDefaults\n(suiteName)"]
-        S2["SwiftData\n(groupContainer)"]
-        S3["FileManager\n(sharedContainerURL)"]
+        S1["UserDefaults<br/>(suiteName)"]
+        S2["SwiftData<br/>(groupContainer)"]
+        S3["FileManager<br/>(sharedContainerURL)"]
     end
     subgraph WIDGET["위젯 프로세스"]
         W1["TimelineProvider"] --> W2["데이터 읽기"]
@@ -237,7 +237,7 @@ flowchart TD
     A["사용자가 위젯 버튼 탭"] --> B["AppIntent.perform() 실행"]
     B --> C["App Group 데이터 업데이트"]
     C --> D["perform() 완료 반환"]
-    D --> E["WidgetKit이 자동으로\ngetTimeline 재요청"]
+    D --> E["WidgetKit이 자동으로<br/>getTimeline 재요청"]
     E --> F["새 Entry로 위젯 뷰 갱신"]
     F --> G["업데이트된 UI 표시"]
     style A fill:#0ea5e9,color:#fff
@@ -303,7 +303,7 @@ flowchart LR
     end
     subgraph CONFIGURABLE["AppIntentConfiguration"]
         direction TB
-        C0["사용자 설정\n(WidgetConfigurationIntent)"] --> C1["Configurable Provider"]
+        C0["사용자 설정<br/>(WidgetConfigurationIntent)"] --> C1["Configurable Provider"]
         C1 --> C2["설정값 반영 데이터 제공"]
         C2 --> C3["위젯 뷰 렌더링"]
     end

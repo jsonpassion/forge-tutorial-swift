@@ -129,8 +129,8 @@ flowchart LR
         A2["NavigationLink"] -->|"목적지 뷰 직접 포함"| B2["DetailView"]
     end
     subgraph 값기반["값 기반 방식"]
-        C1["NavigationLink\nvalue: Fruit"] -->|"값 전달"| D["navigationDestination\n(for: Fruit.self)"]
-        C2["NavigationLink\nvalue: Fruit"] -->|"값 전달"| D
+        C1["NavigationLink<br/>value: Fruit"] -->|"값 전달"| D["navigationDestination<br/>(for: Fruit.self)"]
+        C2["NavigationLink<br/>value: Fruit"] -->|"값 전달"| D
         D -->|"화면 생성"| E["DetailView"]
     end
 ```

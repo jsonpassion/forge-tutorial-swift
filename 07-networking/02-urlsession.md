@@ -74,10 +74,10 @@ func fetchData() async throws -> Data {
 
 ```mermaid
 flowchart LR
-    POST["POST\n리소스 생성"] --> GET["GET\n리소스 조회"]
-    GET --> PUT["PUT\n리소스 수정"]
+    POST["POST<br/>리소스 생성"] --> GET["GET<br/>리소스 조회"]
+    GET --> PUT["PUT<br/>리소스 수정"]
     PUT --> GET
-    GET --> DELETE["DELETE\n리소스 삭제"]
+    GET --> DELETE["DELETE<br/>리소스 삭제"]
     style POST fill:#4CAF50,color:#fff
     style GET fill:#2196F3,color:#fff
     style PUT fill:#FF9800,color:#fff
@@ -169,12 +169,12 @@ func deletePost(id: Int) async throws {
 ```mermaid
 flowchart TD
     R["HTTP 응답 수신"] --> Check{"상태 코드 확인"}
-    Check -->|200~299| S["✅ 성공\n데이터 처리 진행"]
-    Check -->|400| B["❌ Bad Request\n요청 형식 오류"]
-    Check -->|401/403| A["🔒 인증/권한 오류\n로그인 필요"]
-    Check -->|404| N["🔍 Not Found\n리소스 없음"]
-    Check -->|429| T["⏳ Rate Limit\n잠시 후 재시도"]
-    Check -->|500~599| E["🔥 서버 에러\n서버 측 문제"]
+    Check -->|200~299| S["O 성공<br/>데이터 처리 진행"]
+    Check -->|400| B["X Bad Request<br/>요청 형식 오류"]
+    Check -->|401/403| A["🔒 인증/권한 오류<br/>로그인 필요"]
+    Check -->|404| N["🔍 Not Found<br/>리소스 없음"]
+    Check -->|429| T["⏳ Rate Limit<br/>잠시 후 재시도"]
+    Check -->|500~599| E["🔥 서버 에러<br/>서버 측 문제"]
 ```
 
 
@@ -266,12 +266,12 @@ func configuredRequest() -> URLRequest {
 
 ```mermaid
 flowchart LR
-    A["기본 URL\nhttps://api.example.com/search"] --> B["URLComponents"]
-    Q1["URLQueryItem\nq = swift"] --> B
-    Q2["URLQueryItem\npage = 1"] --> B
-    Q3["URLQueryItem\nlimit = 20"] --> B
+    A["기본 URL<br/>https://api.example.com/search"] --> B["URLComponents"]
+    Q1["URLQueryItem<br/>q = swift"] --> B
+    Q2["URLQueryItem<br/>page = 1"] --> B
+    Q3["URLQueryItem<br/>limit = 20"] --> B
     B --> C["자동 퍼센트 인코딩"]
-    C --> D["최종 URL\n...?q=swift&page=1&limit=20"]
+    C --> D["최종 URL<br/>...?q=swift&page=1&limit=20"]
 ```
 
 

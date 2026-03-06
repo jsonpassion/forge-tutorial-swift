@@ -318,13 +318,13 @@ class ProfileViewController: UIViewController {
 
 ```mermaid
 flowchart LR
-    subgraph 방향1["SwiftUI → UIKit"]
+    subgraph 방향1["SwiftUI -> UIKit"]
         A1["@State 변경"] --> B1["updateUIView"] --> C1["UIKit 뷰 반영"]
     end
-    subgraph 방향2["UIKit → SwiftUI"]
+    subgraph 방향2["UIKit -> SwiftUI"]
         A2["사용자 이벤트"] --> B2["Delegate 콜백"] --> C2["Coordinator"] --> D2["@Binding 업데이트"]
     end
-    subgraph 방향3["SwiftUI → UIKit 프로젝트"]
+    subgraph 방향3["SwiftUI -> UIKit 프로젝트"]
         A3["SwiftUI View"] --> B3["UIHostingController"] --> C3["addChild + addSubview"]
     end
 ```

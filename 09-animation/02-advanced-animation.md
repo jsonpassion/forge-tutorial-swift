@@ -184,12 +184,12 @@ sequenceDiagram
     T->>Y: 애니메이션 시작
     T->>S: 애니메이션 시작
     T->>R: 애니메이션 시작
-    Note over Y: SpringKeyframe(0) → SpringKeyframe(-100)
-    Note over S: LinearKeyframe(1.0) → SpringKeyframe(1.5)
-    Note over R: LinearKeyframe(0) → CubicKeyframe(-30)
-    Note over Y: CubicKeyframe(-50) → SpringKeyframe(0)
+    Note over Y: SpringKeyframe(0) -> SpringKeyframe(-100)
+    Note over S: LinearKeyframe(1.0) -> SpringKeyframe(1.5)
+    Note over R: LinearKeyframe(0) -> CubicKeyframe(-30)
+    Note over Y: CubicKeyframe(-50) -> SpringKeyframe(0)
     Note over S: SpringKeyframe(1.0)
-    Note over R: CubicKeyframe(30) → SpringKeyframe(0)
+    Note over R: CubicKeyframe(30) -> SpringKeyframe(0)
     Note right of R: 각 트랙이 독립적 타이밍으로 동작
 ```
 

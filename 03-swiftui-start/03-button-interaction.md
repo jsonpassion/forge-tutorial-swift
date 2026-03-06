@@ -81,7 +81,7 @@ flowchart LR
     A["사용자 탭"] --> B["@State 값 변경"]
     B --> C["SwiftUI 감지"]
     C --> D["body 재계산"]
-    D --> E["변경된 부분만\n화면 업데이트"]
+    D --> E["변경된 부분만<br/>화면 업데이트"]
     E --> A
 ```
 
@@ -281,11 +281,11 @@ flowchart TD
         T["Toggle / Slider / Stepper"]
     end
     subgraph State["@State 변수"]
-        S["isNotificationOn\nvolume\nquantity"]
+        S["isNotificationOn<br/>volume<br/>quantity"]
     end
     S -- "읽기: 현재 값 표시" --> T
     T -- "$바인딩: 값 수정" --> S
-    S -- "값 변경 → 화면 갱신" --> View
+    S -- "값 변경 -> 화면 갱신" --> View
 ```
 
 
@@ -303,8 +303,8 @@ stateDiagram-v2
     옵션선택 --> 옵션선택: 커피 종류/샷/당도 변경
     옵션선택 --> 주문완료: 주문하기 버튼 탭
     주문완료 --> 옵션선택: 새 주문 버튼 탭
-    note right of 옵션선택: orderPlaced = false\n버튼 활성화
-    note right of 주문완료: orderPlaced = true\n버튼 비활성화
+    note right of 옵션선택: orderPlaced = false<br/>버튼 활성화
+    note right of 주문완료: orderPlaced = true<br/>버튼 비활성화
 ```
 
 

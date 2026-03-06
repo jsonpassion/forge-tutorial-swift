@@ -114,10 +114,10 @@ actor APIClient {
 
 ```mermaid
 flowchart LR
-    A["iTunes API\nJSON 응답"] --> B["ITunesSearchResponse\n(서버 모델)"]
-    B --> C["ITunesTrack\n(서버 모델)"]
-    C --> D["MusicItem\ninit(from:) 변환"]
-    D --> E["SwiftUI View\n화면 표시"]
+    A["iTunes API<br/>JSON 응답"] --> B["ITunesSearchResponse<br/>(서버 모델)"]
+    B --> C["ITunesTrack<br/>(서버 모델)"]
+    C --> D["MusicItem<br/>init(from:) 변환"]
+    D --> E["SwiftUI View<br/>화면 표시"]
 
     style A fill:#f9f,stroke:#333
     style B fill:#bbf,stroke:#333
@@ -185,11 +185,11 @@ struct MusicItem: Identifiable, Sendable {
 stateDiagram-v2
     [*] --> 대기중: 앱 시작
     대기중 --> 타이머시작: searchText 변경
-    타이머시작 --> 타이머시작: searchText 재변경\n(이전 Task 자동 취소)
-    타이머시작 --> API요청: 500ms 경과\n(취소 없음)
+    타이머시작 --> 타이머시작: searchText 재변경<br/>(이전 Task 자동 취소)
+    타이머시작 --> API요청: 500ms 경과<br/>(취소 없음)
     API요청 --> 결과표시: 응답 성공
     API요청 --> 에러처리: 응답 실패
-    API요청 --> 대기중: Task 취소됨\n(새 검색어 입력)
+    API요청 --> 대기중: Task 취소됨<br/>(새 검색어 입력)
     결과표시 --> 타이머시작: searchText 변경
     에러처리 --> 타이머시작: searchText 변경
 ```
@@ -582,9 +582,9 @@ struct MusicExplorerView: View {
 
 ```mermaid
 graph TD
-    A["뷰 모델 계층\n(UI 상태 관리)"] --> B["서비스 계층\n(비즈니스 로직, 모델 변환)"]
-    B --> C["네트워크 계층\n(URLSession 호출, 에러 변환)"]
-    C --> D["API 계층\n(엔드포인트 정의, URL 생성)"]
+    A["뷰 모델 계층<br/>(UI 상태 관리)"] --> B["서비스 계층<br/>(비즈니스 로직, 모델 변환)"]
+    B --> C["네트워크 계층<br/>(URLSession 호출, 에러 변환)"]
+    C --> D["API 계층<br/>(엔드포인트 정의, URL 생성)"]
     D --> E["외부 API 서버"]
 
     style A fill:#e1f5fe,stroke:#0288d1

@@ -19,12 +19,12 @@
 
 ```mermaid
 flowchart TD
-    P1["프로토콜 정의"] --> C1["능력의 약속\n(프로퍼티 + 메서드)"]
-    P2["익스텐션"] --> C2["기존 타입 확장\n(연산 프로퍼티 + 메서드)"]
+    P1["프로토콜 정의"] --> C1["능력의 약속<br/>(프로퍼티 + 메서드)"]
+    P2["익스텐션"] --> C2["기존 타입 확장<br/>(연산 프로퍼티 + 메서드)"]
     P1 --> D["프로토콜 익스텐션"]
     P2 --> D
     D --> C3["기본 구현 제공"]
-    C1 --> POP["프로토콜 지향 프로그래밍\n(POP)"]
+    C1 --> POP["프로토콜 지향 프로그래밍<br/>(POP)"]
     C2 --> POP
     C3 --> POP
 ```
@@ -190,10 +190,10 @@ true
 ```mermaid
 flowchart TD
     A["타입이 프로토콜 채택"] --> B{"메서드를 직접 구현했나?"}
-    B -->|Yes| C["커스텀 구현 사용\n(Teacher.greet)"]
-    B -->|No| D{"프로토콜 익스텐션에\n기본 구현이 있나?"}
-    D -->|Yes| E["기본 구현 사용\n(Student.greet)"]
-    D -->|No| F["컴파일 에러 ❌"]
+    B -->|Yes| C["커스텀 구현 사용<br/>(Teacher.greet)"]
+    B -->|No| D{"프로토콜 익스텐션에<br/>기본 구현이 있나?"}
+    D -->|Yes| E["기본 구현 사용<br/>(Student.greet)"]
+    D -->|No| F["컴파일 에러 X"]
 ```
 
 
@@ -451,13 +451,13 @@ for (i, shape) in sortedByArea.enumerated() {
 
 ```mermaid
 flowchart LR
-    subgraph 상속["클래스 상속 ⚠️"]
+    subgraph 상속["클래스 상속 !"]
         direction TB
         GA["Animal"] --> GB["Dog"]
         GA --> GC["Cat"]
         GB --> GD["PoliceDog"]
     end
-    subgraph 프로토콜["프로토콜 조합 ✅"]
+    subgraph 프로토콜["프로토콜 조합 O"]
         direction TB
         PA["Runnable"] -.-> PD2["PoliceDog"]
         PB["Trainable"] -.-> PD2

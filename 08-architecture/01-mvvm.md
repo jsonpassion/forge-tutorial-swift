@@ -39,9 +39,9 @@ MVVM을 적용하면 이야기가 달라집니다. 비즈니스 로직을 ViewMo
 
 ```mermaid
 flowchart LR
-    U["사용자 액션"] --> V["View\n(UI 렌더링)"]
-    V -->|"이벤트 전달"| VM["ViewModel\n(로직 처리)"]
-    VM -->|"데이터 요청"| M["Model\n(데이터 구조)"]
+    U["사용자 액션"] --> V["View<br/>(UI 렌더링)"]
+    V -->|"이벤트 전달"| VM["ViewModel<br/>(로직 처리)"]
+    VM -->|"데이터 요청"| M["Model<br/>(데이터 구조)"]
     M -->|"원본 데이터"| VM
     VM -->|"가공된 상태"| V
     V -->|"화면 업데이트"| U
@@ -348,11 +348,11 @@ MVVM은 2005년 Microsoft의 John Gossman이 WPF(Windows Presentation Foundation
 ```mermaid
 flowchart TD
     Q{"화면이 복잡한가?"}
-    Q -->|"단순 표시 화면"| A["ViewModel 없이\nView + @State로 충분"]
+    Q -->|"단순 표시 화면"| A["ViewModel 없이<br/>View + @State로 충분"]
     Q -->|"비즈니스 로직 있음"| B{"테스트가 필요한가?"}
-    B -->|"아니오"| C["View 내 로직도 OK\n단, 코드 정리 필요"]
+    B -->|"아니오"| C["View 내 로직도 OK<br/>단, 코드 정리 필요"]
     B -->|"예"| D["ViewModel 분리 권장"]
-    Q -->|"복잡한 폼/검색/다중 API"| E["ViewModel 필수\n여러 ViewModel로 분할 가능"]
+    Q -->|"복잡한 폼/검색/다중 API"| E["ViewModel 필수<br/>여러 ViewModel로 분할 가능"]
 
     style A fill:#e8f5e9
     style C fill:#fff3e0

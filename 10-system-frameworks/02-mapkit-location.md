@@ -23,11 +23,11 @@
 ```mermaid
 graph TD
     A["Map 뷰"] --> B["MapContentBuilder"]
-    B --> C["Marker\n(핀 표시)"]
-    B --> D["Annotation\n(커스텀 뷰)"]
-    B --> E["UserAnnotation\n(내 위치)"]
-    A --> F["MapCameraPosition\n(카메라 제어)"]
-    A --> G[".mapStyle()\n(지도 스타일)"]
+    B --> C["Marker<br/>(핀 표시)"]
+    B --> D["Annotation<br/>(커스텀 뷰)"]
+    B --> E["UserAnnotation<br/>(내 위치)"]
+    A --> F["MapCameraPosition<br/>(카메라 제어)"]
+    A --> G[".mapStyle()<br/>(지도 스타일)"]
     A --> H[".mapControls()"]
     H --> I["MapCompass"]
     H --> J["MapScaleView"]

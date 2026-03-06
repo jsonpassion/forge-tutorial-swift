@@ -31,12 +31,12 @@ flowchart LR
         I1["뷰 객체 생성"] --> I2["위치/크기 설정"]
         I2 --> I3["색상/폰트 지정"]
         I3 --> I4["부모 뷰에 추가"]
-        I4 --> I5["상태 변경 시\n수동 업데이트"]
+        I4 --> I5["상태 변경 시<br/>수동 업데이트"]
     end
     subgraph 선언형["선언형 (SwiftUI)"]
         direction TB
-        D1["원하는 모습 선언"] --> D2["프레임워크가\n자동 렌더링"]
-        D2 --> D3["상태 변경 시\n자동 업데이트"]
+        D1["원하는 모습 선언"] --> D2["프레임워크가<br/>자동 렌더링"]
+        D2 --> D3["상태 변경 시<br/>자동 업데이트"]
     end
 ```
 
@@ -108,7 +108,7 @@ struct MyFirstApp: App {
 
 ```mermaid
 graph TD
-    A["@main App\n(앱 전체)"] --> B["Scene\n(WindowGroup)"]
+    A["@main App<br/>(앱 전체)"] --> B["Scene<br/>(WindowGroup)"]
     B --> C["ContentView"]
     C --> D["Text"]
     C --> E["Image"]
@@ -175,15 +175,15 @@ struct ContentView: View {
 
 ```mermaid
 flowchart TD
-    A["Text\n(원본 뷰)"] --> B[".font(.largeTitle)\n폰트 적용"]
-    B --> C[".padding()\n여백 추가"]
-    C --> D[".background(.yellow)\n배경색 적용"]
-    D --> E["최종 결과:\n패딩 포함 배경"]
+    A["Text<br/>(원본 뷰)"] --> B[".font(.largeTitle)<br/>폰트 적용"]
+    B --> C[".padding()<br/>여백 추가"]
+    C --> D[".background(.yellow)<br/>배경색 적용"]
+    D --> E["최종 결과:<br/>패딩 포함 배경"]
     
-    A2["Text\n(원본 뷰)"] --> B2[".font(.largeTitle)\n폰트 적용"]
-    B2 --> C2[".background(.yellow)\n배경색 적용"]
-    C2 --> D2[".padding()\n여백 추가"]
-    D2 --> E2["최종 결과:\n배경 없는 여백"]
+    A2["Text<br/>(원본 뷰)"] --> B2[".font(.largeTitle)<br/>폰트 적용"]
+    B2 --> C2[".background(.yellow)<br/>배경색 적용"]
+    C2 --> D2[".padding()<br/>여백 추가"]
+    D2 --> E2["최종 결과:<br/>배경 없는 여백"]
 ```
 
 

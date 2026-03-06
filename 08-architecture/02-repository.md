@@ -10,12 +10,12 @@
 
 ```mermaid
 flowchart LR
-    subgraph before["❌ 적용 전"]
+    subgraph before["X 적용 전"]
         VM1["ViewModel"] --> API1["URLSession"]
         VM1 --> DB1["SwiftData"]
     end
-    subgraph after["✅ 적용 후"]
-        VM2["ViewModel"] --> P["Repository\n프로토콜"]
+    subgraph after["O 적용 후"]
+        VM2["ViewModel"] --> P["Repository<br/>프로토콜"]
         P --> API2["API Repository"]
         P --> DB2["SwiftData Repository"]
         P --> Mock["Mock Repository"]

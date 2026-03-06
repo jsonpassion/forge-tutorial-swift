@@ -182,13 +182,13 @@ flowchart LR
     A["사용자 입력"] --> B["텍스트 입력"]
     A --> C["선택/토글"]
     A --> D["값 조절"]
-    B --> B1["TextField\n일반 텍스트"]
-    B --> B2["SecureField\n비밀번호"]
-    C --> C1["Toggle\n켜기/끄기"]
-    C --> C2["Picker\n옵션 선택"]
-    C --> C3["DatePicker\n날짜 선택"]
-    D --> D1["Slider\n연속 값 드래그"]
-    D --> D2["Stepper\n정수 +/- 버튼"]
+    B --> B1["TextField<br/>일반 텍스트"]
+    B --> B2["SecureField<br/>비밀번호"]
+    C --> C1["Toggle<br/>켜기/끄기"]
+    C --> C2["Picker<br/>옵션 선택"]
+    C --> C3["DatePicker<br/>날짜 선택"]
+    D --> D1["Slider<br/>연속 값 드래그"]
+    D --> D2["Stepper<br/>정수 +/- 버튼"]
 ```
 
 

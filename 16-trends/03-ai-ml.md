@@ -26,11 +26,11 @@ AI는 더 이상 선택이 아닙니다. 사용자는 이미 **Writing Tools로 
 
 ```mermaid
 graph TD
-    FM["Foundation Models\n온디바이스 LLM"] --> CoreML["Core ML\n모델 실행 엔진"]
-    Vision["Vision\n이미지 분석"] --> CoreML
-    NL["Natural Language\n텍스트 분석"] --> CoreML
-    Sound["SoundAnalysis\n소리 분류"] --> CoreML
-    CreateML["Create ML\n모델 학습"] -.->|"학습된 .mlmodel"| CoreML
+    FM["Foundation Models<br/>온디바이스 LLM"] --> CoreML["Core ML<br/>모델 실행 엔진"]
+    Vision["Vision<br/>이미지 분석"] --> CoreML
+    NL["Natural Language<br/>텍스트 분석"] --> CoreML
+    Sound["SoundAnalysis<br/>소리 분류"] --> CoreML
+    CreateML["Create ML<br/>모델 학습"] -.->|"학습된 .mlmodel"| CoreML
     CoreML --> HW["하드웨어 가속"]
     HW --> CPU["CPU"]
     HW --> GPU["GPU"]
@@ -75,11 +75,11 @@ func classifyImage(_ image: CGImage) async throws -> String {
 
 ```mermaid
 flowchart LR
-    A["PyTorch / TensorFlow\n학습된 모델"] -->|coremltools 변환| B[".mlmodel 파일"]
-    C["Create ML\n직접 학습"] --> B
-    B -->|Xcode 추가| D["Swift 클래스\n자동 생성"]
+    A["PyTorch / TensorFlow<br/>학습된 모델"] -->|coremltools 변환| B[".mlmodel 파일"]
+    C["Create ML<br/>직접 학습"] --> B
+    B -->|Xcode 추가| D["Swift 클래스<br/>자동 생성"]
     D --> E["앱에서 추론 실행"]
-    E --> F["CPU + GPU +\nNeural Engine"]
+    E --> F["CPU + GPU +<br/>Neural Engine"]
 ```
 
 
@@ -260,15 +260,15 @@ let response = try await session.respond(to: "서울 날씨 어때?")
 
 ```mermaid
 flowchart TD
-    Request["AI 요청 발생"] --> Check{"온디바이스로\n처리 가능?"}
-    Check -->|Yes| OnDevice["온디바이스 처리\nFoundation Models / Core ML"]
+    Request["AI 요청 발생"] --> Check{"온디바이스로<br/>처리 가능?"}
+    Check -->|Yes| OnDevice["온디바이스 처리<br/>Foundation Models / Core ML"]
     OnDevice --> Privacy1["🔒 데이터가 기기를 떠나지 않음"]
-    Check -->|No| PCC{"Private Cloud Compute\n필요?"}
+    Check -->|No| PCC{"Private Cloud Compute<br/>필요?"}
     PCC -->|Yes| Cloud["Apple Silicon 서버"]
-    Cloud --> Privacy2["🔒 데이터 즉시 삭제\n암호학적 검증 가능"]
+    Cloud --> Privacy2["🔒 데이터 즉시 삭제<br/>암호학적 검증 가능"]
     PCC -->|No| Third{"사용자 동의?"}
-    Third -->|동의| External["서드파티 AI\n(예: ChatGPT)"]
-    External --> Privacy3["⚠️ IP 마스킹\n명시적 동의 필수"]
+    Third -->|동의| External["서드파티 AI<br/>(예: ChatGPT)"]
+    External --> Privacy3["! IP 마스킹<br/>명시적 동의 필수"]
     Third -->|거부| Decline["요청 거절"]
 ```
 

@@ -24,10 +24,10 @@ graph TD
     C -->|"시스템 스타일"| D["List"]
     C -->|"커스텀 디자인"| E["ScrollView"]
     D --> F["Section으로 그룹화"]
-    D --> G[".swipeActions\n.searchable\n.refreshable"]
-    E --> H["LazyVStack\n(세로 스크롤)"]
-    E --> I["LazyHStack\n(가로 스크롤)"]
-    E --> J["LazyVGrid\n(그리드 레이아웃)"]
+    D --> G[".swipeActions<br/>.searchable<br/>.refreshable"]
+    E --> H["LazyVStack<br/>(세로 스크롤)"]
+    E --> I["LazyHStack<br/>(가로 스크롤)"]
+    E --> J["LazyVGrid<br/>(그리드 레이아웃)"]
 ```
 
 
@@ -336,17 +336,17 @@ struct ScrollViewDemoView: View {
 ```mermaid
 flowchart TD
     subgraph VS["VStack (비효율)"]
-        V1["항목 1 ✅ 생성"] --- V2["항목 2 ✅ 생성"]
-        V2 --- V3["항목 3 ✅ 생성"]
-        V3 --- V4["... 항목 50 ✅ 모두 생성"]
+        V1["항목 1 O 생성"] --- V2["항목 2 O 생성"]
+        V2 --- V3["항목 3 O 생성"]
+        V3 --- V4["... 항목 50 O 모두 생성"]
     end
     subgraph LV["LazyVStack (효율적)"]
-        L1["항목 1 ✅ 화면에 보임"] --- L2["항목 2 ✅ 화면에 보임"]
-        L2 --- L3["항목 3 ✅ 화면에 보임"]
+        L1["항목 1 O 화면에 보임"] --- L2["항목 2 O 화면에 보임"]
+        L2 --- L3["항목 3 O 화면에 보임"]
         L3 --- L4["항목 4~50 💤 대기"]
     end
-    VS -.->|"50개 뷰 즉시 생성\n메모리 사용 ↑"| BAD["⚠️ 성능 저하"]
-    LV -.->|"3개만 생성\n스크롤 시 추가 로드"| GOOD["✅ 성능 최적화"]
+    VS -.->|"50개 뷰 즉시 생성<br/>메모리 사용 ↑"| BAD["! 성능 저하"]
+    LV -.->|"3개만 생성<br/>스크롤 시 추가 로드"| GOOD["O 성능 최적화"]
 ```
 
 
@@ -567,13 +567,13 @@ struct MemoRowView: View {
 
 ```mermaid
 flowchart TD
-    A["스크롤 목록이 필요하다"] --> B{"시스템 기본 스타일\n사용할 건가요?"}
-    B -->|"네"| C{"스와이프/편집 모드\n필요한가요?"}
-    C -->|"네"| D["✅ List 사용"]
+    A["스크롤 목록이 필요하다"] --> B{"시스템 기본 스타일<br/>사용할 건가요?"}
+    B -->|"네"| C{"스와이프/편집 모드<br/>필요한가요?"}
+    C -->|"네"| D["O List 사용"]
     C -->|"아니오"| D
-    B -->|"아니오"| E{"완전 커스텀\n디자인인가요?"}
-    E -->|"네"| F["✅ ScrollView\n+ LazyVStack"]
-    E -->|"그리드 형태"| G["✅ ScrollView\n+ LazyVGrid"]
+    B -->|"아니오"| E{"완전 커스텀<br/>디자인인가요?"}
+    E -->|"네"| F["O ScrollView<br/>+ LazyVStack"]
+    E -->|"그리드 형태"| G["O ScrollView<br/>+ LazyVGrid"]
 ```
 
 

@@ -18,11 +18,11 @@
 
 ```mermaid
 flowchart LR
-    A["앱 내 콘텐츠"] --> B["ShareLink\n공유 시트"]
+    A["앱 내 콘텐츠"] --> B["ShareLink<br/>공유 시트"]
     B --> C["메시지/SNS/메일"]
     C --> D["수신자가 링크 탭"]
     D --> E{"앱 설치 여부"}
-    E -->|설치됨| F["onOpenURL\n앱 내 화면 이동"]
+    E -->|설치됨| F["onOpenURL<br/>앱 내 화면 이동"]
     E -->|미설치| G["웹 페이지 열기"]
 ```
 
@@ -101,11 +101,11 @@ struct PreviewShareView: View {
 
 ```mermaid
 flowchart TD
-    A["커스텀 타입\n(Recipe)"] --> B["transferRepresentation"]
-    B --> C["1순위: CodableRepresentation\nJSON 직렬화"]
-    B --> D["2순위: ProxyRepresentation\n텍스트 변환"]
-    B --> E["3순위: DataRepresentation\n바이너리"]
-    B --> F["4순위: FileRepresentation\n파일 내보내기"]
+    A["커스텀 타입<br/>(Recipe)"] --> B["transferRepresentation"]
+    B --> C["1순위: CodableRepresentation<br/>JSON 직렬화"]
+    B --> D["2순위: ProxyRepresentation<br/>텍스트 변환"]
+    B --> E["3순위: DataRepresentation<br/>바이너리"]
+    B --> F["4순위: FileRepresentation<br/>파일 내보내기"]
     C -->|수신 앱 지원| G["이 형식 사용"]
     C -->|미지원| D
     D -->|미지원| E
@@ -205,12 +205,12 @@ flowchart TD
     subgraph scheme["URL Scheme"]
         S1["myapp://recipe/123"] --> S2{"앱 설치?"}
         S2 -->|Yes| S3["앱 열림"]
-        S2 -->|No| S4["❌ 아무 반응 없음"]
+        S2 -->|No| S4["X 아무 반응 없음"]
     end
     subgraph universal["Universal Links"]
         U1["https://example.com/recipe/123"] --> U2{"앱 설치?"}
         U2 -->|Yes| U3["앱 열림"]
-        U2 -->|No| U4["✅ 웹 페이지 열림"]
+        U2 -->|No| U4["O 웹 페이지 열림"]
     end
 ```
 
@@ -270,7 +270,7 @@ sequenceDiagram
     Apple->>웹서버: AASA 파일 다운로드
     Apple-->>사용자기기: 도메인-앱 매핑 승인
     Note over 사용자기기: 이후 https://example.com/... 링크 탭 시
-    사용자기기->>사용자기기: onOpenURL 호출 → 앱 내 화면 이동
+    사용자기기->>사용자기기: onOpenURL 호출 -> 앱 내 화면 이동
 ```
 
 
@@ -384,14 +384,14 @@ struct DeepLinkDemoView: View {
 
 ```mermaid
 flowchart TD
-    A["URL 수신\nonOpenURL"] --> B["URLComponents 파싱"]
+    A["URL 수신<br/>onOpenURL"] --> B["URLComponents 파싱"]
     B --> C{"path 첫 번째 세그먼트"}
     C -->|recipe| D["selectedTab = .home"]
-    D --> E["navigationPath =\n.recipeDetail(id)"]
+    D --> E["navigationPath =<br/>.recipeDetail(id)"]
     C -->|profile| F["selectedTab = .profile"]
-    F --> G["navigationPath =\n.userProfile(id)"]
+    F --> G["navigationPath =<br/>.userProfile(id)"]
     C -->|기타| H["무시 또는 홈으로"]
-    E --> I["NavigationStack\n화면 전환"]
+    E --> I["NavigationStack<br/>화면 전환"]
     G --> I
 ```
 

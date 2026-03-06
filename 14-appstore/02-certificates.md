@@ -10,13 +10,13 @@
 
 ```mermaid
 flowchart TD
-    A["Apple Developer Program\n(개발자 등록)"] --> B["Certificate\n(인증서 발급)"]
-    A --> C["App ID\n(앱 등록)"]
-    A --> D["Device UDID\n(기기 등록)"]
-    B --> E["Provisioning Profile\n(프로비저닝 프로파일)"]
+    A["Apple Developer Program<br/>(개발자 등록)"] --> B["Certificate<br/>(인증서 발급)"]
+    A --> C["App ID<br/>(앱 등록)"]
+    A --> D["Device UDID<br/>(기기 등록)"]
+    B --> E["Provisioning Profile<br/>(프로비저닝 프로파일)"]
     C --> E
     D --> E
-    E --> F["Code Signing\n(코드 서명)"]
+    E --> F["Code Signing<br/>(코드 서명)"]
     F --> G["서명된 앱 바이너리"]
     G --> H["실기기 설치 / App Store 배포"]
 ```
@@ -99,14 +99,14 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-    A["🪪 인증서\n(누가)"] --> D["📋 Provisioning Profile\n(통행증)"]
-    B["📱 App ID\n(무엇을)"] --> D
-    C["💻 Device UDID\n(어디서)"] --> D
+    A["🪪 인증서<br/>(누가)"] --> D["📋 Provisioning Profile<br/>(통행증)"]
+    B["📱 App ID<br/>(무엇을)"] --> D
+    C["💻 Device UDID<br/>(어디서)"] --> D
     D --> E{"프로파일 종류"}
-    E --> F["Development\n기기 제한 O"]
-    E --> G["Ad Hoc\n기기 제한 O"]
-    E --> H["App Store\n기기 제한 X"]
-    E --> I["Enterprise\n기기 제한 X"]
+    E --> F["Development<br/>기기 제한 O"]
+    E --> G["Ad Hoc<br/>기기 제한 O"]
+    E --> H["App Store<br/>기기 제한 X"]
+    E --> I["Enterprise<br/>기기 제한 X"]
 ```
 
 
@@ -143,9 +143,9 @@ Xcode의 **Automatically manage signing** 옵션을 켜면, 위의 모든 과정
 
 ```mermaid
 flowchart TD
-    A["Capabilities 탭에서\n기능 추가"] --> B["App ID에\nEntitlement 등록"]
-    B --> C["Provisioning Profile\n자동 갱신"]
-    C --> D["Code Signing\n재수행"]
+    A["Capabilities 탭에서<br/>기능 추가"] --> B["App ID에<br/>Entitlement 등록"]
+    B --> C["Provisioning Profile<br/>자동 갱신"]
+    C --> D["Code Signing<br/>재수행"]
     D --> E["앱 빌드 완료"]
     style A fill:#f9f,stroke:#333
     style E fill:#9f9,stroke:#333

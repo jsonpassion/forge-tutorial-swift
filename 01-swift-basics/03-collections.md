@@ -22,12 +22,12 @@
 
 ```mermaid
 graph TD
-    C["Swift 컬렉션"] --> A["Array\n순서 ✅ 중복 ✅"]
-    C --> D["Dictionary\n순서 ❌ 키-값 쌍"]
-    C --> S["Set\n순서 ❌ 중복 ❌"]
-    A --> A1["인덱스로 접근\n[0], [1], [2]..."]
-    D --> D1["키로 접근\n[\"name\"], [\"age\"]..."]
-    S --> S1["집합 연산\n합집합, 교집합, 차집합"]
+    C["Swift 컬렉션"] --> A["Array<br/>순서 O 중복 O"]
+    C --> D["Dictionary<br/>순서 X 키-값 쌍"]
+    C --> S["Set<br/>순서 X 중복 X"]
+    A --> A1["인덱스로 접근<br/>(0), (1), (2)..."]
+    D --> D1["키로 접근<br/>('name'), ('age')..."]
+    S --> S1["집합 연산<br/>합집합, 교집합, 차집합"]
 ```
 
 
@@ -230,13 +230,13 @@ print("❤️ 관심 카테고리: \(wishCategories)")
 ```mermaid
 flowchart LR
     subgraph Swift["Swift (값 타입)"]
-        O1["original\n[1, 2, 3]"] -->|"copy = original"| C1["copy\n[1, 2, 3]"]
-        C1 -->|"copy.append(4)"| C2["copy\n[1, 2, 3, 4]"]
-        O1 -.->|"원본 유지"| O2["original\n[1, 2, 3]"]
+        O1["original<br/>[1, 2, 3]"] -->|"copy = original"| C1["copy<br/>[1, 2, 3]"]
+        C1 -->|"copy.append(4)"| C2["copy<br/>[1, 2, 3, 4]"]
+        O1 -.->|"원본 유지"| O2["original<br/>[1, 2, 3]"]
     end
     subgraph Other["다른 언어 (참조 타입)"]
-        O3["original\n[1, 2, 3]"] -->|"copy = original"| C3["copy (같은 데이터 참조)"]
-        C3 -->|"copy.append(4)"| C4["둘 다\n[1, 2, 3, 4]"]
+        O3["original<br/>[1, 2, 3]"] -->|"copy = original"| C3["copy (같은 데이터 참조)"]
+        C3 -->|"copy.append(4)"| C4["둘 다<br/>[1, 2, 3, 4]"]
     end
 ```
 

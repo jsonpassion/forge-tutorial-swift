@@ -28,8 +28,8 @@ UI 테스트 타겟은 앱과 별도 프로세스에서 실행됩니다. 앱의 
 
 ```mermaid
 flowchart LR
-    A["테스트 프로세스\n(XCUITest)"] -->|"UI 요소 쿼리\n& 액션 전달"| B["시스템\n(Accessibility 프레임워크)"]
-    B -->|"요소 탐색\n& 이벤트 주입"| C["앱 프로세스\n(XCUIApplication)"]
+    A["테스트 프로세스<br/>(XCUITest)"] -->|"UI 요소 쿼리<br/>& 액션 전달"| B["시스템<br/>(Accessibility 프레임워크)"]
+    B -->|"요소 탐색<br/>& 이벤트 주입"| C["앱 프로세스<br/>(XCUIApplication)"]
     C -->|"UI 상태 반환"| B
     B -->|"결과 전달"| A
 ```

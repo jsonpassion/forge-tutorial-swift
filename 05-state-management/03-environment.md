@@ -26,7 +26,7 @@
 
 ```mermaid
 flowchart TD
-    subgraph Prop_Drilling["❌ Prop Drilling"]
+    subgraph Prop_Drilling["X Prop Drilling"]
         direction TD
         A1["앱 루트"] -->|"전달"| B1["탭뷰"]
         B1 -->|"전달"| C1["네비게이션"]
@@ -36,7 +36,7 @@ flowchart TD
         style C1 fill:#fdd,stroke:#c33
         style D1 fill:#fdd,stroke:#c33
     end
-    subgraph Environment["✅ @Environment"]
+    subgraph Environment["O @Environment"]
         direction TD
         A2["앱 루트"] -->|"주입"| ENV["Environment 공간"]
         ENV -.->|"직접 접근"| B2["탭뷰"]
@@ -62,11 +62,11 @@ SwiftUI는 `@Environment`를 통해 수많은 시스템 값을 제공합니다. 
 ```mermaid
 flowchart LR
     SYS["SwiftUI 시스템"] --> EV["EnvironmentValues"]
-    EV --> CS["colorScheme\n라이트/다크"]
-    EV --> DT["dynamicTypeSize\n글자 크기"]
-    EV --> SC["sizeClass\n화면 크기"]
-    EV --> DIS["dismiss\n화면 닫기"]
-    EV --> LOC["locale\n언어/지역"]
+    EV --> CS["colorScheme<br/>라이트/다크"]
+    EV --> DT["dynamicTypeSize<br/>글자 크기"]
+    EV --> SC["sizeClass<br/>화면 크기"]
+    EV --> DIS["dismiss<br/>화면 닫기"]
+    EV --> LOC["locale<br/>언어/지역"]
     CS --> VIEW["내 뷰"]
     DT --> VIEW
     SC --> VIEW
@@ -254,12 +254,12 @@ struct ProfileView: View {
 
 ```mermaid
 flowchart TD
-    APP["MyApp\n@State authManager"] -->|".environment(authManager)"| CR["ContentRootView\n중간 뷰 — AuthManager 모름"]
+    APP["MyApp<br/>@State authManager"] -->|".environment(authManager)"| CR["ContentRootView<br/>중간 뷰 — AuthManager 모름"]
     CR --> TAB1["Tab: 홈"]
     CR --> TAB2["Tab: 프로필"]
-    TAB1 --> HV["HomeView\n@Environment(AuthManager.self)"]
-    TAB2 --> PV["ProfileView\n@Environment(AuthManager.self)"]
-    AM["AuthManager\n@Observable"] -.->|"직접 접근"| HV
+    TAB1 --> HV["HomeView<br/>@Environment(AuthManager.self)"]
+    TAB2 --> PV["ProfileView<br/>@Environment(AuthManager.self)"]
+    AM["AuthManager<br/>@Observable"] -.->|"직접 접근"| HV
     AM -.->|"직접 접근"| PV
     style CR fill:#f5f5f5,stroke:#999
     style HV fill:#e8f5e9,stroke:#4caf50
@@ -438,11 +438,11 @@ struct ItemListView: View {
 
 ```mermaid
 flowchart TD
-    Q1{"여러 화면에서\n사용하는 데이터?"}
-    Q1 -->|"Yes"| Q2{"뷰 계층 2단계\n이상 전달?"}
-    Q1 -->|"No"| PARAM["@State + @Binding\n파라미터 전달"]
-    Q2 -->|"Yes"| ENV["@Environment\n환경 주입"]
-    Q2 -->|"No"| Q3{"앱 전역 설정\n또는 서비스?"}
+    Q1{"여러 화면에서<br/>사용하는 데이터?"}
+    Q1 -->|"Yes"| Q2{"뷰 계층 2단계<br/>이상 전달?"}
+    Q1 -->|"No"| PARAM["@State + @Binding<br/>파라미터 전달"]
+    Q2 -->|"Yes"| ENV["@Environment<br/>환경 주입"]
+    Q2 -->|"No"| Q3{"앱 전역 설정<br/>또는 서비스?"}
     Q3 -->|"Yes"| ENV
     Q3 -->|"No"| PARAM
     style ENV fill:#e8f5e9,stroke:#4caf50

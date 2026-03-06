@@ -10,13 +10,13 @@
 
 ```mermaid
 flowchart LR
-    subgraph before["❌ Router 없음"]
+    subgraph before["X Router 없음"]
         VA["View A"] -->|직접 이동| VB["View B"]
         VB -->|직접 이동| VC["View C"]
         VA -->|직접 이동| VC
         VC -->|직접 이동| VD["View D"]
     end
-    subgraph after["✅ Router 패턴"]
+    subgraph after["O Router 패턴"]
         R["🗼 Router"] --> V1["View A"]
         R --> V2["View B"]
         R --> V3["View C"]
@@ -114,15 +114,15 @@ enum AppRoute: Hashable {
 
 ```mermaid
 graph TD
-    ROOT["RecipeAppView"] -->|소유| ROUTER["AppRouter\n(@Observable)"]
+    ROOT["RecipeAppView"] -->|소유| ROUTER["AppRouter<br/>(@Observable)"]
     ROUTER -->|path: NavigationPath| NAV["NavigationStack"]
     ROOT -->|.environment| HOME["RecipeHomeView"]
     ROOT -->|.environment| DETAIL["RecipeDetailView"]
     ROOT -->|.environment| SEARCH["RecipeSearchView"]
     HOME -->|router.navigateTo()| ROUTER
     DETAIL -->|router.goBack()| ROUTER
-    ROUTER -->|navigationDestination\nswitch route| DETAIL
-    ROUTER -->|navigationDestination\nswitch route| SEARCH
+    ROUTER -->|navigationDestination<br/>switch route| DETAIL
+    ROUTER -->|navigationDestination<br/>switch route| SEARCH
 ```
 
 
@@ -251,8 +251,8 @@ struct ProfileView: View {
 ```mermaid
 graph TD
     MAIN["MainRouter"] --> TAB_SEL["selectedTab"]
-    MAIN --> HR["HomeRouter\nNavigationPath"]
-    MAIN --> SR["SearchRouter\nNavigationPath"]
+    MAIN --> HR["HomeRouter<br/>NavigationPath"]
+    MAIN --> SR["SearchRouter<br/>NavigationPath"]
     subgraph tab1["🏠 홈 탭"]
         HR --> H_NAV["NavigationStack"]
         H_NAV --> H_ROOT["홈 화면"]

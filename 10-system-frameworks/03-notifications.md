@@ -73,11 +73,11 @@ func requestNotificationPermission() async -> Bool {
 flowchart TD
     A["UNMutableNotificationContent"] --> D["UNNotificationRequest"]
     B["Trigger 선택"] --> D
-    B --> B1["TimeInterval\n(N초 후)"]
-    B --> B2["Calendar\n(특정 날짜/시간)"]
-    B --> B3["Location\n(위치 진입/이탈)"]
-    D --> E["UNUserNotificationCenter\n.add(request)"]
-    E --> F["시스템이 트리거 조건\n충족 시 알림 전달"]
+    B --> B1["TimeInterval<br/>(N초 후)"]
+    B --> B2["Calendar<br/>(특정 날짜/시간)"]
+    B --> B3["Location<br/>(위치 진입/이탈)"]
+    D --> E["UNUserNotificationCenter<br/>.add(request)"]
+    E --> F["시스템이 트리거 조건<br/>충족 시 알림 전달"]
 ```
 
 
@@ -167,11 +167,11 @@ func scheduleDailyReminder() async {
 
 ```mermaid
 flowchart TD
-    A1["UNNotificationAction\n'완료!'"] --> C["UNNotificationCategory\nid: REMINDER"]
-    A2["UNNotificationAction\n'10분 후 다시'"] --> C
-    C --> D["setNotificationCategories\n(센터에 등록)"]
-    E["UNMutableNotificationContent"] -- "categoryIdentifier\n= 'REMINDER'" --> F["알림 요청"]
-    F --> G["알림 표시\n(액션 버튼 포함)"]
+    A1["UNNotificationAction<br/>'완료!'"] --> C["UNNotificationCategory<br/>id: REMINDER"]
+    A2["UNNotificationAction<br/>'10분 후 다시'"] --> C
+    C --> D["setNotificationCategories<br/>(센터에 등록)"]
+    E["UNMutableNotificationContent"] -- "categoryIdentifier<br/>= 'REMINDER'" --> F["알림 요청"]
+    F --> G["알림 표시<br/>(액션 버튼 포함)"]
 ```
 
 
@@ -300,8 +300,8 @@ sequenceDiagram
     S->>S: 사용자가 액션 탭
     S->>D: didReceive 호출
     D->>A: 액션 식별자에 따라 처리
-    Note over A: DONE_ACTION → 완료 처리
-    Note over A: SNOOZE_ACTION → 재예약
+    Note over A: DONE_ACTION -> 완료 처리
+    Note over A: SNOOZE_ACTION -> 재예약
 ```
 
 

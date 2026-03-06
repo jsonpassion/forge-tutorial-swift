@@ -121,10 +121,10 @@ flowchart LR
         A1["폴더 삭제"] --> B1["메모도 함께 삭제"]
     end
     subgraph nullify[".nullify"]
-        A2["카테고리 삭제"] --> B2["할 일의 참조 → nil"]
+        A2["카테고리 삭제"] --> B2["할 일의 참조 -> nil"]
     end
     subgraph deny[".deny"]
-        A3["고객 삭제 시도"] --> B3["주문 존재 → 삭제 거부"]
+        A3["고객 삭제 시도"] --> B3["주문 존재 -> 삭제 거부"]
     end
 ```
 

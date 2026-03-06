@@ -19,13 +19,13 @@
 
 ```mermaid
 flowchart LR
-    subgraph 위험["❌ String으로 분기"]
-        A1["status = \"loading\""] --> B1{"if status == ..."}
+    subgraph 위험["X String으로 분기"]
+        A1["status = 'loading'"] --> B1{"if status == ..."}
         B1 --> C1["오타 가능"]
         B1 --> D1["잘못된 값 허용"]
         B1 --> E1["누락 검사 불가"]
     end
-    subgraph 안전["✅ enum으로 분기"]
+    subgraph 안전["O enum으로 분기"]
         A2["state = .loading"] --> B2{"switch state"}
         B2 --> C2["컴파일 타임 검증"]
         B2 --> D2["유효한 값만 허용"]
@@ -120,13 +120,13 @@ flowchart TD
         R1["enum Planet: Int"] --> R2["case mercury = 1"]
         R1 --> R3["case venus = 2"]
         R1 --> R4["case earth = 3"]
-        R5["모든 case가\n같은 타입의 고정 값"] -.-> R1
+        R5["모든 case가<br/>같은 타입의 고정 값"] -.-> R1
     end
     subgraph AV["연관 값 Associated Value"]
-        A1["enum NetworkResult"] --> A2["case success\n(data: Data, statusCode: Int)"]
-        A1 --> A3["case failure\n(error: String)"]
-        A1 --> A4["case loading\n(progress: Double)"]
-        A5["각 case가\n다른 타입·개수의 데이터"] -.-> A1
+        A1["enum NetworkResult"] --> A2["case success<br/>(data: Data, statusCode: Int)"]
+        A1 --> A3["case failure<br/>(error: String)"]
+        A1 --> A4["case loading<br/>(progress: Double)"]
+        A5["각 case가<br/>다른 타입·개수의 데이터"] -.-> A1
     end
 ```
 
@@ -196,12 +196,12 @@ processPayment(.creditCard(number: "1234567890123456", expiry: "12/26"), amount:
 
 ```mermaid
 flowchart TD
-    Q1{"enum 값을\n어떻게 처리?"}
-    Q1 -->|"모든 case 처리"| SW["switch\n전수 검사, 컴파일러 보장"]
-    Q1 -->|"특정 case만 확인"| Q2{"흐름 제어가\n필요한가?"}
-    Q2 -->|"아니오"| IC["if case\n단순 조건 확인"]
-    Q2 -->|"불일치 시 탈출"| GC["guard case\n조기 탈출 패턴"]
-    Q1 -->|"배열에서 필터링"| FC["for case\n특정 패턴만 순회"]
+    Q1{"enum 값을<br/>어떻게 처리?"}
+    Q1 -->|"모든 case 처리"| SW["switch<br/>전수 검사, 컴파일러 보장"]
+    Q1 -->|"특정 case만 확인"| Q2{"흐름 제어가<br/>필요한가?"}
+    Q2 -->|"아니오"| IC["if case<br/>단순 조건 확인"]
+    Q2 -->|"불일치 시 탈출"| GC["guard case<br/>조기 탈출 패턴"]
+    Q1 -->|"배열에서 필터링"| FC["for case<br/>특정 패턴만 순회"]
 ```
 
 
@@ -433,13 +433,13 @@ classDiagram
         case failure(Failure)
     }
     class 문법적_설탕 {
-        nil → Optional.none
-        if let → if case .some
-        ?? → switch + default
+        nil -> Optional.none
+        if let -> if case .some
+        ?? -> switch + default
     }
     Optional -- 문법적_설탕 : 변환
-    note for Optional "String? 은\nOptional~String~ 과 동일"
-    note for Result "네트워크 호출 등\n성공/실패 표현에 사용"
+    note for Optional "String? 은<br/>Optional~String~ 과 동일"
+    note for Result "네트워크 호출 등<br/>성공/실패 표현에 사용"
 ```
 
 

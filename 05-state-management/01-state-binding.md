@@ -20,7 +20,7 @@
 ```mermaid
 flowchart TD
     subgraph 부모뷰["부모 뷰"]
-        SOT["@State\n(Source of Truth)"]
+        SOT["@State<br/>(Source of Truth)"]
     end
     subgraph 자식뷰A["자식 뷰 A"]
         BA["@Binding"]
@@ -32,7 +32,7 @@ flowchart TD
     SOT -->|"$로 바인딩 전달"| BB
     BA -->|"값 변경"| SOT
     BB -->|"값 변경"| SOT
-    SOT -->|"값 변경 감지"| UI["SwiftUI가 body 재계산\n→ 화면 자동 업데이트"]
+    SOT -->|"값 변경 감지"| UI["SwiftUI가 body 재계산<br/>-> 화면 자동 업데이트"]
 ```
 
 
@@ -147,10 +147,10 @@ struct ProfileEditorView: View {
 ```mermaid
 flowchart LR
     STATE["@State private var count = 0"]
-    STATE -->|"count"| READ["읽기 전용\nInt 값 반환"]
-    STATE -->|"$count"| BIND["Binding<Int>\n읽기 + 쓰기"]
+    STATE -->|"count"| READ["읽기 전용<br/>Int 값 반환"]
+    STATE -->|"$count"| BIND["Binding<Int><br/>읽기 + 쓰기"]
     READ --> TEXT["Text에서 표시"]
-    BIND --> INPUT["TextField, Toggle,\nSlider 등 입력 컨트롤"]
+    BIND --> INPUT["TextField, Toggle,<br/>Slider 등 입력 컨트롤"]
 ```
 
 
@@ -432,8 +432,8 @@ struct TodoListView: View {
 
 ```mermaid
 flowchart TD
-    TLV["TodoListView\n@State todos 배열"] -->|"$todos"| ATV["AddTodoView\n@Binding todos"]
-    TLV -->|"ForEach $todos → $item"| TRV["TodoRowView\n@Binding item"]
+    TLV["TodoListView<br/>@State todos 배열"] -->|"$todos"| ATV["AddTodoView<br/>@Binding todos"]
+    TLV -->|"ForEach $todos -> $item"| TRV["TodoRowView<br/>@Binding item"]
     ATV -->|"todos.append()"| TLV
     TRV -->|"item.isCompleted.toggle()"| TLV
     TLV -->|"sheet 표시"| ATV

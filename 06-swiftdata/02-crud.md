@@ -38,7 +38,7 @@ flowchart TD
     A2 --> E["ModelContext"]
     C2 --> E
     D2 --> E
-    E --> F["영구 저장소\n(SQLite)"]
+    E --> F["영구 저장소<br/>(SQLite)"]
     F --> B2
 ```
 

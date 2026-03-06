@@ -24,11 +24,11 @@ flowchart TD
     A["SwiftUI 화면 전환"] --> B["NavigationStack"]
     A --> C["TabView"]
     A --> D["모달 프레젠테이션"]
-    B --> B1["push/pop\n앞뒤 이동"]
-    C --> C1["탭 전환\n좌우 이동"]
-    D --> D1["sheet\n카드형 모달"]
-    D --> D2["fullScreenCover\n전체 화면 모달"]
-    D --> D3["alert / confirmationDialog\n확인 다이얼로그"]
+    B --> B1["push/pop<br/>앞뒤 이동"]
+    C --> C1["탭 전환<br/>좌우 이동"]
+    D --> D1["sheet<br/>카드형 모달"]
+    D --> D2["fullScreenCover<br/>전체 화면 모달"]
+    D --> D3["alert / confirmationDialog<br/>확인 다이얼로그"]
 ```
 
 
@@ -234,12 +234,12 @@ struct HalfSheetDemo: View {
 ```mermaid
 flowchart LR
     subgraph sheet
-        S1["카드형 표시"] --> S2["스와이프 닫기 ✅"]
-        S1 --> S3["presentationDetents\n높이 조절 가능"]
+        S1["카드형 표시"] --> S2["스와이프 닫기 O"]
+        S1 --> S3["presentationDetents<br/>높이 조절 가능"]
         S1 --> S4["뒤 화면 일부 보임"]
     end
     subgraph fullScreenCover
-        F1["전체 화면 표시"] --> F2["스와이프 닫기 ❌"]
+        F1["전체 화면 표시"] --> F2["스와이프 닫기 X"]
         F1 --> F3["높이 조절 불가"]
         F1 --> F4["닫기 버튼 필수"]
     end

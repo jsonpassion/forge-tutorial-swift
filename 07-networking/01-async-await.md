@@ -32,15 +32,15 @@ sequenceDiagram
     participant U as 사용자(UI)
     participant N as 네트워크 요청
 
-    Note over U,N: 🔴 동기 방식 (Synchronous)
+    Note over U,N: X 동기 방식 (Synchronous)
     U->>N: 데이터 요청
     Note over U: ❄️ UI 멈춤 (3초)
     N-->>U: 응답 반환
     Note over U: UI 재개
 
-    Note over U,N: 🟢 비동기 방식 (Async/Await)
+    Note over U,N: O 비동기 방식 (Async/Await)
     U->>N: 데이터 요청
-    Note over U: ✅ UI 계속 동작
+    Note over U: O UI 계속 동작
     Note over U: 스크롤, 애니메이션 가능
     N-->>U: 응답 반환
     Note over U: 결과 반영
