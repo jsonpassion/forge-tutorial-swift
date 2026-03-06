@@ -16,6 +16,20 @@
 
 App Intents는 단순한 Siri 연동을 넘어서 앱의 **확장 전략**입니다. 한 번 작성한 인텐트가 Siri 음성 명령, Shortcuts 자동화, Spotlight 검색, 위젯 설정, Control Center 컨트롤에서 모두 동작합니다. iOS 26에서는 Apple Intelligence와의 통합이 더욱 깊어져서, Siri가 앱의 데이터를 이해하고 맥락에 맞는 응답을 제공합니다. 인텐트를 잘 설계하면 사용자가 앱을 열지 않고도 핵심 기능을 사용할 수 있어요.
 
+> 📊 **그림 1**: App Intents — 한 번 정의하면 시스템 전반에서 활용
+
+```mermaid
+flowchart TD
+    A["AppIntent 정의"] --> B["Siri 음성 명령"]
+    A --> C["Shortcuts 앱"]
+    A --> D["Spotlight 검색"]
+    A --> E["위젯 버튼"]
+    A --> F["Control Center"]
+    A --> G["Action Button"]
+    style A fill:#4A90D9,color:#fff
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: AppIntent — 앱 기능을 시스템에 노출하기
@@ -23,6 +37,23 @@ App Intents는 단순한 Siri 연동을 넘어서 앱의 **확장 전략**입니
 > 💡 **비유**: AppIntent는 **메뉴판**입니다. 레스토랑(앱)이 어떤 요리(기능)를 제공하는지 배달 플랫폼(시스템)에 등록하면, 고객(사용자)이 앱을 방문하지 않아도 주문(실행)할 수 있죠.
 
 AppIntent 프로토콜에는 세 가지 핵심 요소가 있습니다.
+
+> 📊 **그림 2**: AppIntent 실행 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant S as Siri / Shortcuts
+    participant I as AppIntent
+    participant A as 앱 로직
+    U->>S: "물 얼마나 마셨어?"
+    S->>I: Intent 매칭 + 파라미터 해석
+    I->>A: perform() 호출
+    A-->>I: 결과 반환
+    I-->>S: IntentResult + Dialog
+    S-->>U: "오늘 5잔 마셨습니다"
+```
+
 
 | 요소 | 역할 |
 |------|------|
@@ -160,6 +191,22 @@ struct WaterView: View {
 
 앱의 커스텀 데이터 타입을 Siri, Shortcuts, Spotlight에서 검색하고 선택할 수 있게 하려면 `AppEntity`를 사용합니다.
 
+> 📊 **그림 3**: AppEntity와 EntityQuery 검색 구조
+
+```mermaid
+flowchart LR
+    A["사용자 입력"] --> B["EntityStringQuery"]
+    B --> C{"검색 방식"}
+    C -->|ID 검색| D["entities(for:)"]
+    C -->|텍스트 검색| E["entities(matching:)"]
+    C -->|추천 목록| F["suggestedEntities()"]
+    D --> G["AppEntity 반환"]
+    E --> G
+    F --> G
+    G --> H["인텐트 파라미터로 전달"]
+```
+
+
 ```swift
 import AppIntents
 
@@ -217,6 +264,20 @@ struct LogDrinkIntent: AppIntent {
 ### 개념 5: 위젯과 Control Center에서 인텐트 재사용
 
 App Intents의 강력한 점은 **한 번 작성하면 여러 곳에서 재사용**된다는 것입니다.
+
+> 📊 **그림 4**: 인텐트 재사용 — 하나의 인텐트, 다양한 진입점
+
+```mermaid
+flowchart TD
+    W["위젯 버튼"] --> I["LogWaterIntent"]
+    CC["Control Center"] --> I
+    SR["Siri 음성"] --> I
+    SC["Shortcuts 앱"] --> I
+    I --> P["perform()"]
+    P --> D["WaterStore 업데이트"]
+    style I fill:#34C759,color:#fff
+```
+
 
 ```swift
 import WidgetKit

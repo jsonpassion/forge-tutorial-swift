@@ -87,6 +87,24 @@ Source of Truth를 결정하는 핵심 질문: **"이 데이터를 누가 만들
 
 SwiftUI의 데이터 흐름은 기본적으로 **위에서 아래로** 흐릅니다.
 
+> 📊 **그림 1**: SwiftUI 단방향 데이터 흐름 — 데이터는 아래로, 이벤트는 위로
+
+```mermaid
+flowchart TD
+    subgraph 데이터흐름["📦 데이터 흐름 (위 → 아래)"]
+        direction TB
+        A["부모 뷰\n@State / @Observable"] -->|"프로퍼티 전달"| B["자식 뷰\n읽기 전용"]
+        A -->|"$binding 전달"| C["자식 뷰\n@Binding"]
+        A -->|".environment()"| D["하위 뷰 계층\n@Environment"]
+    end
+    subgraph 이벤트흐름["⚡ 이벤트 흐름 (아래 → 위)"]
+        direction BT
+        E["버튼 탭 / 사용자 입력"] -->|"@Binding 값 변경"| F["부모 상태 업데이트"]
+        G["클로저 콜백 호출"] -->|"onAction()"| F
+    end
+```
+
+
 **데이터 흐름** → 부모에서 자식으로 (아래로)
 - `@State` → `@Binding`
 - `@Observable` → 프로퍼티 전달
@@ -185,6 +203,35 @@ struct TodoAppView: View {
 
 상황에 따라 어떤 프로퍼티 래퍼를 써야 하는지, 의사결정 흐름을 정리해볼게요.
 
+> 📊 **그림 2**: 프로퍼티 래퍼 선택 의사결정 트리
+
+```mermaid
+flowchart TD
+    Q1{"이 뷰가 데이터를\n만드나요?"}
+    Q1 -->|"예"| Q2{"값 타입?\n참조 타입?"}
+    Q1 -->|"아니오"| Q4{"어떻게 받나요?"}
+    Q2 -->|"값 타입"| R1["@State"]
+    Q2 -->|"참조 타입"| R2["@State +\n@Observable 클래스"]
+    R1 --> Q3{"자식에게\n전달 필요?"}
+    R2 --> Q3
+    Q3 -->|"읽기만"| R3["일반 프로퍼티"]
+    Q3 -->|"읽기+쓰기\n값 타입"| R4["$로 @Binding 전달"]
+    Q3 -->|"읽기+쓰기\n참조 타입"| R5["객체 전달 +\n@Bindable"]
+    Q4 -->|"부모가 직접 전달"| Q5{"타입은?"}
+    Q4 -->|"뷰 계층 어디서든"| R6["@Environment"]
+    Q5 -->|"값 타입"| R7["@Binding"]
+    Q5 -->|"참조 타입"| R8["프로퍼티 / @Bindable"]
+    style R1 fill:#4CAF50,color:#fff
+    style R2 fill:#4CAF50,color:#fff
+    style R3 fill:#2196F3,color:#fff
+    style R4 fill:#2196F3,color:#fff
+    style R5 fill:#2196F3,color:#fff
+    style R6 fill:#FF9800,color:#fff
+    style R7 fill:#2196F3,color:#fff
+    style R8 fill:#2196F3,color:#fff
+```
+
+
 **질문 1: 이 데이터를 이 뷰가 만드나요?**
 - **예** → 질문 2로
 - **아니오** → 질문 4로
@@ -271,6 +318,26 @@ struct VisualDebugView: View {
 
 WWDC 2025에서 소개된 SwiftUI Instrument는 **Cause & Effect 그래프**를 제공합니다:
 - 어떤 상태 변경이 어떤 뷰 업데이트를 유발했는지 시각화
+
+> 📊 **그림 5**: SwiftUI 상태 변경 → 뷰 업데이트 디버깅 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant V as 뷰 (body)
+    participant S as @State / @Observable
+    participant D as SwiftUI Diffing
+    participant R as 렌더러
+    U->>V: 버튼 탭
+    V->>S: 상태 변경 (count += 1)
+    S-->>V: 변경 감지 → body 재호출
+    Note over V: _printChanges()로<br/>변경 원인 확인
+    V->>D: 새 뷰 트리 전달
+    D->>D: 이전 트리와 비교 (diff)
+    D->>R: 변경된 부분만 렌더링
+    Note over R: 실제 비용은<br/>여기서 발생
+```
+
 - 불필요한 업데이트를 주황색/빨간색으로 표시
 - `@Observable`, `@Environment` 의존성 추적 가능
 
@@ -433,6 +500,29 @@ struct RecipeAppView: View {
 ```
 
 이 설계에서의 핵심 판단들:
+
+> 📊 **그림 3**: 레시피 앱의 데이터 흐름 아키텍처
+
+```mermaid
+graph TD
+    subgraph App["RecipeAppView"]
+        Store["@State RecipeStore\n(Source of Truth)"]
+    end
+    subgraph List["RecipeListView"]
+        Env["@Environment RecipeStore"]
+        Search["@State searchText\n(로컬 상태)"]
+    end
+    subgraph Row["RecipeRowView"]
+        Recipe["let recipe: Recipe\n(값 전달)"]
+        Callback["onToggleFavorite\n(클로저 콜백)"]
+    end
+    Store -->|".environment()"| Env
+    Env -->|"필요한 값만 전달"| Recipe
+    Store -.->|"클로저 전달"| Callback
+    Callback -.->|"이벤트 위로 전달"| Store
+    Search -->|"필터링"| Env
+```
+
 - **`RecipeStore`**: 앱 전역 → `@Environment`로 주입
 - **`searchText`**: 검색 화면에서만 필요 → `@State` 로컬
 - **`RecipeRowView`**: `@Observable` 전체가 아니라 **필요한 `Recipe` 값만** 전달
@@ -620,6 +710,38 @@ struct MemoAppView: View {
 ```
 
 이 앱의 데이터 흐름 정리:
+
+> 📊 **그림 4**: 메모 앱 전체 데이터 흐름 설계
+
+```mermaid
+flowchart TD
+    subgraph Root["MemoAppView"]
+        MS["@State MemoStore"]
+        SA["@State showAddSheet"]
+        ST["@State showTimestamps"]
+    end
+    subgraph EnvLayer["Environment 주입"]
+        E1[".environment(store)"]
+        E2[".environment(showTimestamps)"]
+    end
+    subgraph ListView["MemoRowView"]
+        LM["let memo: Memo\n(값만 전달)"]
+        LP["onPin 클로저"]
+        LE["@Environment showTimestamps"]
+    end
+    subgraph Sheet["AddMemoSheet"]
+        ST1["@State title (로컬)"]
+        ST2["@State content (로컬)"]
+        CB["onSave 콜백"]
+    end
+    MS --> E1 --> LM
+    ST --> E2 --> LE
+    MS -.->|"클로저"| LP
+    LP -.->|"이벤트↑"| MS
+    SA -->|"sheet 표시"| Sheet
+    CB -.->|"이벤트↑"| MS
+```
+
 - **`MemoStore`** → `@State` (루트) + `@Environment` (하위 뷰)
 - **`showAddSheet`**, **`showTimestamps`** → `@State` (로컬 UI 상태)
 - **`title`**, **`content`** (AddMemoSheet) → `@State` (시트 로컬)

@@ -58,6 +58,23 @@ struct ProductCard: View {
 | `.accessibilityElement(children:)` | 자식 요소 처리 방식 | `.combine`, `.contain`, `.ignore` |
 | `.accessibilityIdentifier(_:)` | 테스트 자동화용 ID | UI 테스트에서만 사용 |
 
+> 📊 **그림 1**: accessibilityElement(children:) 옵션별 VoiceOver 동작 비교
+
+```mermaid
+flowchart TD
+    subgraph COMBINE[".combine — 하나로 합침"]
+        C1["카드 뷰"] --> C2["VoiceOver 읽기:\n'상품명, 가격 10000원'"]
+    end
+    subgraph CONTAIN[".contain — 개별 탐색"]
+        D1["카드 뷰"] --> D2["VoiceOver: '상품명'"]
+        D1 --> D3["VoiceOver: '가격 10000원'"]
+    end
+    subgraph IGNORE[".ignore — 자식 무시"]
+        E1["카드 뷰"] --> E2["직접 지정한\naccessibilityLabel만 읽기"]
+    end
+```
+
+
 ```swift
 // 커스텀 별점 뷰의 접근성
 struct RatingView: View {
@@ -123,6 +140,22 @@ struct IconWithText: View {
 
 ### 개념 3: String Catalogs — 현대적 다국어 지원
 
+> 📊 **그림 2**: String Catalogs 다국어 지원 워크플로우
+
+```mermaid
+flowchart LR
+    A["Swift 코드\nText('환영합니다')"] -->|"자동 추출"| B["String Catalog\n(.xcstrings)"]
+    B -->|"번역 입력"| C["언어별 번역"]
+    C --> D["🇰🇷 한국어"]
+    C --> E["🇺🇸 English"]
+    C --> F["🇯🇵 日本語"]
+    D --> G["빌드 시\n로케일 자동 선택"]
+    E --> G
+    F --> G
+    G --> H["현지화된 앱"]
+```
+
+
 > 💡 **비유**: String Catalog는 **자동 번역 노트**입니다. 코드에서 문자열을 쓰면 Xcode가 자동으로 번역이 필요한 목록을 만들어주고, 번역본을 언어별로 관리해줍니다.
 
 Xcode 15부터 도입된 String Catalogs(`.xcstrings`)는 기존의 `.strings` 파일을 대체합니다. 코드에서 사용한 문자열을 자동으로 추출하고, 편리한 에디터로 번역을 관리할 수 있죠.
@@ -167,6 +200,24 @@ Text(.greeting(name: username))  // 안전하게 인자 전달
 > 💡 **알고 계셨나요?**: Xcode 26에서는 **AI 기반 자동 코멘트 생성** 기능도 추가되었습니다. 설정에서 "Automatically generate string catalog comments"를 켜면, Xcode가 코드 문맥을 분석해 번역가를 위한 설명을 자동으로 작성해줍니다.
 
 ### 개념 4: 접근성 테스트
+
+> 📊 **그림 3**: 접근성 테스트 전략 — 수동 + 자동 병행
+
+```mermaid
+flowchart TD
+    A["접근성 테스트"] --> B["수동 테스트"]
+    A --> C["자동 테스트"]
+    B --> B1["VoiceOver로\n직접 탐색"]
+    B --> B2["Dynamic Type\n최대 크기 확인"]
+    B --> B3["Accessibility\nInspector 도구"]
+    C --> C1["performAccessibility\nAudit()"]
+    C --> C2["접근성 레이블\n값 검증"]
+    C1 --> D["접근성 문제\n자동 감지"]
+    C2 --> D
+    B1 --> D
+    D --> E["Accessibility\nNutrition Labels 준비"]
+```
+
 
 접근성이 잘 구현되었는지 테스트하는 방법도 중요합니다.
 

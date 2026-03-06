@@ -1,8 +1,8 @@
 {
   "title": "2026: Swift 완전 정복",
-  "subtitle": "iOS 26 & Swift 6 시대의 앱 개발 A to Z",
-  "version": "1.0.19",
-  "lastUpdated": "2026-02-09",
+  "subtitle": "16챕터 73섹션 튜토리얼",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-06",
   "language": "ko",
   "author": "Jason",
   "chapters": [
@@ -557,18 +557,5 @@
       ]
     }
   ],
-  "resources": {
-    "papers": {
-      "description": "Swift 공식 문서와 WWDC 세션",
-      "file": "resources/essential-papers.md"
-    },
-    "datasets": {
-      "description": "챕터별 예제 프로젝트",
-      "file": "resources/datasets.md"
-    },
-    "tools": {
-      "description": "개발 도구와 유용한 라이브러리",
-      "file": "resources/tools.md"
-    }
-  }
+  "resources": {}
 }

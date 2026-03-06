@@ -18,9 +18,40 @@ SwiftUI의 데이터는 보통 부모에서 자식으로 흐릅니다. 하지만
 
 SwiftUI의 `@Binding`은 부모가 **미리 알고 있는** 값을 공유할 때 쓰지만, 자식의 레이아웃 결과처럼 **렌더링 후에야 알 수 있는** 정보는 다른 메커니즘이 필요합니다. 바로 PreferenceKey죠.
 
+> 📊 **그림 1**: SwiftUI 데이터 흐름 — @Binding vs PreferenceKey
+
+```mermaid
+flowchart LR
+    subgraph 일반["@Binding (부모→자식)"]
+        P1["부모 뷰"] -->|"값 전달"| C1["자식 뷰"]
+        C1 -->|"$binding 수정"| P1
+    end
+    subgraph 프리퍼런스["PreferenceKey (자식→부모)"]
+        C2["자식 뷰"] -->|"preference(key:value:)"| R["reduce로 취합"]
+        R -->|"onPreferenceChange"| P2["부모 뷰"]
+    end
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: PreferenceKey — 자식에서 부모로 편지 보내기
+
+> 📊 **그림 2**: PreferenceKey 동작 흐름 — 보고 체계처럼 값이 올라간다
+
+```mermaid
+sequenceDiagram
+    participant C1 as 자식 뷰 A
+    participant C2 as 자식 뷰 B
+    participant R as reduce()
+    participant P as 부모 뷰
+    C1->>R: preference(key: HeightKey, value: 50)
+    C2->>R: preference(key: HeightKey, value: 80)
+    R->>R: max(50, 80) = 80
+    R->>P: onPreferenceChange → 80
+    P->>P: @State 업데이트
+```
+
 
 > 💡 **비유**: PreferenceKey는 **회사의 보고 체계**와 같습니다. 사원(자식 뷰)이 보고서(Preference 값)를 작성하면, 과장 → 부장 → 사장(부모 뷰)으로 올라가면서 취합됩니다. `reduce` 메서드가 바로 이 취합 로직이죠.
 
@@ -129,6 +160,24 @@ struct GeometryReaderDemo: View {
 
 ### 개념 3: 안전한 크기 측정 패턴
 
+> 📊 **그림 3**: GeometryReader 배치 위치에 따른 레이아웃 영향
+
+```mermaid
+flowchart TD
+    subgraph 위험["❌ 직접 사용"]
+        GR1["GeometryReader"] --> V1["가용 공간 전체 차지"]
+        V1 --> L1["레이아웃 깨짐"]
+    end
+    subgraph 안전["✅ .background 안에 사용"]
+        TV["원본 뷰"] --> BG[".background"]
+        BG --> GR2["GeometryReader"]
+        GR2 --> CL["Color.clear"]
+        CL --> PK[".preference(key:value:)"]
+        PK --> OP["onPreferenceChange"]
+    end
+```
+
+
 GeometryReader를 `.background`에 넣으면 원래 뷰의 레이아웃에 영향을 주지 않고 크기를 측정할 수 있습니다:
 
 ```swift
@@ -229,6 +278,21 @@ struct ModernGeometryDemo: View {
 ```
 
 ### 개념 5: 실전 패턴 — 스크롤에 따른 헤더 효과
+
+> 📊 **그림 4**: 스크롤 오프셋 감지 파이프라인
+
+```mermaid
+flowchart TD
+    A["ScrollView
+.coordinateSpace(name: scroll)"] --> B["GeometryReader\n(height: 0 앵커)"]
+    B --> C["proxy.frame(in: .named(scroll)).minY"]
+    C --> D["ScrollOffsetKey\nPreferenceKey"]
+    D --> E["onPreferenceChange"]
+    E --> F["@State scrollOffset 업데이트"]
+    F --> G["headerOpacity 계산"]
+    G --> H["고정 헤더\n.opacity(headerOpacity)"]
+```
+
 
 PreferenceKey와 GeometryReader를 조합한 가장 대표적인 실전 패턴입니다:
 

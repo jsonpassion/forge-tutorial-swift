@@ -58,6 +58,23 @@ print(s1, s2)  // "세계" "안녕"
 
 `<T>`에서 `T`는 **타입 매개변수(Type Parameter)** 입니다. "어떤 타입이든 들어올 수 있다"는 뜻이에요. 함수가 호출될 때 T가 구체적인 타입으로 결정됩니다.
 
+> 📊 **그림 1**: 제네릭 함수의 타입 특수화 — 하나의 틀에서 여러 타입이 탄생
+
+```mermaid
+flowchart TD
+    A["제네릭 함수\nswapValues<T>"] --> B["T = Int"]
+    A --> C["T = String"]
+    A --> D["T = Double"]
+    B --> E["swapValues(&x, &y)\nInt 교환"]
+    C --> F["swapValues(&s1, &s2)\nString 교환"]
+    D --> G["swapValues(&d1, &d2)\nDouble 교환"]
+    style A fill:#f9a825,color:#000
+    style B fill:#42a5f5,color:#fff
+    style C fill:#66bb6a,color:#fff
+    style D fill:#ab47bc,color:#fff
+```
+
+
 ### 개념 2: 제네릭 타입 만들기
 
 함수뿐 아니라 struct, class, enum도 제네릭으로 만들 수 있습니다.
@@ -138,6 +155,24 @@ func printSorted<T: Comparable & CustomStringConvertible>(_ items: [T]) {
 
 ### 개념 4: 에러 처리 — throw / try / catch
 
+> 📊 **그림 4**: 에러 전파 흐름 — throw에서 catch까지
+
+```mermaid
+sequenceDiagram
+    participant 호출자 as 호출자 (do 블록)
+    participant 함수 as throws 함수
+    participant 에러 as Error
+    호출자->>함수: try login(username, password)
+    alt 성공
+        함수-->>호출자: 토큰 반환
+    else 실패
+        함수->>에러: throw LoginError
+        에러-->>호출자: catch 블록으로 전달
+        Note over 호출자: 에러 종류별 분기 처리
+    end
+```
+
+
 > 💡 **비유**: 에러 처리는 **보험**입니다. 사고가 안 나면 좋지만, 혹시 사고가 나면 보험이 피해를 줄여주죠. 코드에서도 "실패할 수 있는 작업"에 대해 미리 대비해두는 겁니다.
 
 ```run:swift
@@ -185,6 +220,26 @@ do {
 
 에러를 처리하는 세 가지 방법:
 
+> 📊 **그림 2**: 에러 처리 3가지 방법 비교 — try / try? / try!
+
+```mermaid
+flowchart TD
+    START["throws 함수 호출"] --> TRY["do-try-catch"]
+    START --> TRYQ["try?"]
+    START --> TRYE["try!"]
+    TRY -->|성공| S1["값 반환"]
+    TRY -->|실패| C1["catch 블록에서\n에러 처리"]
+    TRYQ -->|성공| S2["Optional(값)"]
+    TRYQ -->|실패| C2["nil 반환"]
+    TRYE -->|성공| S3["값 반환"]
+    TRYE -->|실패| C3["💥 런타임 크래시"]
+    style TRY fill:#42a5f5,color:#fff
+    style TRYQ fill:#66bb6a,color:#fff
+    style TRYE fill:#ef5350,color:#fff
+    style C3 fill:#b71c1c,color:#fff
+```
+
+
 ```run:swift
 // 방법 1: do-try-catch — 에러를 직접 처리
 do {
@@ -214,6 +269,22 @@ print(token ?? "로그인 실패")   // "토큰-ABC123"
 ### 개념 5: Result 타입 — 성공과 실패를 값으로
 
 `Result`는 [앞서 배운 enum](./04-enums-pattern.md)으로 만들어진 타입입니다. 에러를 **값으로 다룰 수 있게** 해줍니다.
+
+> 📊 **그림 3**: Result 타입의 분기 구조 — 성공과 실패를 값으로 표현
+
+```mermaid
+flowchart LR
+    F["함수 호출"] --> R["Result<Success, Failure>"]
+    R -->|".success"| S["성공 값 추출\nlet name = ..."]
+    R -->|".failure"| E["에러 값 추출\nlet error = ..."]
+    S --> U1["UI 업데이트"]
+    E --> U2["에러 메시지 표시"]
+    E --> U3["재시도 로직"]
+    style R fill:#f9a825,color:#000
+    style S fill:#66bb6a,color:#fff
+    style E fill:#ef5350,color:#fff
+```
+
 
 ```run:swift
 enum DataError: Error {

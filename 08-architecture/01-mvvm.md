@@ -35,7 +35,49 @@ MVVM을 적용하면 이야기가 달라집니다. 비즈니스 로직을 ViewMo
 
 **사용자 액션** → **View** → **ViewModel** → **Model** → **ViewModel**(가공) → **View**(업데이트)
 
+> 📊 **그림 1**: MVVM 데이터 흐름 — 사용자 액션에서 UI 업데이트까지
+
+```mermaid
+flowchart LR
+    U["사용자 액션"] --> V["View\n(UI 렌더링)"]
+    V -->|"이벤트 전달"| VM["ViewModel\n(로직 처리)"]
+    VM -->|"데이터 요청"| M["Model\n(데이터 구조)"]
+    M -->|"원본 데이터"| VM
+    VM -->|"가공된 상태"| V
+    V -->|"화면 업데이트"| U
+```
+
+
 ### 개념 2: SwiftUI에서 ViewModel 만들기
+
+> 📊 **그림 2**: MVVM 각 레이어의 책임과 SwiftUI 매핑
+
+```mermaid
+classDiagram
+    class Model {
+        +struct Article
+        +Codable 프로토콜
+        데이터 구조 정의
+    }
+    class ViewModel {
+        +@Observable 클래스
+        +@MainActor
+        +articles: [Article]
+        +isLoading: Bool
+        +fetchArticles() async
+        비즈니스 로직 처리
+    }
+    class View {
+        +SwiftUI View
+        +@State viewModel
+        +body: some View
+        UI 렌더링만 담당
+    }
+    View --> ViewModel : 이벤트 호출
+    ViewModel --> Model : 데이터 사용
+    ViewModel --> View : 상태 바인딩
+```
+
 
 SwiftUI에서 ViewModel은 `@Observable` 매크로를 사용해 만듭니다. 이전의 `ObservableObject` + `@Published` 방식보다 훨씬 깔끔해졌어요.
 
@@ -87,6 +129,27 @@ class ArticleListViewModel {
 > ⚠️ **흔한 오해**: "ViewModel에 `@MainActor`를 붙이면 성능이 떨어지지 않나요?" — ViewModel은 UI 상태를 관리하므로 메인 스레드에서 동작해야 합니다. `async` 메서드 안의 네트워크 호출은 자동으로 백그라운드에서 실행되고, 결과만 메인 스레드로 돌아오기 때문에 성능 문제가 없습니다.
 
 ### 개념 3: View에서 ViewModel 연결하기
+
+> 📊 **그림 3**: ArticleListView의 실행 흐름 — View가 나타나면 ViewModel이 데이터를 가져옵니다
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant V as ArticleListView
+    participant VM as ArticleListViewModel
+    participant API as JSONPlaceholder API
+
+    U->>V: 화면 진입
+    V->>VM: .task { fetchArticles() }
+    VM->>VM: isLoading = true
+    VM->>API: URLSession.shared.data(from: url)
+    API-->>VM: JSON 응답
+    VM->>VM: JSONDecoder로 파싱
+    VM->>VM: articles 업데이트, isLoading = false
+    VM-->>V: @Observable 상태 변경 감지
+    V-->>U: 기사 목록 표시
+```
+
 
 ```swift
 // MARK: - View
@@ -279,6 +342,24 @@ MVVM은 2005년 Microsoft의 John Gossman이 WPF(Windows Presentation Foundation
 사실 Apple은 공식적으로 "MVVM을 쓰라"고 말한 적이 없어요. WWDC 2020의 "Data Essentials in SwiftUI" 세션에서는 "Source of Truth"와 "데이터 흐름"을 강조했을 뿐이죠. SwiftUI 커뮤니티에서는 "MVVM이 SwiftUI에 꼭 필요한가?"라는 논쟁이 계속되고 있습니다.
 
 ### "MVVM이 필요없다"는 주장에 대해
+
+> 📊 **그림 4**: 화면 복잡도에 따른 MVVM 적용 판단 기준
+
+```mermaid
+flowchart TD
+    Q{"화면이 복잡한가?"}
+    Q -->|"단순 표시 화면"| A["ViewModel 없이\nView + @State로 충분"]
+    Q -->|"비즈니스 로직 있음"| B{"테스트가 필요한가?"}
+    B -->|"아니오"| C["View 내 로직도 OK\n단, 코드 정리 필요"]
+    B -->|"예"| D["ViewModel 분리 권장"]
+    Q -->|"복잡한 폼/검색/다중 API"| E["ViewModel 필수\n여러 ViewModel로 분할 가능"]
+
+    style A fill:#e8f5e9
+    style C fill:#fff3e0
+    style D fill:#e3f2fd
+    style E fill:#e3f2fd
+```
+
 
 일부 개발자들은 SwiftUI 자체가 이미 View와 State를 분리하므로 별도 ViewModel이 필요없다고 주장합니다. 간단한 화면에서는 맞는 말이에요. 하지만 **비즈니스 로직이 복잡하거나, 테스트가 중요하거나, 팀이 크다면** ViewModel의 가치는 분명합니다.
 

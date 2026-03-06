@@ -15,6 +15,27 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: @State와 @Binding의 데이터 흐름 전체 구조
+
+```mermaid
+flowchart TD
+    subgraph 부모뷰["부모 뷰"]
+        SOT["@State\n(Source of Truth)"]
+    end
+    subgraph 자식뷰A["자식 뷰 A"]
+        BA["@Binding"]
+    end
+    subgraph 자식뷰B["자식 뷰 B"]
+        BB["@Binding"]
+    end
+    SOT -->|"$로 바인딩 전달"| BA
+    SOT -->|"$로 바인딩 전달"| BB
+    BA -->|"값 변경"| SOT
+    BB -->|"값 변경"| SOT
+    SOT -->|"값 변경 감지"| UI["SwiftUI가 body 재계산\n→ 화면 자동 업데이트"]
+```
+
+
 SwiftUI는 **선언형(Declarative)** 프레임워크입니다. "이 데이터가 이러면 화면은 이렇게 보여줘"라고 선언하면, 데이터가 바뀔 때 SwiftUI가 알아서 화면을 업데이트해요. 그런데 이 마법이 작동하려면, SwiftUI가 **어떤 데이터를 지켜봐야 하는지** 알아야 합니다. 그게 바로 `@State`의 역할이에요.
 
 `@State`와 `@Binding`을 모르면 SwiftUI에서 사실상 아무것도 할 수 없습니다. 버튼 하나 누를 때마다 바뀌는 숫자, 텍스트 필드에 입력하는 글자, 토글의 on/off — 모든 인터랙션의 출발점이 바로 여기거든요.
@@ -121,6 +142,18 @@ struct ProfileEditorView: View {
 - `count` → 현재 값을 **읽기만** 함 (`Int`)
 - `$count` → 값을 **읽고 쓸 수 있는 바인딩** (`Binding<Int>`)
 
+> 📊 **그림 2**: @State 값 읽기 vs $ 바인딩의 차이
+
+```mermaid
+flowchart LR
+    STATE["@State private var count = 0"]
+    STATE -->|"count"| READ["읽기 전용\nInt 값 반환"]
+    STATE -->|"$count"| BIND["Binding<Int>\n읽기 + 쓰기"]
+    READ --> TEXT["Text에서 표시"]
+    BIND --> INPUT["TextField, Toggle,\nSlider 등 입력 컨트롤"]
+```
+
+
 `TextField`, `Toggle`, `Slider` 같은 입력 컨트롤은 값을 변경해야 하므로, `$`를 통해 바인딩을 전달받습니다.
 
 ### 개념 4: @Binding — 부모의 데이터를 빌려 쓰기
@@ -179,6 +212,22 @@ struct ParentCounterView: View {
 ```
 
 이 코드에서 `CounterControlView` 두 개가 같은 `$totalCount`를 공유하고 있어요. 어느 쪽에서든 값을 바꾸면 양쪽 모두 업데이트됩니다. 이것이 **단일 진실의 원천(Single Source of Truth)** 패턴이에요.
+
+> 📊 **그림 3**: Single Source of Truth — 하나의 @State를 여러 자식이 공유
+
+```mermaid
+sequenceDiagram
+    participant P as ParentCounterView<br/>(@State totalCount)
+    participant A as CounterControlView A<br/>(@Binding count)
+    participant B as CounterControlView B<br/>(@Binding count)
+    P->>A: $totalCount 전달
+    P->>B: $totalCount 전달
+    A->>P: count += 1 (값 변경)
+    P->>P: totalCount 업데이트
+    P->>A: 새 값으로 UI 갱신
+    P->>B: 새 값으로 UI 갱신
+```
+
 
 > 🔥 **실무 팁**: `@Binding`에는 `private`을 붙이지 마세요. 부모 뷰가 값을 전달해줘야 하니까요. `@State`는 `private`, `@Binding`은 `private` 없이 — 이 규칙만 기억하면 됩니다.
 
@@ -378,6 +427,19 @@ struct TodoListView: View {
 ```
 
 이 실습에서 주목할 포인트:
+
+> 📊 **그림 4**: 할 일 앱의 뷰 계층과 데이터 흐름
+
+```mermaid
+flowchart TD
+    TLV["TodoListView\n@State todos 배열"] -->|"$todos"| ATV["AddTodoView\n@Binding todos"]
+    TLV -->|"ForEach $todos → $item"| TRV["TodoRowView\n@Binding item"]
+    ATV -->|"todos.append()"| TLV
+    TRV -->|"item.isCompleted.toggle()"| TLV
+    TLV -->|"sheet 표시"| ATV
+    TLV -->|"List 렌더링"| TRV
+```
+
 - **`TodoListView`**: `@State`로 `todos` 배열을 소유 (Source of Truth)
 - **`TodoRowView`**: `@Binding`으로 개별 아이템을 수정
 - **`AddTodoView`**: `@Binding`으로 부모의 배열에 새 항목 추가

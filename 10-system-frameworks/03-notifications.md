@@ -18,6 +18,21 @@
 
 ## 핵심 개념
 
+> 📊 **그림 1**: 로컬 알림의 전체 흐름 — 권한 요청부터 사용자 응답까지
+
+```mermaid
+flowchart LR
+    A["권한 요청"] --> B{"허용?"}
+    B -- Yes --> C["콘텐츠 작성"]
+    B -- No --> X["알림 불가"]
+    C --> D["트리거 설정"]
+    D --> E["요청 등록"]
+    E --> F["시스템 대기"]
+    F --> G["알림 표시"]
+    G --> H["사용자 응답"]
+```
+
+
 ### 개념 1: 알림 권한 요청
 
 > 💡 **비유**: 알림 권한은 **초인종 설치 허가**와 같습니다. 아무리 중요한 소식이 있어도, 집주인(사용자)이 "초인종을 달아도 좋다"고 허락하지 않으면 문 앞에서 기다리는 수밖에 없죠.
@@ -51,6 +66,20 @@ func requestNotificationPermission() async -> Bool {
 > 💡 **비유**: 로컬 알림은 **예약 문자**와 같습니다. 내용(Content)을 작성하고, 발송 시간(Trigger)을 정하고, 발송 요청(Request)을 넣으면 시스템이 알아서 전달합니다.
 
 알림은 세 가지 조각으로 구성됩니다: **콘텐츠 + 트리거 + 요청**
+
+> 📊 **그림 2**: 알림의 세 가지 구성 요소가 합쳐져 요청이 되는 구조
+
+```mermaid
+flowchart TD
+    A["UNMutableNotificationContent"] --> D["UNNotificationRequest"]
+    B["Trigger 선택"] --> D
+    B --> B1["TimeInterval\n(N초 후)"]
+    B --> B2["Calendar\n(특정 날짜/시간)"]
+    B --> B3["Location\n(위치 진입/이탈)"]
+    D --> E["UNUserNotificationCenter\n.add(request)"]
+    E --> F["시스템이 트리거 조건\n충족 시 알림 전달"]
+```
+
 
 ```swift
 import UserNotifications
@@ -133,6 +162,18 @@ func scheduleDailyReminder() async {
 > 💡 **비유**: 알림 액션은 **인터폰 버튼**과 같습니다. 단순히 "딩동" 소리만 나는 초인종이 아니라, "문 열기", "통화하기", "무시하기" 버튼이 달린 스마트 인터폰인 거죠. 사용자가 앱을 열지 않고도 바로 반응할 수 있습니다.
 
 알림에 커스텀 버튼을 추가하면 사용자가 앱을 열지 않고도 바로 행동할 수 있습니다:
+
+> 📊 **그림 3**: 알림 액션과 카테고리의 등록 및 연결 구조
+
+```mermaid
+flowchart TD
+    A1["UNNotificationAction\n'완료!'"] --> C["UNNotificationCategory\nid: REMINDER"]
+    A2["UNNotificationAction\n'10분 후 다시'"] --> C
+    C --> D["setNotificationCategories\n(센터에 등록)"]
+    E["UNMutableNotificationContent"] -- "categoryIdentifier\n= 'REMINDER'" --> F["알림 요청"]
+    F --> G["알림 표시\n(액션 버튼 포함)"]
+```
+
 
 ```swift
 import UserNotifications
@@ -239,6 +280,30 @@ class NotificationManager: NSObject, ObservableObject,
 ```
 
 ## 실습: 알림 테스트 앱
+
+> 📊 **그림 4**: 알림 수신 시 델리게이트 콜백 흐름
+
+```mermaid
+sequenceDiagram
+    participant S as 시스템
+    participant D as Delegate
+    participant A as 앱
+
+    S->>S: 트리거 조건 충족
+    alt 앱이 포그라운드
+        S->>D: willPresent 호출
+        D-->>S: [.banner, .sound] 반환
+        S->>S: 배너 표시
+    else 앱이 백그라운드
+        S->>S: 알림 배너 표시
+    end
+    S->>S: 사용자가 액션 탭
+    S->>D: didReceive 호출
+    D->>A: 액션 식별자에 따라 처리
+    Note over A: DONE_ACTION → 완료 처리
+    Note over A: SNOOZE_ACTION → 재예약
+```
+
 
 권한 요청, 알림 전송, 액션 처리를 모두 포함한 앱을 만들어봅시다:
 

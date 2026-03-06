@@ -22,6 +22,23 @@
 
 의존성 주입은 "필요한 것을 직접 만들지 말고, **외부에서 받아라**"라는 간단한 원칙으로 이 문제를 해결합니다.
 
+> 📊 **그림 1**: 직접 생성 vs 의존성 주입 비교
+
+```mermaid
+flowchart LR
+    subgraph before ["❌ 직접 생성"]
+        V1["ViewModel"] -->|직접 생성| R1["RealRepository"]
+        R1 -->|직접 생성| N1["NetworkClient"]
+        N1 -->|직접 생성| A1["AuthToken"]
+    end
+    subgraph after ["✅ 의존성 주입"]
+        EXT["외부(App/Test)"] -->|주입| V2["ViewModel"]
+        EXT -->|주입| R2["Repository"]
+        EXT -->|주입| N2["NetworkClient"]
+    end
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: 의존성 주입이란?
@@ -35,6 +52,20 @@
 | **생성자 주입** | `init`에서 의존성을 받음 | ViewModel `init(repository:)` |
 | **Environment 주입** | 뷰 계층을 통해 주입 | `.environment()` 수정자 |
 | **프로퍼티 주입** | 프로퍼티에 직접 할당 | 거의 사용하지 않음 |
+
+> 📊 **그림 2**: SwiftUI에서의 DI 방식 흐름
+
+```mermaid
+flowchart TD
+    A["의존성 주입 방식"] --> B["생성자 주입"]
+    A --> C["Environment 주입"]
+    B --> B1["init(service:)"]
+    B1 --> B2["ViewModel이 직접 보유"]
+    C --> C1[".environment() 수정자"]
+    C1 --> C2["뷰 계층 전체에 전파"]
+    C2 --> C3["@Environment로 읽기"]
+```
+
 
 ### 개념 2: 생성자 주입 — 가장 명확한 방법
 
@@ -97,6 +128,22 @@ class WeatherViewModel {
 ### 개념 3: Environment 주입 — SwiftUI의 네이티브 DI
 
 SwiftUI의 `@Environment`는 뷰 계층 어디서든 의존성에 접근할 수 있게 해주는 **내장 DI 컨테이너**입니다. 중간 뷰들이 의존성을 전달할 필요 없이, 필요한 곳에서 바로 꺼내 쓸 수 있어요.
+
+> 📊 **그림 3**: Environment 주입의 뷰 계층 전파
+
+```mermaid
+graph TD
+    APP["App\n.environment(repo)"] --> TAB["TabView"]
+    TAB --> LIST["ArticleListView\n@Environment 읽기 ✅"]
+    TAB --> SETTINGS["SettingsView"]
+    LIST --> DETAIL["DetailView\n@Environment 읽기 ✅"]
+    SETTINGS --> PROFILE["ProfileView\n@Environment 읽기 ✅"]
+    style APP fill:#4CAF50,color:#fff
+    style LIST fill:#2196F3,color:#fff
+    style DETAIL fill:#2196F3,color:#fff
+    style PROFILE fill:#2196F3,color:#fff
+```
+
 
 ```swift
 import SwiftUI
@@ -350,6 +397,30 @@ struct ProfileView: View {
 의존성 주입이라는 용어는 2004년 Martin Fowler가 "Inversion of Control Containers and the Dependency Injection pattern"이라는 글에서 처음 사용했습니다. 하지만 그 원리는 SOLID 원칙의 **D(Dependency Inversion Principle)** — "상위 모듈은 하위 모듈에 의존하지 않고, 둘 다 추상화에 의존한다"에서 비롯되었어요.
 
 SwiftUI에서는 `@Environment`가 이 원칙을 자연스럽게 구현합니다. View(상위)도 Service(하위)도 구체적인 구현이 아닌 **프로토콜(추상화)**에 의존하고, `.environment()` 수정자로 실제 구현을 주입하죠.
+
+> 📊 **그림 4**: 의존성 역전 원칙 (DIP) 구조
+
+```mermaid
+classDiagram
+    class View {
+        @Environment repository
+        body: some View
+    }
+    class ArticleRepository {
+        <<protocol>>
+        +fetchAll() Article[]
+    }
+    class APIArticleRepository {
+        +fetchAll() Article[]
+    }
+    class MockArticleRepository {
+        +fetchAll() Article[]
+    }
+    View --> ArticleRepository : 추상화에 의존
+    APIArticleRepository ..|> ArticleRepository : 실제 앱
+    MockArticleRepository ..|> ArticleRepository : Preview/Test
+```
+
 
 > 🔥 **실무 팁**: DI Container 라이브러리(Swinject 등)를 무리해서 도입하지 마세요. SwiftUI의 `@Environment`만으로도 대부분의 DI 요구사항을 충족할 수 있습니다. 외부 라이브러리는 **SwiftUI를 쓸 수 없는 계층**에서만 고려하세요.
 

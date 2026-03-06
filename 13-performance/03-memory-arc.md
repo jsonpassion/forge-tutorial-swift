@@ -23,6 +23,27 @@ Swift는 **ARC(Automatic Reference Counting)**로 메모리를 관리합니다. 
 
 > 💡 **비유**: ARC는 **도서관 대출 시스템**입니다. 책(객체)을 빌리면 대출 카운트가 1 올라가고, 반납하면 1 내려가죠. 카운트가 0이 되면 책꽂이(메모리)에서 정리됩니다.
 
+> 📊 **그림 1**: ARC 참조 카운트 변화 흐름
+
+```mermaid
+stateDiagram-v2
+    [*] --> RC1: ref1 = Person()
+    RC1 --> RC2: ref2 = ref1
+    RC2 --> RC3: ref3 = ref1
+    RC3 --> RC2_2: ref1 = nil
+    RC2_2 --> RC1_2: ref2 = nil
+    RC1_2 --> RC0: ref3 = nil
+    RC0 --> [*]: deinit 호출
+
+    state RC1 : 참조 카운트 = 1
+    state RC2 : 참조 카운트 = 2
+    state RC3 : 참조 카운트 = 3
+    state RC2_2 : 참조 카운트 = 2
+    state RC1_2 : 참조 카운트 = 1
+    state RC0 : 참조 카운트 = 0
+```
+
+
 참조 타입(class)만 ARC의 관리 대상입니다. 값 타입(struct, enum)은 복사되므로 참조 카운트가 필요 없어요.
 
 ```run:swift
@@ -58,6 +79,19 @@ ref3 = nil  // 카운트: 0 → "철수 해제됨" 출력!
 
 > 💡 **비유**: 두 사람이 서로의 손을 잡고 있으면 둘 다 놓지 못합니다. A가 B를 잡고, B가 A를 잡으면 **교착 상태**죠. ARC에서도 두 객체가 서로를 강하게 참조하면 둘 다 해제되지 않습니다.
 
+> 📊 **그림 2**: 순환 참조 — 서로를 놓지 못하는 두 객체
+
+```mermaid
+graph LR
+    E["Employee\n(참조 카운트: 1)"] -- "strong: team" --> T["Team\n(참조 카운트: 1)"]
+    T -- "strong: leader" --> E
+    V1["변수 employee = nil"] -.-> E
+    V2["변수 team = nil"] -.-> T
+    style E fill:#ff6b6b,color:#fff
+    style T fill:#ff6b6b,color:#fff
+```
+
+
 ```swift
 // ❌ 순환 참조 발생!
 class Employee {
@@ -91,6 +125,19 @@ team = nil      // deinit 호출 안 됨 ⚠️
 ### 개념 3: weak과 unowned — 순환 고리 끊기
 
 순환 참조의 한쪽을 `weak` 또는 `unowned`로 바꾸면 됩니다.
+
+> 📊 **그림 3**: weak 참조로 순환 고리 끊기
+
+```mermaid
+graph LR
+    E["Employee\n(참조 카운트: 1)"] -- "strong: team" --> T["Team\n(참조 카운트: 2)"]
+    T -. "weak: leader" .-> E
+    V1["변수 employee"] --> E
+    V2["변수 team"] --> T
+    style E fill:#51cf66,color:#fff
+    style T fill:#51cf66,color:#fff
+```
+
 
 ```run:swift
 // ✅ weak으로 순환 참조 해결
@@ -136,6 +183,21 @@ team = nil      // "팀 iOS팀 해제됨" ✅
 ### 개념 4: 클로저의 캡처 리스트
 
 클로저에서 `self`를 캡처할 때 순환 참조가 가장 많이 발생합니다.
+
+> 📊 **그림 4**: 클로저 캡처에 의한 순환 참조와 해결
+
+```mermaid
+flowchart TD
+    subgraph 순환참조["❌ 순환 참조"]
+        A1["NetworkManager"] -- "strong: onComplete" --> B1["클로저"]
+        B1 -- "strong: self 캡처" --> A1
+    end
+    subgraph 해결["✅ weak self로 해결"]
+        A2["NetworkManager"] -- "strong: onComplete" --> B2["클로저"]
+        B2 -. "weak: self 캡처" .-> A2
+    end
+```
+
 
 ```swift
 // ❌ 순환 참조: self → closure → self
@@ -203,6 +265,22 @@ class TimerViewModel {
 Xcode의 Memory Graph Debugger는 실행 중인 앱의 모든 객체와 참조 관계를 시각화합니다.
 
 **사용 방법:**
+
+> 📊 **그림 5**: Memory Graph Debugger 사용 흐름
+
+```mermaid
+flowchart LR
+    A["앱 실행"] --> B["화면 진입\n(push)"]
+    B --> C["화면 이탈\n(pop)"]
+    C --> D["Memory Graph\n캡처"]
+    D --> E{"해제 안 된\n객체 있음?"}
+    E -- "없음" --> F["정상 ✅"]
+    E -- "있음" --> G["참조 그래프\n확인"]
+    G --> H{"순환 참조?"}
+    H -- "예" --> I["weak/unowned\n적용"]
+    H -- "아니오" --> J["다른 원인\n조사"]
+```
+
 
 1. 앱을 실행한 상태에서 Xcode 하단 **디버그 바**의 메모리 아이콘(세 개의 원) 클릭
 2. 또는 **Debug → Debug Memory Graph** 메뉴 선택

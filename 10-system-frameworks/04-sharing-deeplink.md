@@ -14,6 +14,19 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: 공유와 딥링크의 전체 흐름 — 콘텐츠가 앱 밖으로 나가고 다시 돌아오는 순환
+
+```mermaid
+flowchart LR
+    A["앱 내 콘텐츠"] --> B["ShareLink\n공유 시트"]
+    B --> C["메시지/SNS/메일"]
+    C --> D["수신자가 링크 탭"]
+    D --> E{"앱 설치 여부"}
+    E -->|설치됨| F["onOpenURL\n앱 내 화면 이동"]
+    E -->|미설치| G["웹 페이지 열기"]
+```
+
+
 공유 기능이 없는 앱은 섬과 같습니다. 사용자가 좋은 콘텐츠를 발견해도 친구에게 전달할 방법이 없으니까요. 그리고 딥링크가 없으면, 마케팅 캠페인에서 "이 링크를 탭하면 특정 상품 페이지로 이동"하는 자연스러운 사용자 경험을 만들 수 없습니다. 공유는 앱의 성장을, 딥링크는 사용자 경험을 책임집니다.
 
 ## 핵심 개념
@@ -83,6 +96,21 @@ struct PreviewShareView: View {
 ```
 
 ### 개념 2: Transferable — 커스텀 타입 공유하기
+
+> 📊 **그림 2**: Transferable 표현 방식의 우선순위와 폴백 구조
+
+```mermaid
+flowchart TD
+    A["커스텀 타입\n(Recipe)"] --> B["transferRepresentation"]
+    B --> C["1순위: CodableRepresentation\nJSON 직렬화"]
+    B --> D["2순위: ProxyRepresentation\n텍스트 변환"]
+    B --> E["3순위: DataRepresentation\n바이너리"]
+    B --> F["4순위: FileRepresentation\n파일 내보내기"]
+    C -->|수신 앱 지원| G["이 형식 사용"]
+    C -->|미지원| D
+    D -->|미지원| E
+```
+
 
 > 💡 **비유**: Transferable은 **택배 포장 규격**과 같습니다. 물건(데이터)을 보내려면 표준 박스(표현 방식)에 넣어야 택배 시스템(공유 시트)이 처리할 수 있죠. CodableRepresentation은 JSON 포장, DataRepresentation은 바이너리 포장, FileRepresentation은 파일 포장입니다.
 
@@ -170,6 +198,23 @@ struct RecipeShareView: View {
 
 ### 개념 3: URL Scheme — 커스텀 URL로 앱 열기
 
+> 📊 **그림 3**: URL Scheme vs Universal Links 비교
+
+```mermaid
+flowchart TD
+    subgraph scheme["URL Scheme"]
+        S1["myapp://recipe/123"] --> S2{"앱 설치?"}
+        S2 -->|Yes| S3["앱 열림"]
+        S2 -->|No| S4["❌ 아무 반응 없음"]
+    end
+    subgraph universal["Universal Links"]
+        U1["https://example.com/recipe/123"] --> U2{"앱 설치?"}
+        U2 -->|Yes| U3["앱 열림"]
+        U2 -->|No| U4["✅ 웹 페이지 열림"]
+    end
+```
+
+
 > 💡 **비유**: URL Scheme은 **앱 전용 전화번호**와 같습니다. "myapp://"이라는 번호로 전화하면 바로 우리 앱이 받는 거죠. 단, 같은 번호를 다른 앱이 쓸 수도 있다는 문제가 있어서, 중요한 통화는 Universal Links(검증된 번호)를 쓰는 것이 좋습니다.
 
 URL Scheme을 설정하면 다른 앱이나 웹에서 `myapp://path` 형태의 URL로 앱을 열 수 있습니다:
@@ -210,6 +255,24 @@ struct MyApp: App {
 ```
 
 ### 개념 4: Universal Links — 검증된 딥링크
+
+> 📊 **그림 4**: Universal Links 설정 및 검증 흐름
+
+```mermaid
+sequenceDiagram
+    participant 개발자
+    participant 웹서버
+    participant Apple
+    participant 사용자기기
+    개발자->>웹서버: AASA 파일 배치<br/>(.well-known/apple-app-site-association)
+    개발자->>사용자기기: Associated Domains 설정<br/>(applinks:example.com)
+    사용자기기->>Apple: 앱 설치 시 도메인 검증 요청
+    Apple->>웹서버: AASA 파일 다운로드
+    Apple-->>사용자기기: 도메인-앱 매핑 승인
+    Note over 사용자기기: 이후 https://example.com/... 링크 탭 시
+    사용자기기->>사용자기기: onOpenURL 호출 → 앱 내 화면 이동
+```
+
 
 > 💡 **비유**: Universal Links는 **정부 인증 전화번호**와 같습니다. URL Scheme이 누구나 등록할 수 있는 일반 번호라면, Universal Links는 도메인 소유권을 증명해야 하는 인증된 번호입니다. 중복이 없고, 앱이 설치되지 않았으면 웹 페이지로 자동 연결되죠.
 
@@ -316,6 +379,22 @@ struct DeepLinkDemoView: View {
 ```
 
 ## 실습: 공유 + 딥링크 통합
+
+> 📊 **그림 5**: 딥링크 라우터의 URL 파싱 및 화면 전환 흐름
+
+```mermaid
+flowchart TD
+    A["URL 수신\nonOpenURL"] --> B["URLComponents 파싱"]
+    B --> C{"path 첫 번째 세그먼트"}
+    C -->|recipe| D["selectedTab = .home"]
+    D --> E["navigationPath =\n.recipeDetail(id)"]
+    C -->|profile| F["selectedTab = .profile"]
+    F --> G["navigationPath =\n.userProfile(id)"]
+    C -->|기타| H["무시 또는 홈으로"]
+    E --> I["NavigationStack\n화면 전환"]
+    G --> I
+```
+
 
 레시피를 공유하고, 공유된 링크를 통해 앱으로 돌아오는 전체 흐름을 구현합니다:
 

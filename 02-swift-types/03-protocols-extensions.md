@@ -15,11 +15,54 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: 프로토콜 지향 프로그래밍의 전체 구조
+
+```mermaid
+flowchart TD
+    P1["프로토콜 정의"] --> C1["능력의 약속\n(프로퍼티 + 메서드)"]
+    P2["익스텐션"] --> C2["기존 타입 확장\n(연산 프로퍼티 + 메서드)"]
+    P1 --> D["프로토콜 익스텐션"]
+    P2 --> D
+    D --> C3["기본 구현 제공"]
+    C1 --> POP["프로토콜 지향 프로그래밍\n(POP)"]
+    C2 --> POP
+    C3 --> POP
+```
+
+
 SwiftUI의 `View` 프로토콜, SwiftData의 `@Model`, `Codable`, `Hashable`, `Equatable`... Swift에서 마주치는 거의 모든 중요한 개념이 프로토콜입니다. 프로토콜을 모르면 SwiftUI의 `struct ContentView: View`가 왜 그렇게 생겼는지조차 이해할 수 없어요. Swift를 쓴다면 프로토콜은 **반드시** 알아야 합니다.
 
 ## 핵심 개념
 
 ### 개념 1: 프로토콜 — 능력의 약속
+
+> 📊 **그림 2**: 프로토콜 채택 — 하나의 약속, 다양한 타입
+
+```mermaid
+classDiagram
+    class Describable {
+        <<protocol>>
+        +description: String
+        +summarize() String
+    }
+    class Book {
+        +title: String
+        +author: String
+        +pages: Int
+        +description: String
+        +summarize() String
+    }
+    class Movie {
+        +title: String
+        +director: String
+        +runtime: Int
+        +description: String
+        +summarize() String
+    }
+    Describable <|.. Book : 채택
+    Describable <|.. Movie : 채택
+```
+
 
 > 💡 **비유**: 프로토콜은 **자격증**입니다. "운전면허가 있다"고 하면, 그 사람이 남자든 여자든, 학생이든 직장인이든 상관없이 "운전할 수 있다"는 능력이 보장되죠. 프로토콜도 마찬가지로, 타입이 특정 능력을 갖추고 있음을 보증합니다.
 
@@ -141,6 +184,18 @@ true
 ```
 
 ### 개념 3: 프로토콜 기본 구현 — 익스텐션의 진짜 힘
+
+> 📊 **그림 3**: 기본 구현의 동작 흐름 — 커스텀 구현이 있으면 우선 적용
+
+```mermaid
+flowchart TD
+    A["타입이 프로토콜 채택"] --> B{"메서드를 직접 구현했나?"}
+    B -->|Yes| C["커스텀 구현 사용\n(Teacher.greet)"]
+    B -->|No| D{"프로토콜 익스텐션에\n기본 구현이 있나?"}
+    D -->|Yes| E["기본 구현 사용\n(Student.greet)"]
+    D -->|No| F["컴파일 에러 ❌"]
+```
+
 
 프로토콜과 익스텐션을 결합하면, 프로토콜에 **기본 구현(default implementation)** 을 제공할 수 있습니다. 이게 Swift 프로토콜의 진짜 무기입니다.
 
@@ -391,6 +446,27 @@ for (i, shape) in sortedByArea.enumerated() {
 ### "프로토콜 지향 프로그래밍"의 탄생
 
 2015년 WWDC에서 Apple의 Dave Abrahams가 발표한 **"Protocol-Oriented Programming in Swift"** 세션은 Swift 커뮤니티에 큰 파장을 일으켰습니다. 그는 "Swift is a protocol-oriented programming language"라고 선언하며, 클래스 상속 중심의 전통적인 객체지향 프로그래밍의 한계를 지적했어요.
+
+> 📊 **그림 4**: 클래스 상속 vs 프로토콜 — 구조적 차이
+
+```mermaid
+flowchart LR
+    subgraph 상속["클래스 상속 ⚠️"]
+        direction TB
+        GA["Animal"] --> GB["Dog"]
+        GA --> GC["Cat"]
+        GB --> GD["PoliceDog"]
+    end
+    subgraph 프로토콜["프로토콜 조합 ✅"]
+        direction TB
+        PA["Runnable"] -.-> PD2["PoliceDog"]
+        PB["Trainable"] -.-> PD2
+        PC["Searchable"] -.-> PD2
+        PA -.-> PE["Athlete"]
+        PB -.-> PF["Student"]
+    end
+```
+
 
 상속의 문제점은 뭘까요? **다이아몬드 문제**(두 부모로부터 같은 메서드를 상속받으면?), **깊은 상속 계층**(할아버지 클래스를 수정하면 모든 후손이 영향받음), **단일 상속 제한**(한 번에 하나만 상속 가능) 등이 있죠. 프로토콜은 이 모든 문제를 우아하게 해결합니다. 타입은 여러 프로토콜을 동시에 채택할 수 있고, 프로토콜 익스텐션으로 코드를 재사용할 수 있으니까요.
 

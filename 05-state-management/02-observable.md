@@ -26,6 +26,29 @@
 
 > 💡 **비유**: `@Observable`은 **스마트 감시 카메라 시스템**입니다. 집 안의 각 방(프로퍼티)마다 카메라가 설치되어 있어서, 거실(name)에 변화가 생기면 거실을 보는 모니터만 업데이트하고, 주방(email)을 보는 모니터는 그대로 둡니다. 이전 시스템(`ObservableObject`)은 어떤 방이든 변화가 생기면 **모든 모니터**가 깜빡였거든요.
 
+> 📊 **그림 1**: @Observable의 프로퍼티 수준 추적 vs ObservableObject의 전체 알림
+
+```mermaid
+flowchart LR
+    subgraph OO["ObservableObject (이전)"]
+        direction TB
+        P1["name 변경"] --> OW["objectWillChange\n전체 알림"]
+        OW --> V1["뷰 A 업데이트"]
+        OW --> V2["뷰 B 업데이트"]
+        OW --> V3["뷰 C 업데이트"]
+    end
+    subgraph OB["@Observable (현재)"]
+        direction TB
+        Q1["name 변경"] --> T1["name 추적"]
+        T1 --> W1["뷰 A만 업데이트"]
+        Q2["email 변경"] --> T2["email 추적"]
+        T2 --> W2["뷰 B만 업데이트"]
+    end
+    style OO fill:#fee,stroke:#c33
+    style OB fill:#efe,stroke:#3a3
+```
+
+
 `@Observable`은 클래스에 붙이는 매크로입니다. 이 매크로를 붙이면 **모든 저장 프로퍼티**가 자동으로 관찰 대상이 됩니다.
 
 ```swift
@@ -136,6 +159,27 @@ struct NewProfileView: View {
 3. getter에서 **"이 프로퍼티를 읽었어"** 를 등록 (`access` 호출)
 4. setter에서 **"이 프로퍼티가 바뀔 거야/바뀌었어"** 를 알림 (`withMutation` 호출)
 
+> 📊 **그림 2**: @Observable 매크로가 프로퍼티를 변환하는 과정
+
+```mermaid
+sequenceDiagram
+    participant V as SwiftUI 뷰 (body)
+    participant P as 프로퍼티 getter
+    participant R as ObservationRegistrar
+    participant S as 프로퍼티 setter
+
+    V->>P: profile.name 읽기
+    P->>R: access(keyPath: \.name)
+    R-->>R: "뷰가 name을 읽음" 기록
+    P-->>V: "김개발" 반환
+
+    Note over V,S: 나중에 값 변경 시...
+    S->>R: withMutation(keyPath: \.name)
+    R->>V: name이 바뀜 → 뷰 무효화
+    V->>V: body 재계산
+```
+
+
 SwiftUI는 뷰의 `body`를 계산할 때, 어떤 `@Observable` 프로퍼티에 접근했는지를 추적합니다. 그래서 해당 프로퍼티가 바뀔 때**만** 그 뷰를 다시 그리는 거예요. 이것이 `ObservableObject`보다 성능이 좋은 핵심 이유입니다.
 
 ### 개념 4: @Bindable — @Observable 객체에 바인딩 만들기
@@ -204,6 +248,23 @@ struct ParentView: View {
 | `@State`로 소유한 `@Observable` | `$object.property` 바로 사용 |
 | 파라미터로 받은 `@Observable` | `@Bindable var object` 선언 후 `$object.property` |
 | `@Environment`로 받은 `@Observable` | body 안에서 `@Bindable var obj = obj` 후 사용 |
+
+> 📊 **그림 3**: @Observable 객체의 소유와 전달 패턴
+
+```mermaid
+flowchart TD
+    A["부모 뷰\n@State private var model"] -->|소유| M["@Observable 객체"]
+    A -->|"파라미터 전달"| B["자식 뷰 A\n@Bindable var model"]
+    A -->|"파라미터 전달"| C["자식 뷰 B\nvar model (읽기 전용)"]
+    A -->|".environment()"| D["깊은 자식 뷰\n@Environment 주입"]
+    B -->|"$model.property"| E["TextField, Toggle 등\n양방향 바인딩"]
+    C -->|"model.property"| F["Text 등\n읽기만"]
+    style A fill:#e8f0fe,stroke:#4285f4
+    style M fill:#fff3cd,stroke:#ffc107
+    style B fill:#d4edda,stroke:#28a745
+    style C fill:#d4edda,stroke:#28a745
+```
+
 
 ### 개념 5: @ObservationIgnored — 추적 제외하기
 
@@ -408,6 +469,23 @@ struct ShoppingAppView: View {
 ```
 
 이 실습에서 주목할 포인트:
+
+> 📊 **그림 4**: 쇼핑 카트 실습의 뷰 계층과 데이터 흐름
+
+```mermaid
+flowchart TD
+    S["ShoppingAppView\n@State cart = ShoppingCart()"] --> PL["ProductListView\n@Bindable var cart"]
+    S --> CV["CartView\n@Bindable var cart"]
+    PL -->|"cart.add(product)"| CART["ShoppingCart\n@Observable"]
+    CV -->|"cart.remove / cart.clear"| CART
+    CART -->|"items 변경 감지"| PL
+    CART -->|"items, totalPrice 변경 감지"| CV
+    style S fill:#e8f0fe,stroke:#4285f4
+    style CART fill:#fff3cd,stroke:#ffc107
+    style PL fill:#d4edda,stroke:#28a745
+    style CV fill:#d4edda,stroke:#28a745
+```
+
 - **`ShoppingCart`**: `@Observable` 클래스로, 여러 뷰에서 공유
 - **`ShoppingAppView`**: `@State`로 `cart`를 소유 (Source of Truth)
 - **`ProductListView`, `CartView`**: `@Bindable`로 `cart`를 받아 사용

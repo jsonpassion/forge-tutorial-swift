@@ -19,9 +19,38 @@
 
 ## 핵심 개념
 
+> 📊 **그림 1**: Swift 제어 흐름 구문 전체 구조
+
+```mermaid
+flowchart TD
+    A["제어 흐름"] --> B["조건문"]
+    A --> C["반복문"]
+    B --> D["if/else\n기본 분기"]
+    B --> E["guard\n조기 탈출"]
+    B --> F["switch\n패턴 매칭"]
+    C --> G["for-in\n컬렉션 순회"]
+    C --> H["while\n조건 반복"]
+    C --> I["repeat-while\n최소 1회 실행"]
+```
+
+
 ### 개념 1: if/else — 기본 조건 분기
 
 > 💡 **비유**: `if`문은 **갈림길의 이정표**입니다. "비가 오면 우산을 챙기고, 아니면 그냥 나간다" — 조건에 따라 다른 길을 가는 거죠.
+
+> 📊 **그림 2**: if/else 조건 분기 흐름
+
+```mermaid
+flowchart TD
+    A["조건 평가"] --> B{"temperature > 30?"}
+    B -->|true| C["🥵 에어컨 켜기"]
+    B -->|false| D{"temperature > 20?"}
+    D -->|true| E["😊 쾌적한 날씨"]
+    D -->|false| F{"temperature > 10?"}
+    F -->|true| G["🧥 겉옷 챙기기"]
+    F -->|false| H["🥶 많이 춥다"]
+```
+
 
 ```run:swift
 let temperature = 32
@@ -68,6 +97,23 @@ if age >= 19, hasTicket {
 
 > 💡 **비유**: `guard`는 **건물 경비원**입니다. "신분증 있으세요? 없으면 못 들어갑니다!" — 조건을 만족하지 않으면 바로 내보내고, 만족하면 통과시킵니다.
 
+> 📊 **그림 3**: guard vs if 흐름 비교
+
+```mermaid
+flowchart LR
+    subgraph guard문
+        A1["guard 조건 확인"] --> B1{"조건 충족?"}
+        B1 -->|false| C1["즉시 return/탈출"]
+        B1 -->|true| D1["본문 로직 실행"]
+    end
+    subgraph if문
+        A2["if 조건 확인"] --> B2{"조건 충족?"}
+        B2 -->|true| C2["성공 로직\n(들여쓰기 깊어짐)"]
+        B2 -->|false| D2["실패 처리"]
+    end
+```
+
+
 `guard`는 **조건이 거짓일 때 조기 탈출(early exit)** 하는 구문입니다. `if`와 반대로 생각하면 편해요.
 
 ```run:swift
@@ -96,6 +142,23 @@ processOrder(itemCount: 3)   // "✅ 3개 상품을 주문합니다."
 ### 개념 3: switch — 여러 경우를 깔끔하게
 
 > 💡 **비유**: `switch`는 **자동 분류기**입니다. 편지를 넣으면 우편번호에 따라 자동으로 올바른 칸에 배분되죠. 여러 경우를 한눈에 정리할 수 있습니다.
+
+> 📊 **그림 4**: switch 패턴 매칭 흐름
+
+```mermaid
+flowchart TD
+    A["switch 값 입력"] --> B{"case 1 매칭?"}
+    B -->|true| C["case 1 실행 → 자동 종료"]
+    B -->|false| D{"case 2 매칭?"}
+    D -->|true| E["case 2 실행 → 자동 종료"]
+    D -->|false| F{"case 3 매칭?"}
+    F -->|true| G["case 3 실행 → 자동 종료"]
+    F -->|false| H["default 실행"]
+    style C fill:#2d6a4f
+    style E fill:#2d6a4f
+    style G fill:#2d6a4f
+```
+
 
 ```run:swift
 let dayOfWeek = "수요일"

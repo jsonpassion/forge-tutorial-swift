@@ -69,6 +69,21 @@ struct SFSymbolsBasicView: View {
 
 SF Symbols는 단순한 흑백 아이콘이 아닙니다. **4가지 렌더링 모드**로 다양한 색상 표현이 가능해요.
 
+> 📊 **그림 1**: SF Symbols의 4가지 렌더링 모드 비교
+
+```mermaid
+graph TD
+    S["SF Symbol 렌더링 모드"] --> M["단색\nMonochrome"]
+    S --> H["계층\nHierarchical"]
+    S --> P["팔레트\nPalette"]
+    S --> MC["멀티컬러\nMulticolor"]
+    M --> M1["1가지 색상\n전체 동일"]
+    H --> H1["1가지 색상\n레이어별 투명도 차이"]
+    P --> P1["레이어별\n다른 색상 지정"]
+    MC --> MC1["Apple 정의\n고유 색상 자동 적용"]
+```
+
+
 ```swift
 import SwiftUI
 
@@ -181,6 +196,23 @@ struct SymbolEffectView: View {
 
 > 💡 **비유**: Asset Catalog은 앱의 **옷장**입니다. 이미지, 색상, 아이콘 등을 잘 정리해두면, 코드에서 이름만으로 꺼내 쓸 수 있어요. 라이트 모드용/다크 모드용 옷을 따로 걸어두면 상황에 맞게 자동으로 바뀌죠.
 
+> 📊 **그림 2**: Asset Catalog의 구조와 리소스 해석 흐름
+
+```mermaid
+flowchart LR
+    A["Assets.xcassets"] --> B["Image Set"]
+    A --> C["Color Set"]
+    A --> D["App Icon"]
+    B --> B1["1x"]
+    B --> B2["2x"]
+    B --> B3["3x"]
+    C --> C1["Any Appearance\n(라이트 모드)"]
+    C --> C2["Dark\n(다크 모드)"]
+    B1 & B2 & B3 --> E["디바이스 해상도에\n맞게 자동 선택"]
+    C1 & C2 --> F["시스템 설정에\n맞게 자동 전환"]
+```
+
+
 **이미지 에셋 추가하기:**
 1. Xcode에서 `Assets.xcassets`를 클릭
 2. 좌측 하단 + 버튼 → "Image Set" 선택
@@ -229,6 +261,20 @@ struct AssetCatalogDemoView: View {
 ### 개념 5: 다크 모드 대응
 
 SwiftUI는 다크 모드를 기본 지원합니다. 시스템 색상과 Asset Catalog을 활용하면 자동으로 대응돼요.
+
+> 📊 **그림 3**: SwiftUI 다크 모드 색상 해석 흐름
+
+```mermaid
+flowchart TD
+    A["SwiftUI 뷰에서\n색상 사용"] --> B{"색상 종류?"}
+    B -->|"시스템 색상\n.primary, .secondary"| C["UIKit이 자동으로\n라이트/다크 값 전환"]
+    B -->|"Asset Catalog\nColor Set"| D["Any / Dark 중\n현재 모드에 맞는 값 선택"]
+    B -->|"하드코딩\n.red, .blue"| E["모드 변경 시\n색상 고정 (비권장)"]
+    C --> F["다크 모드 자동 대응 ✅"]
+    D --> F
+    E --> G["수동 대응 필요 ⚠️"]
+```
+
 
 ```swift
 import SwiftUI

@@ -15,6 +15,22 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: Swift Concurrency 핵심 개념 관계도
+
+```mermaid
+graph TD
+    A["Swift Concurrency"] --> B["Actor"]
+    A --> C["Sendable"]
+    A --> D["TaskGroup"]
+    A --> E["AsyncStream"]
+    B -->|"상태 보호"| F["데이터 경쟁 방지"]
+    C -->|"경계 넘기"| F
+    D -->|"병렬 실행"| G["성능 최적화"]
+    E -->|"콜백 변환"| H["async/await 통합"]
+    B -.->|"@MainActor"| I["UI 안전성"]
+```
+
+
 앱이 복잡해지면 여러 작업이 동시에 실행됩니다. 네트워크 요청, 데이터베이스 저장, UI 업데이트가 한꺼번에 일어나죠. 이때 같은 데이터를 여러 곳에서 동시에 수정하면 **데이터 경쟁(Data Race)**이 발생합니다. 앱이 예측 불가능하게 동작하거나, 간헐적으로 크래시가 나죠. Swift 6에서는 이런 문제를 **컴파일 타임에** 잡아줍니다. 더 이상 런타임에 크래시 나길 기다릴 필요가 없어요.
 
 ## 핵심 개념
@@ -24,6 +40,30 @@
 > 💡 **비유**: Actor는 은행 창구의 **번호표 시스템**입니다. 여러 고객이 동시에 오더라도 한 번에 한 명만 처리하죠. 덕분에 잔고가 꼬일 일이 없습니다.
 
 Actor는 자신의 상태에 대한 접근을 자동으로 직렬화합니다. 외부에서 actor의 프로퍼티나 메서드에 접근하려면 반드시 `await`를 써야 하죠.
+
+> 📊 **그림 2**: Actor의 직렬화된 접근 방식
+
+```mermaid
+sequenceDiagram
+    participant T1 as Task 1
+    participant T2 as Task 2
+    participant A as Actor (ImageCache)
+    T1->>A: await store(imageA)
+    activate A
+    Note right of A: 한 번에 하나만 처리
+    A-->>T1: 완료
+    deactivate A
+    T2->>A: await image(for: url)
+    activate A
+    A-->>T2: 캐시된 데이터 반환
+    deactivate A
+    T1->>A: await loadImage(url)
+    activate A
+    Note right of A: 네트워크 요청 중에도<br/>다른 접근 대기
+    A-->>T1: 다운로드 완료
+    deactivate A
+```
+
 
 ```swift
 // 동시 접근으로부터 안전한 캐시
@@ -86,6 +126,30 @@ class ViewModel {
 
 Sendable은 "이 타입은 동시성 환경에서 안전하게 공유할 수 있다"는 것을 컴파일러에 약속하는 프로토콜입니다.
 
+> 📊 **그림 3**: Sendable 격리 경계 개념
+
+```mermaid
+flowchart LR
+    subgraph ISO1["Actor A 격리 영역"]
+        A1["var state = 42"]
+    end
+    subgraph ISO2["Actor B 격리 영역"]
+        B1["var data = []"]
+    end
+    subgraph SAFE["Sendable 타입"]
+        S1["struct (값 타입) ✅"]
+        S2["final class + let ✅"]
+    end
+    subgraph UNSAFE["Non-Sendable"]
+        U1["class + var ❌"]
+    end
+    S1 -->|"경계 통과 가능"| ISO1
+    S1 -->|"경계 통과 가능"| ISO2
+    S2 -->|"경계 통과 가능"| ISO2
+    U1 -.->|"컴파일 에러!"| ISO1
+```
+
+
 ```swift
 // 값 타입은 자동으로 Sendable (복사되니까 안전!)
 struct UserProfile: Sendable {
@@ -132,6 +196,26 @@ actor Counter {
 > 💡 **비유**: TaskGroup은 **분업하는 팀**입니다. "이미지 100장 다운로드해!" 같은 작업을 팀원들에게 나눠주고, 모두 끝나면 결과를 모으는 거죠.
 
 `async let`은 작업 수가 정해져 있을 때 쓰고, TaskGroup은 **동적인 수의 작업**을 병렬 실행할 때 사용합니다.
+
+> 📊 **그림 4**: TaskGroup 병렬 실행과 결과 수집 흐름
+
+```mermaid
+flowchart TD
+    A["withThrowingTaskGroup 시작"] --> B["addTask: URL 1"]
+    A --> C["addTask: URL 2"]
+    A --> D["addTask: URL 3"]
+    A --> E["addTask: URL N"]
+    B --> F["다운로드 완료"]
+    C --> G["다운로드 완료"]
+    D --> H["다운로드 완료"]
+    E --> I["다운로드 완료"]
+    F --> J["for try await 결과 수집"]
+    G --> J
+    H --> J
+    I --> J
+    J --> K["정렬 후 반환"]
+```
+
 
 ```swift
 // 여러 URL에서 이미지를 동시에 다운로드
@@ -193,6 +277,25 @@ func downloadWithLimit(urls: [URL]) async throws -> [Data] {
 ```
 
 ### 개념 4: AsyncStream — 이벤트의 다리
+
+> 📊 **그림 5**: AsyncStream이 콜백을 async/await으로 변환하는 흐름
+
+```mermaid
+sequenceDiagram
+    participant CB as 콜백 기반 API<br/>(CLLocationManager)
+    participant AS as AsyncStream<br/>(continuation)
+    participant C as 소비자<br/>(for await)
+    CB->>AS: delegate.didUpdate(location1)
+    AS->>AS: continuation.yield(location1)
+    AS->>C: location1 전달
+    CB->>AS: delegate.didUpdate(location2)
+    AS->>AS: continuation.yield(location2)
+    AS->>C: location2 전달
+    CB->>AS: 완료 또는 에러
+    AS->>AS: continuation.finish()
+    AS->>C: 스트림 종료
+```
+
 
 > 💡 **비유**: AsyncStream은 콜백의 세계와 async/await의 세계를 연결하는 **다리**입니다. 레거시 API의 콜백을 `for await` 루프로 바꿔주죠.
 

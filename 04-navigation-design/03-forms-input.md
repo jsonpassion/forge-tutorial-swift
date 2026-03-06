@@ -15,6 +15,27 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: SwiftUI Form의 구조 — 컨테이너와 입력 컨트롤 관계
+
+```mermaid
+graph TD
+    A["Form"] --> B["Section: 계정"]
+    A --> C["Section: 알림"]
+    A --> D["Section: 화면"]
+    B --> E["TextField"]
+    B --> F["SecureField"]
+    C --> G["Toggle"]
+    C --> H["Picker"]
+    D --> I["Slider"]
+    D --> J["Stepper"]
+    D --> K["DatePicker"]
+    style A fill:#4A90D9,color:#fff
+    style B fill:#7BB3E0,color:#fff
+    style C fill:#7BB3E0,color:#fff
+    style D fill:#7BB3E0,color:#fff
+```
+
+
 설정 앱을 열어보세요. Wi-Fi 켜기/끄기(Toggle), 화면 밝기(Slider), 언어 선택(Picker), 이름 입력(TextField)... 이 모든 컨트롤이 `Form` 안에 깔끔하게 정리되어 있죠. 회원가입, 프로필 편집, 앱 설정 등 사용자 입력이 필요한 거의 모든 화면에서 이 패턴을 사용합니다.
 
 ## 핵심 개념
@@ -154,6 +175,23 @@ struct LoginFormView: View {
 
 폼에서 자주 쓰는 선택/조절 컨트롤들을 한 번에 살펴볼까요?
 
+> 📊 **그림 2**: 입력 컨트롤 분류 — 용도별 선택 가이드
+
+```mermaid
+flowchart LR
+    A["사용자 입력"] --> B["텍스트 입력"]
+    A --> C["선택/토글"]
+    A --> D["값 조절"]
+    B --> B1["TextField\n일반 텍스트"]
+    B --> B2["SecureField\n비밀번호"]
+    C --> C1["Toggle\n켜기/끄기"]
+    C --> C2["Picker\n옵션 선택"]
+    C --> C3["DatePicker\n날짜 선택"]
+    D --> D1["Slider\n연속 값 드래그"]
+    D --> D2["Stepper\n정수 +/- 버튼"]
+```
+
+
 ```swift
 import SwiftUI
 
@@ -234,6 +272,20 @@ struct ControlsDemoView: View {
 > 💡 **비유**: @FocusState는 **손전등**이에요. 여러 입력 필드 중에서 지금 빛을 비추고 있는(포커스된) 필드가 어디인지를 추적하고, 원하는 곳으로 빛을 옮길 수 있습니다.
 
 여러 텍스트 필드가 있을 때, 리턴 키를 누르면 다음 필드로 자동 이동하게 하거나, "완료" 버튼으로 키보드를 닫을 수 있어요.
+
+> 📊 **그림 3**: @FocusState 포커스 이동 흐름
+
+```mermaid
+stateDiagram-v2
+    [*] --> 이름필드: onAppear
+    이름필드 --> 성필드: Return (next)
+    성필드 --> 이메일필드: Return (next)
+    이메일필드 --> [*]: Return (done)
+    이름필드 --> [*]: 완료 버튼
+    성필드 --> [*]: 완료 버튼
+    이메일필드 --> [*]: 완료 버튼
+```
+
 
 ```swift
 import SwiftUI

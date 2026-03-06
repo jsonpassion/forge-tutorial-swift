@@ -74,6 +74,18 @@ struct ButtonBasicsView: View {
 
 `print()`로만 확인하는 건 재미없죠? `@State`를 사용하면 버튼을 눌렀을 때 **화면이 실제로 바뀌는** 경험을 할 수 있습니다. @State는 뷰가 **기억하는 값**이에요. 이 값이 바뀌면 SwiftUI가 자동으로 화면을 다시 그립니다.
 
+> 📊 **그림 1**: @State 반응형 업데이트 사이클
+
+```mermaid
+flowchart LR
+    A["사용자 탭"] --> B["@State 값 변경"]
+    B --> C["SwiftUI 감지"]
+    C --> D["body 재계산"]
+    D --> E["변경된 부분만\n화면 업데이트"]
+    E --> A
+```
+
+
 ```swift
 struct CounterView: View {
     // @State: 이 뷰가 소유하는 상태 변수
@@ -261,11 +273,40 @@ struct InputControlsView: View {
 
 여기서 `$isNotificationOn`처럼 변수 앞에 `$`가 붙은 것이 보이죠? 이것은 **바인딩(Binding)** 이라고 합니다. "이 값을 읽기만 하는 게 아니라, 수정도 할 수 있게 연결해줘"라는 의미예요. Toggle이 스위치를 바꿀 때, Slider가 값을 조절할 때 `$`를 통해 원본 @State 값이 직접 업데이트됩니다. 바인딩은 [Ch5. 상태 관리](../05-state-management/01-state-binding.md)에서 더 자세히 배웁니다.
 
+> 📊 **그림 2**: @State와 Binding($)의 양방향 데이터 흐름
+
+```mermaid
+flowchart TD
+    subgraph View["뷰"]
+        T["Toggle / Slider / Stepper"]
+    end
+    subgraph State["@State 변수"]
+        S["isNotificationOn\nvolume\nquantity"]
+    end
+    S -- "읽기: 현재 값 표시" --> T
+    T -- "$바인딩: 값 수정" --> S
+    S -- "값 변경 → 화면 갱신" --> View
+```
+
+
 > 🔥 **실무 팁**: `$` (달러 사인)은 @State 변수의 **projected value**로, Binding 타입을 반환합니다. @State 변수 자체는 읽기용, `$`를 붙이면 읽기+쓰기 양방향 연결이 됩니다. 지금은 "입력 컨트롤에는 `$`를 붙인다"고 기억하세요!
 
 ## 실습: 주문 앱 만들기
 
 지금까지 배운 버튼과 컨트롤들을 조합해서 간단한 커피 주문 화면을 만들어봅시다.
+
+> 📊 **그림 3**: 커피 주문 앱의 상태 전이
+
+```mermaid
+stateDiagram-v2
+    [*] --> 옵션선택: 앱 시작
+    옵션선택 --> 옵션선택: 커피 종류/샷/당도 변경
+    옵션선택 --> 주문완료: 주문하기 버튼 탭
+    주문완료 --> 옵션선택: 새 주문 버튼 탭
+    note right of 옵션선택: orderPlaced = false\n버튼 활성화
+    note right of 주문완료: orderPlaced = true\n버튼 비활성화
+```
+
 
 ```swift
 import SwiftUI

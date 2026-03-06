@@ -43,9 +43,37 @@ nil
 
 타입 뒤에 `?`를 붙이면 **옵셔널 타입**이 됩니다. `String?`은 "String이 있을 수도 있고, nil일 수도 있다"는 뜻이에요.
 
+> 📊 **그림 1**: Optional의 내부 구조 — 값이 있거나(.some) 없거나(.none)
+
+```mermaid
+stateDiagram-v2
+    [*] --> Some: 값 할당
+    [*] --> None: nil 할당
+    Some --> None: = nil
+    None --> Some: 값 할당
+    Some: .some(값)
+    None: .none (nil)
+```
+
+
 > ⚠️ **흔한 오해**: "`nil`은 0이나 빈 문자열과 같다" — 전혀 다릅니다! `0`은 숫자 0이라는 **값이 있는 것**이고, `""`은 빈 문자열이라는 **값이 있는 것**입니다. `nil`은 **값 자체가 없음**을 의미합니다. 빈 컵에 물이 없는 것(빈 문자열)과 컵 자체가 없는 것(nil)의 차이라고 생각하세요.
 
 ### 개념 2: 옵셔널 바인딩 — 안전하게 꺼내기
+
+> 📊 **그림 2**: 옵셔널 언래핑 방법 선택 가이드
+
+```mermaid
+flowchart TD
+    A["옵셔널 값 사용"] --> B{"nil일 수 있는가?"}
+    B -- 아니오 --> C["일반 타입으로 사용"]
+    B -- 예 --> D{"기본값이 있는가?"}
+    D -- 예 --> E["?? nil 병합 연산자"]
+    D -- 아니오 --> F{"nil이면 어떻게?"}
+    F -- 블록 안에서 처리 --> G["if let 바인딩"]
+    F -- 함수에서 빠져나감 --> H["guard let 바인딩"]
+    F -- 절대 nil 아님 확신 --> I["! 강제 언래핑\n⚠️ 최후의 수단"]
+```
+
 
 옵셔널에서 값을 꺼내려면 **언래핑(Unwrapping)** 이 필요합니다. 가장 안전한 방법은 `if let`과 `guard let`입니다.
 
@@ -124,6 +152,22 @@ if let text = possibleNumber, let number = Int(text) {
 ### 개념 4: 옵셔널 체이닝
 
 > 💡 **비유**: 옵셔널 체이닝은 **도미노**와 같습니다. 중간에 하나라도 `nil`이면 거기서 멈추고 전체 결과가 `nil`이 됩니다. 크래시 없이요!
+
+> 📊 **그림 3**: 옵셔널 체이닝의 동작 흐름 — 중간에 nil이면 전파 중단
+
+```mermaid
+flowchart LR
+    A["person"] -->|".address?"| B{"address 존재?"}
+    B -- 예 --> C["Address 객체"]
+    B -- 아니오 --> NIL1["nil 반환"]
+    C -->|".zipCode?"| D{"zipCode 존재?"}
+    D -- 예 --> E["\"06100\""]
+    D -- 아니오 --> NIL2["nil 반환"]
+    style NIL1 fill:#ff6b6b,color:#fff
+    style NIL2 fill:#ff6b6b,color:#fff
+    style E fill:#51cf66,color:#fff
+```
+
 
 ```run:swift
 // 중첩된 옵셔널 접근

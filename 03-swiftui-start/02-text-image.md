@@ -14,6 +14,24 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: 이 세션에서 다루는 핵심 요소
+
+```mermaid
+graph TD
+    A["SwiftUI 기본 뷰"] --> B["Text"]
+    A --> C["Image"]
+    B --> B1["폰트 & 스타일"]
+    B --> B2["텍스트 합치기"]
+    C --> C1["SF Symbols"]
+    C --> C2["에셋 이미지"]
+    C --> C3["AsyncImage"]
+    B1 --> D["수정자 체이닝"]
+    C1 --> D
+    C2 --> D
+    C3 --> D
+```
+
+
 어떤 앱을 열어보세요. 화면의 대부분은 **텍스트**와 **이미지**로 이루어져 있습니다. 메시지 앱의 대화 내용, 인스타그램의 사진, 설정 화면의 아이콘과 레이블... 모두 Text와 Image의 조합이에요. 이 두 가지를 제대로 다루는 것이 앱 UI의 시작점입니다.
 
 ## 핵심 개념
@@ -21,6 +39,19 @@
 ### 개념 1: Text 뷰 마스터하기
 
 > 💡 **비유**: Text는 **만능 포스트잇**입니다. 글을 적고, 색을 바꾸고, 크기를 조절하고, 굵게 만들 수 있어요. 포스트잇에 데코레이션을 하듯, 수정자로 텍스트를 꾸밉니다.
+
+> 📊 **그림 2**: 수정자 체이닝의 원리 — 각 수정자가 이전 뷰를 감싸는 구조
+
+```mermaid
+flowchart LR
+    A["Text\n'안녕하세요'"] --> B[".font(.title)\n폰트 적용"]
+    B --> C[".foregroundStyle(.blue)\n색상 적용"]
+    C --> D[".padding()\n여백 추가"]
+    D --> E["최종 뷰"]
+    style A fill:#e8f5e9
+    style E fill:#e3f2fd
+```
+
 
 Text는 SwiftUI에서 가장 기본적인 뷰입니다. 문자열을 화면에 표시하고, 다양한 수정자로 스타일을 입힐 수 있어요.
 
@@ -246,6 +277,21 @@ struct AssetImageView: View {
 ### 개념 5: AsyncImage — 인터넷 이미지 로드하기
 
 > 💡 **비유**: AsyncImage는 **택배 추적**과 같습니다. 주문(URL)하면 배송 중에는 로딩 표시가 나오고, 도착하면 상품(이미지)이 보이고, 배송 실패하면 안내 메시지가 나오죠.
+
+> 📊 **그림 3**: AsyncImage의 상태 전이 — URL 요청부터 결과 표시까지
+
+```mermaid
+stateDiagram-v2
+    [*] --> empty: URL 요청 시작
+    empty --> success: 이미지 로드 완료
+    empty --> failure: 네트워크 오류 / 잘못된 URL
+    success --> [*]: 이미지 표시
+    failure --> [*]: 에러 UI 표시
+    note right of empty: ProgressView\n(로딩 표시)
+    note right of success: image\n(.resizable 등 적용)
+    note right of failure: 대체 아이콘\n(exclamationmark)
+```
+
 
 인터넷에서 이미지를 다운로드해서 표시하는 것도 SwiftUI에서는 간단합니다.
 

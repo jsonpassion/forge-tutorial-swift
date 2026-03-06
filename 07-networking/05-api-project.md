@@ -21,6 +21,29 @@
 
 ### 개념 1: API 클라이언트 설계 — 네트워크의 관문
 
+> 📊 **그림 1**: API 클라이언트를 통한 네트워크 요청 흐름
+
+```mermaid
+sequenceDiagram
+    participant V as View
+    participant VM as ViewModel
+    participant AC as APIClient
+    participant S as URLSession
+    participant API as iTunes API
+
+    V->>VM: search(term:)
+    VM->>AC: request(.search(...))
+    AC->>S: data(from: url)
+    S->>API: HTTP GET /search?term=...
+    API-->>S: JSON 응답
+    S-->>AC: (data, response)
+    AC->>AC: 상태코드 검증 + 디코딩
+    AC-->>VM: ITunesSearchResponse
+    VM->>VM: 모델 변환
+    VM-->>V: UI 업데이트
+```
+
+
 > 💡 **비유**: API 클라이언트는 회사의 **접수 창구**와 같습니다. 모든 외부 요청이 이 창구를 통과하니까, 인증 처리, 에러 변환, 로깅 등을 한 곳에서 관리할 수 있죠. 각 화면에서 직접 URLSession을 부르는 것은, 직원들이 각자 알아서 외부 업체에 전화하는 것과 같습니다.
 
 ```swift
@@ -87,6 +110,23 @@ actor APIClient {
 
 ### 개념 2: 모델 설계 — 서버 응답과 앱 모델 분리
 
+> 📊 **그림 2**: 서버 응답 모델과 앱 모델의 분리 구조
+
+```mermaid
+flowchart LR
+    A["iTunes API\nJSON 응답"] --> B["ITunesSearchResponse\n(서버 모델)"]
+    B --> C["ITunesTrack\n(서버 모델)"]
+    C --> D["MusicItem\ninit(from:) 변환"]
+    D --> E["SwiftUI View\n화면 표시"]
+
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#bbf,stroke:#333
+    style D fill:#bfb,stroke:#333
+    style E fill:#fbf,stroke:#333
+```
+
+
 서버 응답 모델과 앱에서 사용하는 모델을 분리하면 유지보수가 편해집니다:
 
 ```swift
@@ -138,6 +178,22 @@ struct MusicItem: Identifiable, Sendable {
 ```
 
 ### 개념 3: 검색 + 디바운싱 — 타이핑할 때마다 요청하지 않기
+
+> 📊 **그림 3**: .task(id:)를 활용한 디바운싱 동작 원리
+
+```mermaid
+stateDiagram-v2
+    [*] --> 대기중: 앱 시작
+    대기중 --> 타이머시작: searchText 변경
+    타이머시작 --> 타이머시작: searchText 재변경\n(이전 Task 자동 취소)
+    타이머시작 --> API요청: 500ms 경과\n(취소 없음)
+    API요청 --> 결과표시: 응답 성공
+    API요청 --> 에러처리: 응답 실패
+    API요청 --> 대기중: Task 취소됨\n(새 검색어 입력)
+    결과표시 --> 타이머시작: searchText 변경
+    에러처리 --> 타이머시작: searchText 변경
+```
+
 
 > 💡 **비유**: 엘리베이터 문이 닫히려 할 때 누군가 뛰어오면 다시 열어주죠? 그리고 사람이 안 오면 그제야 문을 닫습니다. **디바운싱**도 비슷합니다. 사용자가 타이핑을 멈출 때까지 기다렸다가, 최종 입력에 대해서만 검색을 실행하는 것이죠.
 
@@ -521,6 +577,23 @@ struct MusicExplorerView: View {
 ## 더 깊이 알아보기
 
 ### 네트워크 계층 아키텍처
+
+> 📊 **그림 4**: 실전 네트워크 계층 분리 구조
+
+```mermaid
+graph TD
+    A["뷰 모델 계층\n(UI 상태 관리)"] --> B["서비스 계층\n(비즈니스 로직, 모델 변환)"]
+    B --> C["네트워크 계층\n(URLSession 호출, 에러 변환)"]
+    C --> D["API 계층\n(엔드포인트 정의, URL 생성)"]
+    D --> E["외부 API 서버"]
+
+    style A fill:#e1f5fe,stroke:#0288d1
+    style B fill:#e8f5e9,stroke:#388e3c
+    style C fill:#fff3e0,stroke:#f57c00
+    style D fill:#fce4ec,stroke:#c62828
+    style E fill:#f5f5f5,stroke:#616161
+```
+
 
 실전 프로젝트에서는 네트워크 코드를 계층별로 분리하는 것이 좋습니다:
 

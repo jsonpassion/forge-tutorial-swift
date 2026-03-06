@@ -15,6 +15,22 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: SwiftUI 리스트/스크롤 컴포넌트 관계도
+
+```mermaid
+graph TD
+    A["데이터 컬렉션"] --> B["ForEach"]
+    B --> C{"어떤 컨테이너?"}
+    C -->|"시스템 스타일"| D["List"]
+    C -->|"커스텀 디자인"| E["ScrollView"]
+    D --> F["Section으로 그룹화"]
+    D --> G[".swipeActions\n.searchable\n.refreshable"]
+    E --> H["LazyVStack\n(세로 스크롤)"]
+    E --> I["LazyHStack\n(가로 스크롤)"]
+    E --> J["LazyVGrid\n(그리드 레이아웃)"]
+```
+
+
 iPhone 사용 시간의 절반 이상은 **스크롤**하는 데 쓴다고 해도 과언이 아닙니다. 연락처 목록, 쇼핑 상품 목록, 채팅 메시지 목록... 앱의 핵심 데이터를 사용자에게 보여주는 가장 기본적인 방법이 리스트예요. 여기서 제대로 배워두면 어떤 앱이든 데이터 목록을 자신있게 구현할 수 있습니다.
 
 ## 핵심 개념
@@ -58,6 +74,19 @@ struct ForEachDemoView: View {
 ```
 
 여기서 `id: \.self`가 보이죠? 이것은 "각 항목을 구별하는 기준으로 값 자체를 사용해"라는 뜻입니다. SwiftUI는 목록이 변경될 때 **어떤 항목이 추가/삭제/이동되었는지** 알아야 하거든요. 그래서 고유 식별자(ID)가 필요합니다.
+
+> 📊 **그림 2**: ForEach의 ID 기반 뷰 매칭 흐름
+
+```mermaid
+flowchart LR
+    A["데이터 배열"] --> B["ForEach"]
+    B --> C["각 항목의 id 추출"]
+    C --> D{"데이터 변경 감지"}
+    D -->|"id 일치"| E["기존 뷰 재사용"]
+    D -->|"새 id"| F["새 뷰 생성"]
+    D -->|"id 사라짐"| G["뷰 제거 + 애니메이션"]
+```
+
 
 ### 개념 2: Identifiable 프로토콜
 
@@ -302,6 +331,25 @@ struct ScrollViewDemoView: View {
 
 > 🔥 **실무 팁**: ScrollView 안에서는 반드시 **LazyVStack** 또는 **LazyHStack**을 사용하세요! 일반 VStack은 모든 뷰를 한 번에 생성하지만, Lazy 버전은 화면에 보이는 것만 생성합니다. 아이템이 수십 개 이상이면 성능 차이가 확연합니다.
 
+> 📊 **그림 3**: VStack vs LazyVStack 렌더링 비교
+
+```mermaid
+flowchart TD
+    subgraph VS["VStack (비효율)"]
+        V1["항목 1 ✅ 생성"] --- V2["항목 2 ✅ 생성"]
+        V2 --- V3["항목 3 ✅ 생성"]
+        V3 --- V4["... 항목 50 ✅ 모두 생성"]
+    end
+    subgraph LV["LazyVStack (효율적)"]
+        L1["항목 1 ✅ 화면에 보임"] --- L2["항목 2 ✅ 화면에 보임"]
+        L2 --- L3["항목 3 ✅ 화면에 보임"]
+        L3 --- L4["항목 4~50 💤 대기"]
+    end
+    VS -.->|"50개 뷰 즉시 생성\n메모리 사용 ↑"| BAD["⚠️ 성능 저하"]
+    LV -.->|"3개만 생성\n스크롤 시 추가 로드"| GOOD["✅ 성능 최적화"]
+```
+
+
 ### 개념 6: 가로 스크롤과 그리드
 
 ```swift
@@ -514,6 +562,20 @@ struct MemoRowView: View {
 ## 더 깊이 알아보기
 
 ### List vs ScrollView+LazyVStack, 어떤 걸 써야 할까?
+
+> 📊 **그림 4**: List vs ScrollView+LazyVStack 선택 가이드
+
+```mermaid
+flowchart TD
+    A["스크롤 목록이 필요하다"] --> B{"시스템 기본 스타일\n사용할 건가요?"}
+    B -->|"네"| C{"스와이프/편집 모드\n필요한가요?"}
+    C -->|"네"| D["✅ List 사용"]
+    C -->|"아니오"| D
+    B -->|"아니오"| E{"완전 커스텀\n디자인인가요?"}
+    E -->|"네"| F["✅ ScrollView\n+ LazyVStack"]
+    E -->|"그리드 형태"| G["✅ ScrollView\n+ LazyVGrid"]
+```
+
 
 이 질문은 SwiftUI 개발자들 사이에서 가장 자주 나오는 질문 중 하나입니다.
 

@@ -19,6 +19,21 @@
 
 마이그레이션을 제대로 하지 않으면 앱이 크래시하거나 데이터가 소실됩니다. 하지만 SwiftData는 `VersionedSchema`와 `SchemaMigrationPlan`으로 이 과정을 체계적으로 관리할 수 있게 해줍니다.
 
+> 📊 **그림 1**: SwiftData 마이그레이션 시스템의 핵심 구성 요소
+
+```mermaid
+graph TD
+    A["VersionedSchema\n(스키마 스냅샷)"] -->|"버전별 정의"| B["SchemaV1"]
+    A -->|"버전별 정의"| C["SchemaV2"]
+    A -->|"버전별 정의"| D["SchemaV3"]
+    E["SchemaMigrationPlan\n(마이그레이션 계획)"] -->|"schemas 배열"| A
+    E -->|"stages 배열"| F["MigrationStage"]
+    F --> G["lightweight\n(경량)"]
+    F --> H["custom\n(커스텀)"]
+    E -->|"적용"| I["ModelContainer"]
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: VersionedSchema — 스키마의 타임캡슐
@@ -154,6 +169,25 @@ struct MemoApp: App {
 
 ### 개념 3: 경량 vs 커스텀 마이그레이션
 
+> 📊 **그림 2**: 경량 마이그레이션 vs 커스텀 마이그레이션 판단 흐름
+
+```mermaid
+flowchart TD
+    A["스키마 변경 발생"] --> B{"변경 유형은?"}
+    B -->|"새 프로퍼티 추가\n(기본값 있음)"| C["경량 마이그레이션"]
+    B -->|"새 모델 추가"| C
+    B -->|"Optional로 변경"| C
+    B -->|"프로퍼티 이름 변경"| D["커스텀 마이그레이션"]
+    B -->|"프로퍼티 타입 변경"| D
+    B -->|"데이터 변환 필요"| D
+    B -->|"중복 데이터 제거"| D
+    C --> E["MigrationStage.lightweight"]
+    D --> F["MigrationStage.custom"]
+    F --> G["willMigrate 클로저\n(이전 버전 모델 사용)"]
+    F --> H["didMigrate 클로저\n(새 버전 모델 사용)"]
+```
+
+
 SwiftData는 두 종류의 마이그레이션을 지원합니다.
 
 #### 경량 마이그레이션 (Lightweight)
@@ -248,6 +282,18 @@ static let migrateV2toV3 = MigrationStage.custom(
 > ⚠️ **흔한 오해**: "커스텀 마이그레이션의 `willMigrate`에서는 새 버전의 모델을 사용해야 한다" — 아닙니다! `willMigrate`는 마이그레이션 **전**에 실행되므로, **이전 버전(fromVersion)**의 모델 타입을 사용해서 데이터를 가져와야 합니다.
 
 ### 전체 마이그레이션 플랜 조합
+
+> 📊 **그림 3**: V1→V2→V3 순차적 마이그레이션 흐름
+
+```mermaid
+flowchart LR
+    V1["V1\n초기 출시\nMemo: title, content"] -->|"경량 마이그레이션\n새 필드 추가"| V2["V2\nisPinned 추가\nTag 모델 추가"]
+    V2 -->|"커스텀 마이그레이션\n중복 태그 제거"| V3["V3\nTag에 unique 제약"]
+    style V1 fill:#f9f,stroke:#333
+    style V2 fill:#bbf,stroke:#333
+    style V3 fill:#bfb,stroke:#333
+```
+
 
 여러 버전에 걸친 마이그레이션 플랜:
 

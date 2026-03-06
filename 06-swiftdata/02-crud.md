@@ -19,6 +19,30 @@
 
 ## 핵심 개념
 
+> 📊 **그림 1**: SwiftData CRUD 작업과 ModelContext의 역할
+
+```mermaid
+flowchart TD
+    subgraph Create
+        A1["모델 인스턴스 생성"] --> A2["modelContext.insert()"]
+    end
+    subgraph Read
+        B1["@Query 선언"] --> B2["자동 fetch & 갱신"]
+    end
+    subgraph Update
+        C1["프로퍼티 직접 수정"] --> C2["자동 변경 감지"]
+    end
+    subgraph Delete
+        D1["modelContext.delete()"] --> D2["컨텍스트에서 제거"]
+    end
+    A2 --> E["ModelContext"]
+    C2 --> E
+    D2 --> E
+    E --> F["영구 저장소\n(SQLite)"]
+    F --> B2
+```
+
+
 ### 개념 1: Create — 데이터 생성
 
 > 💡 **비유**: 도서관에 새 책을 기증하는 것과 같습니다. 책(모델 인스턴스)을 만들고, 도서관(ModelContext)에 등록하면 카탈로그에 자동으로 추가됩니다.
@@ -186,6 +210,20 @@ let recentMemos = try modelContext.fetch(descriptor)
 ### 개념 3: Update — 데이터 수정
 
 > 💡 **비유**: SwiftData의 업데이트는 **구글 문서**처럼 작동합니다. 문서를 열고 내용을 수정하면 자동으로 저장되잖아요? SwiftData도 마찬가지입니다. 모델의 프로퍼티를 그냥 바꾸면, SwiftData가 변경을 자동으로 감지하고 저장합니다.
+
+> 📊 **그림 3**: SwiftData 자동 변경 추적(Dirty Tracking) 원리
+
+```mermaid
+stateDiagram-v2
+    [*] --> Clean: fetch / insert
+    Clean --> Dirty: 프로퍼티 수정
+    Dirty --> Dirty: 추가 수정
+    Dirty --> Clean: 자동 저장 (auto-save)
+    Dirty --> Clean: 명시적 save() 호출
+    Clean --> Deleted: delete() 호출
+    Deleted --> [*]: 저장소에서 제거
+```
+
 
 SwiftData의 **자동 변경 추적(dirty tracking)**은 정말 강력합니다. 모델 프로퍼티를 직접 수정하기만 하면, 별도의 "업데이트 함수" 없이 변경이 자동으로 반영됩니다:
 
@@ -457,6 +495,30 @@ struct MemoApp: App {
 ## 더 깊이 알아보기
 
 ### @Query의 내부 동작
+
+> 📊 **그림 2**: @Query의 반응형 데이터 갱신 흐름
+
+```mermaid
+sequenceDiagram
+    participant V as SwiftUI 뷰
+    participant Q as @Query
+    participant MC as ModelContext
+    participant DB as 저장소(SQLite)
+
+    V->>Q: @Query var memos 선언
+    Q->>MC: FetchDescriptor 실행
+    MC->>DB: SQL 쿼리
+    DB-->>MC: 결과 반환
+    MC-->>Q: [Memo] 데이터
+    Q-->>V: 뷰 렌더링
+
+    Note over MC: 다른 곳에서 insert/delete 발생
+    MC->>Q: 변경 알림(Notification)
+    Q->>MC: 자동 re-fetch
+    MC-->>Q: 갱신된 [Memo]
+    Q-->>V: 뷰 자동 업데이트
+```
+
 
 `@Query`가 어떻게 데이터 변경을 감지할까요? 내부적으로 `@Query`는:
 

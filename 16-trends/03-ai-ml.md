@@ -22,6 +22,22 @@ AI는 더 이상 선택이 아닙니다. 사용자는 이미 **Writing Tools로 
 
 > 💡 **비유**: Apple의 ML 스택은 **요리 도구 세트**와 같습니다. **Core ML**은 완성된 레시피(모델)를 실행하는 오븐이고, **Create ML**은 나만의 레시피를 만드는 요리 학교이며, **Vision/NaturalLanguage**는 특화된 조리 도구(이미지/텍스트 분석)이고, **Foundation Models**는 만능 셰프(LLM)입니다.
 
+> 📊 **그림 1**: Apple ML 프레임워크 스택 구조
+
+```mermaid
+graph TD
+    FM["Foundation Models\n온디바이스 LLM"] --> CoreML["Core ML\n모델 실행 엔진"]
+    Vision["Vision\n이미지 분석"] --> CoreML
+    NL["Natural Language\n텍스트 분석"] --> CoreML
+    Sound["SoundAnalysis\n소리 분류"] --> CoreML
+    CreateML["Create ML\n모델 학습"] -.->|"학습된 .mlmodel"| CoreML
+    CoreML --> HW["하드웨어 가속"]
+    HW --> CPU["CPU"]
+    HW --> GPU["GPU"]
+    HW --> NE["Neural Engine"]
+```
+
+
 | 프레임워크 | 역할 | 도입 |
 |-----------|------|------|
 | **Core ML** | 학습된 모델을 앱에서 실행 | 2017 |
@@ -54,6 +70,18 @@ func classifyImage(_ image: CGImage) async throws -> String {
 ```
 
 **모델 출처**: PyTorch/TensorFlow 모델을 `coremltools`(Python)로 변환하거나, Create ML로 직접 학습합니다.
+
+> 📊 **그림 2**: Core ML 모델 통합 워크플로우
+
+```mermaid
+flowchart LR
+    A["PyTorch / TensorFlow\n학습된 모델"] -->|coremltools 변환| B[".mlmodel 파일"]
+    C["Create ML\n직접 학습"] --> B
+    B -->|Xcode 추가| D["Swift 클래스\n자동 생성"]
+    D --> E["앱에서 추론 실행"]
+    E --> F["CPU + GPU +\nNeural Engine"]
+```
+
 
 ### 개념 3: Vision과 Natural Language — 특화된 AI 도구
 
@@ -228,6 +256,23 @@ let response = try await session.respond(to: "서울 날씨 어때?")
 
 ### 개념 5: Apple의 온디바이스 ML 철학
 
+> 📊 **그림 5**: Apple의 3계층 AI 프라이버시 모델
+
+```mermaid
+flowchart TD
+    Request["AI 요청 발생"] --> Check{"온디바이스로\n처리 가능?"}
+    Check -->|Yes| OnDevice["온디바이스 처리\nFoundation Models / Core ML"]
+    OnDevice --> Privacy1["🔒 데이터가 기기를 떠나지 않음"]
+    Check -->|No| PCC{"Private Cloud Compute\n필요?"}
+    PCC -->|Yes| Cloud["Apple Silicon 서버"]
+    Cloud --> Privacy2["🔒 데이터 즉시 삭제\n암호학적 검증 가능"]
+    PCC -->|No| Third{"사용자 동의?"}
+    Third -->|동의| External["서드파티 AI\n(예: ChatGPT)"]
+    External --> Privacy3["⚠️ IP 마스킹\n명시적 동의 필수"]
+    Third -->|거부| Decline["요청 거절"]
+```
+
+
 Apple은 **프라이버시 우선** 원칙을 ML에도 철저히 적용합니다.
 
 | 계층 | 처리 방식 | 사용 사례 |
@@ -257,6 +302,24 @@ Apple의 ML 여정은 2017년 Core ML에서 시작되었습니다. 당시 구글
 2024년 WWDC에서 **Apple Intelligence**가 발표되며 게임이 바뀌었습니다. Writing Tools, Image Playground, Genmoji 같은 생성형 AI 기능이 iOS에 내장되었죠. 하지만 개발자가 이 모델에 직접 접근할 수는 없었습니다.
 
 2025년 WWDC에서 마침내 **Foundation Models 프레임워크**가 공개되며, Apple Intelligence를 구동하는 ~30억 파라미터 온디바이스 모델이 서드파티 개발자에게 열렸습니다. `@Generable` 매크로를 통한 **Guided Generation**(구조화된 출력)은 다른 LLM API에서는 보기 힘든 독특한 기능으로, 컴파일 타임에 출력 형식이 보장됩니다.
+
+> 📊 **그림 3**: Foundation Models — Guided Generation 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as 앱 코드
+    participant Session as LanguageModelSession
+    participant LLM as 온디바이스 LLM
+    participant Schema as @Generable 스키마
+
+    App->>Session: respond(to: 프롬프트, generating: Recipe.self)
+    Session->>Schema: 구조체 스키마 추출
+    Session->>LLM: 프롬프트 + 출력 제약 조건 전달
+    LLM->>LLM: 제약 조건에 맞춰 생성
+    LLM-->>Session: 구조화된 JSON 응답
+    Session-->>App: 타입 안전한 Recipe 인스턴스
+```
+
 
 ## 흔한 오해와 팁
 

@@ -30,6 +30,24 @@ SwiftUI의 레이아웃은 **3단계 협상** 과정을 거칩니다:
 2. **자식이 원하는 크기를 응답** → `sizeThatFits`에서 "나는 이만큼 필요해"라고 반환
 3. **부모가 자식을 배치** → `placeSubviews`에서 각 자식의 좌표를 결정
 
+> 📊 **그림 1**: SwiftUI Layout 프로토콜의 3단계 크기 협상 과정
+
+```mermaid
+sequenceDiagram
+    participant P as 부모 뷰
+    participant L as Layout 컨테이너
+    participant C as 자식 뷰들
+
+    P->>L: ProposedViewSize 제안
+    L->>C: sizeThatFits로 각 자식 크기 질의
+    C-->>L: 필요한 CGSize 응답
+    L-->>P: 전체 필요 크기 반환
+    P->>L: 확정된 bounds 전달
+    L->>C: placeSubviews로 각 자식 배치
+    Note over L,C: place(at:anchor:proposal:)
+```
+
+
 Layout 프로토콜에서 반드시 구현해야 하는 메서드는 딱 **두 개**입니다:
 
 ```swift
@@ -109,6 +127,22 @@ let concreteSize = proposal.replacingUnspecifiedDimensions(by: CGSize(width: 10,
 > 💡 **비유**: 플로우 레이아웃은 **책장에 책을 꽂는 것**과 같습니다. 한 줄에 들어가면 옆에 놓고, 더 이상 안 들어가면 다음 줄로 내려가는 거죠.
 
 태그 클라우드나 칩 뷰에서 가장 많이 쓰이는 패턴입니다:
+
+> 📊 **그림 2**: FlowLayout의 자동 줄바꿈 배치 알고리즘
+
+```mermaid
+flowchart TD
+    A["서브뷰 순회 시작"] --> B["서브뷰의 이상적 크기 측정"]
+    B --> C{"현재 줄에\n들어가는가?"}
+    C -- 예 --> D["현재 x 위치에 배치"]
+    C -- 아니오 --> E["다음 줄로 이동\ny += lineHeight + spacing\nx = 0"]
+    E --> D
+    D --> F["x += 너비 + spacing\nlineHeight 갱신"]
+    F --> G{"다음 서브뷰\n있는가?"}
+    G -- 예 --> B
+    G -- 아니오 --> H["최종 크기 반환"]
+```
+
 
 ```swift
 import SwiftUI
@@ -216,6 +250,24 @@ struct TagChip: View {
 
 `AnyLayout`은 Layout 프로토콜을 타입 소거(type erasure)한 래퍼입니다. `AnyView`와 달리 **성능 손해가 전혀 없고**, 자식 뷰의 **상태와 정체성이 보존**됩니다:
 
+> 📊 **그림 3**: AnyLayout을 통한 동적 레이아웃 전환 구조
+
+```mermaid
+flowchart LR
+    S["상태 변경\n(layoutMode)"] --> AL["AnyLayout\n타입 소거 래퍼"]
+    AL --> V["VStackLayout"]
+    AL --> H["HStackLayout"]
+    AL --> R["RadialLayout"]
+    AL --> F["FlowLayout"]
+    V --> CH["자식 뷰들\n(정체성 유지)"]
+    H --> CH
+    R --> CH
+    F --> CH
+    style AL fill:#f0e6ff,stroke:#7c3aed
+    style CH fill:#e6f7ff,stroke:#0284c7
+```
+
+
 ```swift
 import SwiftUI
 
@@ -268,6 +320,23 @@ struct AdaptiveLayoutDemo: View {
 ### 개념 5: ViewThatFits — 자동 적응형 레이아웃
 
 `ViewThatFits`는 여러 후보 뷰 중에서 **현재 공간에 맞는 첫 번째 뷰**를 자동으로 선택합니다. 반응형 UI를 만드는 가장 간결한 방법이죠:
+
+> 📊 **그림 4**: ViewThatFits의 후보 뷰 선택 과정
+
+```mermaid
+flowchart TD
+    S["사용 가능한 공간 확인"] --> A{"후보 1\n들어가는가?"}
+    A -- 예 --> R1["후보 1 표시\n아이콘 + 전체 텍스트 + 화살표"]
+    A -- 아니오 --> B{"후보 2\n들어가는가?"}
+    B -- 예 --> R2["후보 2 표시\n아이콘 + 축약 텍스트"]
+    B -- 아니오 --> C{"후보 3\n들어가는가?"}
+    C -- 예 --> R3["후보 3 표시\n아이콘만"]
+    C -- 아니오 --> R4["마지막 후보\n무조건 표시"]
+    style R1 fill:#d1fae5,stroke:#059669
+    style R2 fill:#fef3c7,stroke:#d97706
+    style R3 fill:#fee2e2,stroke:#dc2626
+```
+
 
 ```swift
 import SwiftUI

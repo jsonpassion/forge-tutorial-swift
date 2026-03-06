@@ -31,6 +31,19 @@ SwiftUI는 뷰를 **두 가지 방법**으로 구분합니다.
 
 뷰의 `body`가 다시 호출되는 3가지 트리거:
 
+> 📊 **그림 1**: SwiftUI 뷰 업데이트 트리거와 렌더링 흐름
+
+```mermaid
+flowchart TD
+    A["상태 변경\n(@State, @Observable)"] --> D["해당 뷰 body 재호출"]
+    B["부모 파라미터 변경"] --> D
+    C["이벤트 소스\n(onReceive, onChange)"] --> D
+    D --> E{"이전 결과와 diff"}
+    E -->|변경 있음| F["화면 다시 렌더링"]
+    E -->|변경 없음| G["렌더링 건너뜀"]
+```
+
+
 1. **@State, @Observable 등 상태 변경** — 해당 프로퍼티를 읽는 뷰만 업데이트
 2. **부모로부터 받은 파라미터 변경** — 부모가 다시 그려지면 자식도 재평가
 3. **이벤트 소스** — `onReceive`, `onChange` 등이 발동될 때
@@ -67,6 +80,22 @@ struct ItemListView: View {
 > 🔥 **실무 팁**: `_printChanges()`는 디버깅 전용입니다. **언더스코어로 시작하는 API는 프라이빗 API**이므로, 출시 전에 반드시 제거하세요. 하지만 성능 문제를 진단할 때는 이만한 도구가 없습니다.
 
 ### 개념 3: 뷰 분해 — 가장 효과적인 최적화
+
+> 📊 **그림 2**: 뷰 분해 전후 업데이트 범위 비교
+
+```mermaid
+flowchart LR
+    subgraph before["❌ 분해 전"]
+        P1["ProfileView\n(모든 상태)"] -->|name 변경| R1["전체 body 재계산"]
+    end
+    subgraph after["✅ 분해 후"]
+        P2["ProfileView"] --> H["ProfileHeaderView"]
+        P2 --> FC["FollowerCountView"]
+        P2 --> EB["EditButtonView"]
+        H -->|name 변경| RH["Header만 재계산"]
+    end
+```
+
 
 > 💡 **비유**: 큰 뷰 하나를 작은 뷰 여러 개로 나누는 건, **아파트 전체 조명 스위치를 방별로 나누는 것**과 같습니다. 화장실 불만 켜면 되는데 집 전체 조명을 켤 필요 없잖아요?
 
@@ -131,6 +160,23 @@ struct FollowerCountView: View {
 
 ### 개념 4: @Observable의 세밀한 추적
 
+> 📊 **그림 3**: ObservableObject vs @Observable 의존성 추적 비교
+
+```mermaid
+flowchart TD
+    subgraph old["ObservableObject"]
+        OO["UserSettings\nobjectWillChange"] -->|어떤 프로퍼티든 변경| V1["ThemeView 재계산"]
+        OO -->|어떤 프로퍼티든 변경| V2["FontView 재계산"]
+        OO -->|어떤 프로퍼티든 변경| V3["NotificationView 재계산"]
+    end
+    subgraph new["@Observable"]
+        T["theme 변경"] --> TV["ThemeView만 재계산"]
+        F["fontSize 변경"] --> FV["FontView만 재계산"]
+        N["notifications 변경"] --> NV["NotificationView만 재계산"]
+    end
+```
+
+
 `@Observable`은 `ObservableObject`보다 훨씬 효율적입니다. 프로퍼티 단위로 의존성을 추적하거든요.
 
 ```swift
@@ -179,6 +225,19 @@ struct AppearanceView: View {
 ```
 
 ### 개념 5: Equatable로 비교 제어하기
+
+> 📊 **그림 4**: Equatable 적용 시 뷰 업데이트 판단 흐름
+
+```mermaid
+flowchart TD
+    A["부모 뷰 body 재호출"] --> B["자식 뷰에 새 값 전달"]
+    B --> C{"Equatable 준수?"}
+    C -->|No| D["body 무조건 재호출"]
+    C -->|Yes| E{"lhs == rhs?"}
+    E -->|같음| F["body 호출 건너뜀 ✅"]
+    E -->|다름| G["body 재호출"]
+```
+
 
 뷰가 Equatable을 준수하면 SwiftUI가 이전 값과 비교해서 실제로 바뀌었을 때만 body를 호출합니다.
 

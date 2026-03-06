@@ -29,6 +29,26 @@ let json = """
 
 ### 개념 1: Codable이란? — 자동 번역기
 
+> 📊 **그림 1**: Codable 프로토콜 구조와 데이터 변환 흐름
+
+```mermaid
+flowchart LR
+    subgraph Codable
+        direction TB
+        D["Decodable"]
+        E["Encodable"]
+    end
+    JSON["JSON 데이터"] -->|"디코딩"| D
+    D --> S["Swift 구조체"]
+    S --> E
+    E -->|"인코딩"| JSON2["JSON 데이터"]
+    style Codable fill:#f0f4ff,stroke:#4a7bf7
+    style JSON fill:#fff3cd,stroke:#ffc107
+    style JSON2 fill:#fff3cd,stroke:#ffc107
+    style S fill:#d4edda,stroke:#28a745
+```
+
+
 > 💡 **비유**: `Codable`은 **자동 번역기**와 같습니다. JSON이라는 "외국어"를 Swift라는 "모국어"로 자동 번역해주죠. 구조체의 프로퍼티 이름과 타입만 맞춰주면, 번역기가 알아서 매핑합니다.
 
 `Codable`은 사실 두 프로토콜의 조합입니다:
@@ -68,6 +88,25 @@ print(jsonString)  // {"id":1,"name":"김스위프트","email":"swift@example.co
 
 ### 개념 2: URLSession + Codable — 황금 조합
 
+> 📊 **그림 2**: URLSession + Codable 전체 데이터 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as 앱 (Swift)
+    participant Session as URLSession
+    participant Server as REST API 서버
+    participant Decoder as JSONDecoder
+
+    App->>Session: data(from: url)
+    Session->>Server: HTTP GET 요청
+    Server-->>Session: JSON 응답 (Data)
+    Session-->>App: (data, response)
+    App->>App: 상태 코드 확인
+    App->>Decoder: decode([Post].self, from: data)
+    Decoder-->>App: [Post] 배열 반환
+```
+
+
 실제로 API에서 데이터를 가져와 디코딩하는 전체 흐름을 살펴봅시다:
 
 ```swift
@@ -101,6 +140,33 @@ func fetchPosts() async throws -> [Post] {
 배열 디코딩도 간단합니다. `[Post].self`처럼 배열 타입을 전달하면 JSON 배열을 자동으로 파싱합니다.
 
 ### 개념 3: CodingKeys — 이름이 다를 때의 통역사
+
+> 📊 **그림 3**: CodingKeys를 통한 JSON 키 ↔ Swift 프로퍼티 매핑
+
+```mermaid
+flowchart LR
+    subgraph JSON["JSON (snake_case)"]
+        J1["user_name"]
+        J2["profile_image_url"]
+        J3["created_at"]
+    end
+    subgraph CK["CodingKeys (통역사)"]
+        direction TB
+        M1["매핑 규칙"]
+    end
+    subgraph Swift["Swift (camelCase)"]
+        S1["userName"]
+        S2["profileImageUrl"]
+        S3["createdAt"]
+    end
+    J1 --> CK --> S1
+    J2 --> CK --> S2
+    J3 --> CK --> S3
+    style JSON fill:#fff3cd,stroke:#ffc107
+    style CK fill:#e8daef,stroke:#8e44ad
+    style Swift fill:#d4edda,stroke:#28a745
+```
+
 
 서버의 JSON 키 이름이 Swift 컨벤션과 다른 경우가 많습니다. 서버는 `snake_case`를, Swift는 `camelCase`를 쓰니까요:
 
@@ -379,6 +445,24 @@ struct MusicSearchView: View {
 Swift 6에서는 `JSONDecoder`가 완전히 Swift로 다시 작성되었는데, 이로 인해 대용량 JSON 파싱 시 메모리 할당과 문자열 처리 속도가 크게 개선되었습니다.
 
 ### 수동 디코딩이 필요한 경우
+
+> 📊 **그림 4**: 중첩 JSON의 컨테이너 탐색 과정
+
+```mermaid
+flowchart TD
+    ROOT["최상위 컨테이너"] -->|"OuterKeys.data"| DATA["data 컨테이너"]
+    ROOT -->|"status: ok"| STATUS["status (무시)"]
+    DATA -->|"DataKeys.user"| USER["user 컨테이너"]
+    USER -->|"UserKeys.fullName"| NAME["fullName: 김스위프트"]
+    USER -->|"UserKeys.age"| AGE["age: 25"]
+    style ROOT fill:#e8f4fd,stroke:#2196f3
+    style DATA fill:#e8f4fd,stroke:#2196f3
+    style USER fill:#e8f4fd,stroke:#2196f3
+    style NAME fill:#d4edda,stroke:#28a745
+    style AGE fill:#d4edda,stroke:#28a745
+    style STATUS fill:#f5f5f5,stroke:#bbb
+```
+
 
 자동 합성이 안 되는 복잡한 JSON이라면 `init(from:)`을 직접 구현합니다:
 

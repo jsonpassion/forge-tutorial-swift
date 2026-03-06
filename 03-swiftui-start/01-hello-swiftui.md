@@ -22,6 +22,25 @@
 
 ### 개념 1: SwiftUI란?
 
+> 📊 **그림 3**: 명령형 vs 선언형 UI — 접근 방식의 차이
+
+```mermaid
+flowchart LR
+    subgraph 명령형["명령형 (UIKit)"]
+        direction TB
+        I1["뷰 객체 생성"] --> I2["위치/크기 설정"]
+        I2 --> I3["색상/폰트 지정"]
+        I3 --> I4["부모 뷰에 추가"]
+        I4 --> I5["상태 변경 시\n수동 업데이트"]
+    end
+    subgraph 선언형["선언형 (SwiftUI)"]
+        direction TB
+        D1["원하는 모습 선언"] --> D2["프레임워크가\n자동 렌더링"]
+        D2 --> D3["상태 변경 시\n자동 업데이트"]
+    end
+```
+
+
 > 💡 **비유**: SwiftUI는 **레고 설명서**와 같습니다. "이런 모양을 만들고 싶다"고 그림으로 보여주면, 레고 시스템이 알아서 블록을 조립해주는 거죠. 여러분은 최종 모습만 선언하면 됩니다.
 
 SwiftUI는 2019년 WWDC에서 발표된 Apple의 **선언형(Declarative) UI 프레임워크**입니다. "선언형"이라는 말이 어렵게 들릴 수 있는데, 쉽게 말하면 **"무엇을(What)" 보여줄지만 말하면 "어떻게(How)" 그릴지는 프레임워크가 알아서 처리**한다는 뜻이에요.
@@ -85,6 +104,21 @@ struct MyFirstApp: App {
 - **Scene** → 화면 구성 단위 (층)
 - **View** → 화면 요소 하나하나 (방 안의 가구)
 
+> 📊 **그림 1**: SwiftUI 앱의 계층 구조 — App, Scene, View의 관계
+
+```mermaid
+graph TD
+    A["@main App\n(앱 전체)"] --> B["Scene\n(WindowGroup)"]
+    B --> C["ContentView"]
+    C --> D["Text"]
+    C --> E["Image"]
+    C --> F["Button"]
+    style A fill:#f9a825,stroke:#f57f17,color:#000
+    style B fill:#42a5f5,stroke:#1565c0,color:#fff
+    style C fill:#66bb6a,stroke:#2e7d32,color:#fff
+```
+
+
 ### 개념 4: #Preview 매크로
 
 > 💡 **비유**: #Preview는 **거울**입니다. 옷을 갈아입을 때마다(코드를 수정할 때마다) 거울에 바로 내 모습이 비치듯, 코드 변경 사항이 실시간으로 반영되죠.
@@ -136,6 +170,22 @@ struct ContentView: View {
 ```
 
 > ⚠️ **흔한 오해**: "수정자 순서는 상관없다" — **순서가 매우 중요합니다!** `.padding()` 후에 `.background()`를 하면 패딩 영역까지 배경색이 칠해지지만, 순서를 바꾸면 결과가 완전히 달라집니다. 수정자는 **위에서 아래로** 순서대로 적용된다고 기억하세요.
+
+> 📊 **그림 2**: 수정자 체이닝 — 순서에 따라 결과가 달라지는 원리
+
+```mermaid
+flowchart TD
+    A["Text\n(원본 뷰)"] --> B[".font(.largeTitle)\n폰트 적용"]
+    B --> C[".padding()\n여백 추가"]
+    C --> D[".background(.yellow)\n배경색 적용"]
+    D --> E["최종 결과:\n패딩 포함 배경"]
+    
+    A2["Text\n(원본 뷰)"] --> B2[".font(.largeTitle)\n폰트 적용"]
+    B2 --> C2[".background(.yellow)\n배경색 적용"]
+    C2 --> D2[".padding()\n여백 추가"]
+    D2 --> E2["최종 결과:\n배경 없는 여백"]
+```
+
 
 ## 실습: 첫 번째 SwiftUI 앱 만들기
 

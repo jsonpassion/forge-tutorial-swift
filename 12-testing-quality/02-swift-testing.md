@@ -16,6 +16,24 @@ Apple이 WWDC 2024에서 발표한 Swift Testing은 XCTest의 40여 개 Assertio
 
 XCTest는 Objective-C 시대에 설계되었습니다. `XCTestCase`를 상속해야 하고, 메서드 이름을 `test`로 시작해야 하며, 40개가 넘는 Assertion 중 뭘 써야 할지 고민해야 하죠. Swift Testing은 이런 레거시를 걷어내고, Swift 언어의 장점을 100% 활용하도록 처음부터 새로 설계되었습니다. Apple은 새 프로젝트에서 Swift Testing을 기본으로 권장하고 있어요.
 
+> 📊 **그림 1**: XCTest vs Swift Testing — 패러다임 변화
+
+```mermaid
+flowchart LR
+    subgraph XCTest["XCTest (레거시)"]
+        A1["XCTestCase 상속 필수"] --> A2["test 접두사 필수"]
+        A2 --> A3["40+ Assert 메서드"]
+        A3 --> A4["직렬 실행"]
+    end
+    subgraph ST["Swift Testing (차세대)"]
+        B1["struct/class/actor 자유"] --> B2["@Test 매크로"]
+        B2 --> B3["#expect 하나로 통합"]
+        B3 --> B4["병렬 실행 기본"]
+    end
+    XCTest -- "진화" --> ST
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: @Test와 @Suite — 테스트 선언
@@ -98,6 +116,20 @@ import Testing
 
 `#require`는 실패 시 테스트를 즉시 중단합니다. 옵셔널 언래핑에 특히 유용하죠.
 
+> 📊 **그림 2**: #expect vs #require 실패 시 동작 흐름
+
+```mermaid
+flowchart TD
+    A["검증 표현식 평가"] --> B{"결과가 true?"}
+    B -- "true" --> C["✅ 통과, 다음 줄 실행"]
+    B -- "false" --> D{"어떤 매크로?"}
+    D -- "#expect" --> E["❌ 실패 기록\n값 자동 출력"]
+    E --> F["⏩ 테스트 계속 진행"]
+    D -- "#require" --> G["❌ 실패 기록\n에러 throw"]
+    G --> H["⛔ 테스트 즉시 중단"]
+```
+
+
 ```swift
 @Test func optionalUnwrapping() throws {
     let data: [String: Any] = ["name": "Kim", "age": 30]
@@ -157,6 +189,27 @@ func passwordStrength(password: String, expected: PasswordStrength) {
 > ⚠️ **흔한 오해**: `arguments`에 배열 두 개를 `zip` 없이 넘기면 **모든 조합(카르테시안 곱)**이 실행됩니다. 1:1 매칭을 원하면 반드시 `zip`을 사용하세요.
 
 ### 개념 4: Tags와 Traits — 테스트 관리
+
+> 📊 **그림 3**: @Suite, @Test, Tags를 활용한 테스트 조직화 구조
+
+```mermaid
+graph TD
+    Root["@Suite 프로젝트 테스트"] --> S1["@Suite 사용자 관리"]
+    Root --> S2["@Suite 결제"]
+    S1 --> T1["@Test 회원가입"]
+    S1 --> T2["@Test 로그인"]
+    S2 --> T3["@Test 결제 처리"]
+    S2 --> T4["@Test 환불"]
+    T1 -.- Tag1["🏷 .critical"]
+    T2 -.- Tag2["🏷 .networking"]
+    T3 -.- Tag1
+    T3 -.- Tag2
+    T4 -.- Tag3["🏷 .database"]
+    style Tag1 fill:#ff6b6b,color:#fff
+    style Tag2 fill:#4ecdc4,color:#fff
+    style Tag3 fill:#45b7d1,color:#fff
+```
+
 
 Tags로 테스트를 분류하면, Xcode에서 특정 태그만 골라 실행할 수 있습니다.
 

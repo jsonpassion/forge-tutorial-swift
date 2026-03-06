@@ -15,6 +15,25 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: 함수와 클로저의 관계 — 이 세션에서 배울 내용
+
+```mermaid
+graph TD
+    A["함수(Function)"] --> B["매개변수 레이블"]
+    A --> C["반환 타입"]
+    A --> D["기본값 매개변수"]
+    A --> E["클로저(Closure)"]
+    E --> F["축약 문법"]
+    E --> G["후행 클로저"]
+    E --> H["함수형 트리오"]
+    H --> I["map"]
+    H --> J["filter"]
+    H --> K["reduce"]
+    style E fill:#f9a825,color:#000
+    style H fill:#66bb6a,color:#000
+```
+
+
 SwiftUI에서 버튼을 만들 때 `Button("탭하세요") { /* 여기 */ }` 이런 코드를 보게 될 텐데, 중괄호 `{ }` 안의 코드가 바로 **클로저**입니다. SwiftUI는 클로저를 매우 많이 사용하기 때문에, 클로저를 이해하지 못하면 SwiftUI 코드가 전부 암호처럼 보일 수 있어요. 지금 확실히 잡아두면 나중에 감사할 겁니다!
 
 ## 핵심 개념
@@ -133,6 +152,19 @@ let sorted5 = numbers.sorted { $0 < $1 }
 
 이 5단계가 모두 **동일한 결과**를 냅니다! 처음에는 1~2단계로 쓰다가, 익숙해지면 4~5단계로 줄여 쓰는 게 Swift의 관례예요.
 
+> 📊 **그림 2**: 클로저 축약 5단계 — 같은 기능, 점점 짧은 표현
+
+```mermaid
+flowchart TD
+    A["1단계: 전체 문법\n{ (a: Int, b: Int) -> Bool in return a < b }"] --> B["2단계: 타입 추론\n{ a, b in return a < b }"]
+    B --> C["3단계: 암시적 반환\n{ a, b in a < b }"]
+    C --> D["4단계: 단축 인자\n{ $0 < $1 }"]
+    D --> E["5단계: 후행 클로저\n.sorted { $0 < $1 }"]
+    style A fill:#e3f2fd,color:#000
+    style E fill:#c8e6c9,color:#000
+```
+
+
 > ⚠️ **흔한 오해**: "`$0`, `$1`이 대체 뭔가요? 너무 마법 같아요" — 전혀 마법이 아닙니다! `$0`은 첫 번째 매개변수, `$1`은 두 번째 매개변수를 가리키는 Swift의 **단축 인자 이름(Shorthand Argument Names)** 일 뿐이에요. 처음에는 명시적으로 `a, b in` 형태를 쓰고, 익숙해지면 `$0`, `$1`을 쓰세요.
 
 ### 개념 4: map, filter, reduce — 함수형 트리오
@@ -170,6 +202,22 @@ print(result)       // 220 (4+16+36+64+100)
 ```
 
 > 💡 **비유**: `map`은 **변환 공장** (원재료 → 제품), `filter`는 **품질 검사** (합격품만 통과), `reduce`는 **포장** (여러 개를 하나로 묶는 것)입니다.
+
+> 📊 **그림 3**: map / filter / reduce 데이터 처리 파이프라인
+
+```mermaid
+flowchart LR
+    A["원본 배열\n[1,2,3,4,5]"] --> B["filter\n조건 필터링"]
+    B --> C["[2, 4]\n짝수만"]
+    C --> D["map\n요소 변환"]
+    D --> E["[4, 16]\n제곱"]
+    E --> F["reduce\n하나로 합침"]
+    F --> G["20\n최종 값"]
+    style B fill:#ffcc80,color:#000
+    style D fill:#90caf9,color:#000
+    style F fill:#a5d6a7,color:#000
+```
+
 
 ## 실습: 직접 해보기
 

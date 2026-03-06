@@ -25,6 +25,19 @@
 
 NavigationStack은 SwiftUI에서 화면 전환을 관리하는 컨테이너 뷰입니다. 이 안에 넣은 뷰는 자동으로 네비게이션 바가 생기고, 화면 전환 기능을 사용할 수 있게 됩니다.
 
+> 📊 **그림 1**: NavigationStack의 Push/Pop 동작 원리
+
+```mermaid
+stateDiagram-v2
+    [*] --> 루트화면
+    루트화면 --> 화면A : push(A)
+    화면A --> 화면B : push(B)
+    화면B --> 화면A : pop (뒤로가기)
+    화면A --> 루트화면 : pop (뒤로가기)
+    화면B --> 루트화면 : popToRoot
+```
+
+
 ```swift
 import SwiftUI
 
@@ -107,6 +120,22 @@ struct FruitDetailView: View {
 
 iOS 16부터 NavigationLink에 **값(value)**을 전달하고, `navigationDestination`에서 그 값의 타입에 따라 화면을 결정하는 방식이 추가되었어요. 이 방식이 더 유연하고 재사용성이 높습니다.
 
+> 📊 **그림 2**: 기존 방식 vs 값 기반 네비게이션 비교
+
+```mermaid
+flowchart LR
+    subgraph 기존방식["기존 방식"]
+        A1["NavigationLink"] -->|"목적지 뷰 직접 포함"| B1["DetailView"]
+        A2["NavigationLink"] -->|"목적지 뷰 직접 포함"| B2["DetailView"]
+    end
+    subgraph 값기반["값 기반 방식"]
+        C1["NavigationLink\nvalue: Fruit"] -->|"값 전달"| D["navigationDestination\n(for: Fruit.self)"]
+        C2["NavigationLink\nvalue: Fruit"] -->|"값 전달"| D
+        D -->|"화면 생성"| E["DetailView"]
+    end
+```
+
+
 ```swift
 import SwiftUI
 
@@ -158,6 +187,27 @@ struct SmartFruitListView: View {
 ### 개념 4: NavigationPath — 프로그래밍 방식 네비게이션
 
 여러 타입의 값을 하나의 네비게이션 스택에서 관리하려면 `NavigationPath`를 사용합니다. 코드로 화면을 push/pop할 수도 있어요.
+
+> 📊 **그림 3**: NavigationPath를 통한 프로그래밍 방식 네비게이션
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant V as View
+    participant P as NavigationPath
+    participant S as NavigationStack
+    U->>V: "3번 화면으로 이동" 탭
+    V->>P: path.append(1)
+    V->>P: path.append(2)
+    V->>P: path.append(3)
+    P->>S: 스택 업데이트
+    S-->>U: 화면 #3 표시
+    U->>V: "처음으로 돌아가기" 탭
+    V->>P: path.removeLast(3)
+    P->>S: 스택 초기화
+    S-->>U: 홈 화면 표시
+```
+
 
 ```swift
 import SwiftUI

@@ -20,6 +20,21 @@
 
 ### 개념 1: URLSession — 앱의 우체국
 
+> 📊 **그림 1**: URLSession의 HTTP 요청-응답 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as iOS 앱
+    participant Session as URLSession
+    participant Server as 서버
+    App->>Session: URLRequest 생성
+    Session->>Server: HTTP 요청 전송
+    Server-->>Session: HTTP 응답 (Data + StatusCode)
+    Session-->>App: (Data, URLResponse) 반환
+    App->>App: 상태 코드 확인 및 데이터 디코딩
+```
+
+
 > 💡 **비유**: `URLSession`은 **우체국**과 같습니다. 편지(요청)를 쓰면 우체국이 배달하고, 답장(응답)이 오면 전달해줍니다. 우체국에는 일반 우편(shared), 등기 우편(커스텀 설정) 등 다양한 옵션이 있죠.
 
 `URLSession.shared`는 가장 기본적인 세션으로, 별도 설정 없이 바로 사용할 수 있습니다:
@@ -54,6 +69,21 @@ func fetchData() async throws -> Data {
 | `download(from:)` | 파일을 디스크에 다운로드 | `(URL, URLResponse)` |
 
 ### 개념 2: HTTP 메서드 — 서버에게 보내는 동사
+
+> 📊 **그림 2**: HTTP CRUD 메서드와 리소스 생명주기
+
+```mermaid
+flowchart LR
+    POST["POST\n리소스 생성"] --> GET["GET\n리소스 조회"]
+    GET --> PUT["PUT\n리소스 수정"]
+    PUT --> GET
+    GET --> DELETE["DELETE\n리소스 삭제"]
+    style POST fill:#4CAF50,color:#fff
+    style GET fill:#2196F3,color:#fff
+    style PUT fill:#FF9800,color:#fff
+    style DELETE fill:#f44336,color:#fff
+```
+
 
 > 💡 **비유**: HTTP 메서드는 식당에서의 **행동**과 같습니다. GET은 "메뉴 보여주세요"(조회), POST는 "이거 주문할게요"(생성), PUT은 "주문 변경해주세요"(수정), DELETE는 "주문 취소해주세요"(삭제)입니다.
 
@@ -133,6 +163,20 @@ func deletePost(id: Int) async throws {
 ```
 
 ### 개념 3: HTTP 상태 코드 — 서버의 대답
+
+> 📊 **그림 3**: HTTP 상태 코드 분류 체계
+
+```mermaid
+flowchart TD
+    R["HTTP 응답 수신"] --> Check{"상태 코드 확인"}
+    Check -->|200~299| S["✅ 성공\n데이터 처리 진행"]
+    Check -->|400| B["❌ Bad Request\n요청 형식 오류"]
+    Check -->|401/403| A["🔒 인증/권한 오류\n로그인 필요"]
+    Check -->|404| N["🔍 Not Found\n리소스 없음"]
+    Check -->|429| T["⏳ Rate Limit\n잠시 후 재시도"]
+    Check -->|500~599| E["🔥 서버 에러\n서버 측 문제"]
+```
+
 
 > 💡 **비유**: HTTP 상태 코드는 **택배 배송 상태**와 같습니다. 200번대는 "배송 완료!", 400번대는 "주소가 잘못됐어요"(클라이언트 잘못), 500번대는 "물류센터에 문제가 있어요"(서버 잘못)입니다.
 
@@ -217,6 +261,19 @@ func configuredRequest() -> URLRequest {
 > ⚠️ **흔한 오해**: "GET 요청에는 항상 `URL`만 쓰고, POST 요청에는 `URLRequest`를 써야 한다" — 아닙니다! GET 요청에도 `URLRequest`를 사용할 수 있고, 인증 헤더나 캐시 정책을 설정하려면 GET에서도 `URLRequest`가 필요합니다. `URL`만 쓰는 것은 가장 간단한 GET 요청의 단축 표현일 뿐이에요.
 
 ### 개념 5: 쿼리 파라미터 — URL에 검색 조건 붙이기
+
+> 📊 **그림 4**: URLComponents로 안전한 URL 구성 과정
+
+```mermaid
+flowchart LR
+    A["기본 URL\nhttps://api.example.com/search"] --> B["URLComponents"]
+    Q1["URLQueryItem\nq = swift"] --> B
+    Q2["URLQueryItem\npage = 1"] --> B
+    Q3["URLQueryItem\nlimit = 20"] --> B
+    B --> C["자동 퍼센트 인코딩"]
+    C --> D["최종 URL\n...?q=swift&page=1&limit=20"]
+```
+
 
 API 호출 시 검색어나 필터 조건을 URL에 전달하려면 `URLComponents`를 사용합니다:
 

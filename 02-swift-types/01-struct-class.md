@@ -89,6 +89,25 @@ print(account2.balance)   // 50000 — 같은 객체를 보고 있으니까요
 
 ### 개념 3: 값 타입 vs 참조 타입 — 핵심 차이
 
+> 📊 **그림 1**: 값 타입(struct)과 참조 타입(class)의 메모리 동작 비교
+
+```mermaid
+flowchart LR
+    subgraph 값타입["값 타입 (struct)"]
+        direction TB
+        A1["var user1\n{name: 민수}"] -->|"var user2 = user1"| A2["var user2\n{name: 민수}"]
+        A2 -->|"user2.name = 지영"| A3["var user2\n{name: 지영}"]
+        A1 -.->|"원본 그대로"| A1
+    end
+    subgraph 참조타입["참조 타입 (class)"]
+        direction TB
+        B1["let account1"] -->|"참조"| B3["힙 메모리\n{owner: 민수}"]
+        B2["let account2"] -->|"같은 참조"| B3
+        B3 -->|"balance 변경"| B4["힙 메모리\n{balance: 50000}"]
+    end
+```
+
+
 두 타입의 차이를 한눈에 비교해 봅시다.
 
 | 특성 | struct (값 타입) | class (참조 타입) |
@@ -99,6 +118,26 @@ print(account2.balance)   // 50000 — 같은 객체를 보고 있으니까요
 | **상속** | 불가 | 가능 |
 | **init** | 자동 생성 (memberwise) | 직접 작성 필요 |
 | **메모리** | 스택 (빠름) | 힙 + ARC (느림) |
+
+> 📊 **그림 4**: 스택과 힙 — struct와 class의 메모리 배치
+
+```mermaid
+flowchart LR
+    subgraph STACK["스택 Stack (빠름)"]
+        direction TB
+        S1["user1: User\nname=민수, age=25"]
+        S2["user2: User\nname=지영, age=25"]
+        S3["account1: 참조 → 0x1A"]
+        S4["account2: 참조 → 0x1A"]
+    end
+    subgraph HEAP["힙 Heap (느림)"]
+        direction TB
+        H1["0x1A: Account\nowner=민수\nbalance=50000\nrefCount=2"]
+    end
+    S3 -->|"참조"| H1
+    S4 -->|"참조"| H1
+```
+
 | **Sendable** | 기본 Sendable | 별도 처리 필요 |
 
 ```swift
@@ -122,6 +161,22 @@ classCircle.radius = 10  // ✅ let 클래스지만 프로퍼티 변경 가능!
 ```
 
 ### 개념 4: mutating — 구조체의 값 변경
+
+> 📊 **그림 2**: struct 메서드의 mutating 동작 원리
+
+```mermaid
+stateDiagram-v2
+    state "일반 메서드" as normal
+    state "mutating 메서드" as mut
+    state "self 읽기만 가능" as readonly
+    state "self를 새 값으로 교체" as replace
+
+    [*] --> normal: func description()
+    [*] --> mut: mutating func increment()
+    normal --> readonly: self.count 읽기 ✅\nself.count = 1 ❌
+    mut --> replace: self.count += 1 ✅\n(내부적으로 self 재할당)
+```
+
 
 구조체는 값 타입이기 때문에, 메서드 안에서 자신의 프로퍼티를 변경하려면 `mutating` 키워드가 필요합니다.
 
@@ -158,6 +213,28 @@ print(counter.count)   // 0
 ### 개념 5: struct vs class, 뭘 써야 할까?
 
 Apple의 공식 가이드라인은 명확합니다: **기본적으로 struct를 사용하세요.**
+
+> 📊 **그림 3**: struct vs class 선택 가이드 플로차트
+
+```mermaid
+flowchart TD
+    Q1{"여러 곳에서 같은 인스턴스를\n공유하고 수정해야 하나요?"}
+    Q1 -->|"예"| CLASS["class 사용"]
+    Q1 -->|"아니오"| Q2{"상속이 필요한가요?"}
+    Q2 -->|"예"| Q3{"프로토콜로\n대체 가능한가요?"}
+    Q3 -->|"예"| STRUCT["struct + protocol 사용"]
+    Q3 -->|"아니오"| CLASS
+    Q2 -->|"아니오"| Q4{"Objective-C API와\n연동하나요?"}
+    Q4 -->|"예"| CLASS
+    Q4 -->|"아니오"| STRUCT
+
+    STRUCT["✅ struct 사용"]
+    CLASS["⚠️ class 사용"]
+
+    style STRUCT fill:#34a853,color:#fff
+    style CLASS fill:#fbbc04,color:#000
+```
+
 
 - **struct를 쓰세요** (기본 선택):
   - 데이터를 담는 모델 (사용자, 상품, 좌표 등)

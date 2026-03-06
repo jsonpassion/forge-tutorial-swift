@@ -15,6 +15,25 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: enum이 해결하는 문제 — String/Int 분기 vs enum 분기
+
+```mermaid
+flowchart LR
+    subgraph 위험["❌ String으로 분기"]
+        A1["status = \"loading\""] --> B1{"if status == ..."}
+        B1 --> C1["오타 가능"]
+        B1 --> D1["잘못된 값 허용"]
+        B1 --> E1["누락 검사 불가"]
+    end
+    subgraph 안전["✅ enum으로 분기"]
+        A2["state = .loading"] --> B2{"switch state"}
+        B2 --> C2["컴파일 타임 검증"]
+        B2 --> D2["유효한 값만 허용"]
+        B2 --> E2["모든 case 강제 처리"]
+    end
+```
+
+
 Swift 앱을 만들다 보면 "몇 가지 정해진 경우 중 하나"를 표현해야 할 때가 정말 많습니다. 네트워크 요청의 결과(성공/실패), 앱의 화면 상태(로딩/콘텐츠/에러), 결제 수단(카드/현금/포인트) 등이 다 그렇죠. 이런 상황에서 `String`이나 `Int`로 구분하면 오타, 잘못된 값 같은 버그가 생기기 쉽습니다. enum을 쓰면 **컴파일러가 모든 경우를 빠짐없이 처리했는지 검사**해주니까 훨씬 안전해요.
 
 ## 핵심 개념
@@ -93,6 +112,25 @@ POST
 
 ### 개념 3: 연관 값 (Associated Value) — enum의 진짜 힘
 
+> 📊 **그림 2**: 원시 값(Raw Value)과 연관 값(Associated Value) 비교
+
+```mermaid
+flowchart TD
+    subgraph RV["원시 값 Raw Value"]
+        R1["enum Planet: Int"] --> R2["case mercury = 1"]
+        R1 --> R3["case venus = 2"]
+        R1 --> R4["case earth = 3"]
+        R5["모든 case가\n같은 타입의 고정 값"] -.-> R1
+    end
+    subgraph AV["연관 값 Associated Value"]
+        A1["enum NetworkResult"] --> A2["case success\n(data: Data, statusCode: Int)"]
+        A1 --> A3["case failure\n(error: String)"]
+        A1 --> A4["case loading\n(progress: Double)"]
+        A5["각 case가\n다른 타입·개수의 데이터"] -.-> A1
+    end
+```
+
+
 > 💡 **비유**: 원시 값이 **이름표**(고정된 라벨)라면, 연관 값은 **택배 상자**(case마다 다른 내용물을 담을 수 있는 것)입니다. 같은 "배송" case라도 안에 든 물건이 다를 수 있죠.
 
 연관 값을 쓰면 각 case가 **서로 다른 타입과 개수의 데이터**를 가질 수 있습니다.
@@ -153,6 +191,19 @@ processPayment(.creditCard(number: "1234567890123456", expiry: "12/26"), amount:
 ```
 
 ### 개념 4: 패턴 매칭 — switch를 넘어서
+
+> 📊 **그림 3**: Swift 패턴 매칭 도구 — 상황별 선택 가이드
+
+```mermaid
+flowchart TD
+    Q1{"enum 값을\n어떻게 처리?"}
+    Q1 -->|"모든 case 처리"| SW["switch\n전수 검사, 컴파일러 보장"]
+    Q1 -->|"특정 case만 확인"| Q2{"흐름 제어가\n필요한가?"}
+    Q2 -->|"아니오"| IC["if case\n단순 조건 확인"]
+    Q2 -->|"불일치 시 탈출"| GC["guard case\n조기 탈출 패턴"]
+    Q1 -->|"배열에서 필터링"| FC["for case\n특정 패턴만 순회"]
+```
+
 
 `switch` 말고도 다양한 방법으로 enum을 매칭할 수 있습니다.
 
@@ -368,6 +419,29 @@ for (beverage, payment) in orders {
 ## 더 깊이 알아보기
 
 ### Optional은 정말 enum이다
+
+> 📊 **그림 4**: Swift 핵심 타입의 enum 기반 구조
+
+```mermaid
+classDiagram
+    class Optional~Wrapped~ {
+        case none
+        case some(Wrapped)
+    }
+    class Result~Success_Failure~ {
+        case success(Success)
+        case failure(Failure)
+    }
+    class 문법적_설탕 {
+        nil → Optional.none
+        if let → if case .some
+        ?? → switch + default
+    }
+    Optional -- 문법적_설탕 : 변환
+    note for Optional "String? 은\nOptional~String~ 과 동일"
+    note for Result "네트워크 호출 등\n성공/실패 표현에 사용"
+```
+
 
 Swift의 `Optional<T>`은 실제로 이렇게 정의되어 있습니다:
 

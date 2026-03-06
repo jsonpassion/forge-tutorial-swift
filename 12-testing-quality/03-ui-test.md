@@ -24,6 +24,17 @@ Unit Test가 코드 한 줄 한 줄을 검증한다면, UI Test는 실제 사용
 
 UI 테스트 타겟은 앱과 별도 프로세스에서 실행됩니다. 앱의 코드를 직접 접근할 수 없고, 오직 화면의 요소를 통해서만 상호작용합니다.
 
+> 📊 **그림 1**: XCUITest 실행 구조 — 테스트와 앱은 별도 프로세스
+
+```mermaid
+flowchart LR
+    A["테스트 프로세스\n(XCUITest)"] -->|"UI 요소 쿼리\n& 액션 전달"| B["시스템\n(Accessibility 프레임워크)"]
+    B -->|"요소 탐색\n& 이벤트 주입"| C["앱 프로세스\n(XCUIApplication)"]
+    C -->|"UI 상태 반환"| B
+    B -->|"결과 전달"| A
+```
+
+
 ```swift
 import XCTest
 
@@ -122,6 +133,24 @@ UI 요소를 찾는 주요 쿼리 방식:
 
 ### 개념 3: 비동기 UI 대기
 
+> 📊 **그림 3**: waitForExistence 동작 흐름
+
+```mermaid
+sequenceDiagram
+    participant Test as 테스트 코드
+    participant UI as UI 요소
+    participant App as 앱 프로세스
+    Test->>UI: waitForExistence(timeout: 5)
+    loop 폴링 (최대 5초)
+        UI->>App: 요소 존재 여부 확인
+        App-->>UI: 아직 없음
+    end
+    App-->>UI: 요소 나타남!
+    UI-->>Test: true 반환
+    Test->>Test: XCTAssertTrue 통과
+```
+
+
 화면 전환이나 네트워크 응답을 기다려야 할 때 `waitForExistence`를 사용합니다.
 
 ```swift
@@ -154,6 +183,25 @@ func testAlertDismissal() {
 ```
 
 ### 개념 4: Page Object 패턴
+
+> 📊 **그림 2**: Page Object 패턴 — 화면별 캡슐화와 화면 전환
+
+```mermaid
+flowchart TD
+    T["테스트 코드"] --> LS["LoginScreen"]
+    T --> HS["HomeScreen"]
+    T --> TS["TodoScreen"]
+    LS -->|"tapLogin()"| HS
+    HS -->|"tapTodoList()"| TS
+    subgraph PageObjects["Page Objects"]
+        LS --- L1["emailField"]
+        LS --- L2["passwordField"]
+        LS --- L3["loginButton"]
+        HS --- H1["welcomeText"]
+        TS --- T1["todoList"]
+    end
+```
+
 
 테스트가 많아지면 UI 요소 탐색 코드가 중복됩니다. Page Object 패턴으로 화면별 객체를 만들면 유지보수가 쉬워집니다.
 

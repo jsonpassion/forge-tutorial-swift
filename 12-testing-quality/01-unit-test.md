@@ -14,6 +14,27 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 3**: Unit Test가 있는 개발 워크플로 vs 없는 워크플로
+
+```mermaid
+flowchart LR
+    subgraph WITHOUT["테스트 없이"]
+        A1["코드 수정"] --> B1["빌드 & 실행"]
+        B1 --> C1["수동으로 확인"]
+        C1 --> D1["배포"]
+        D1 --> E1["🐛 버그 발견"]
+        E1 --> A1
+    end
+    subgraph WITH["테스트와 함께"]
+        A2["코드 수정"] --> B2["Cmd+U 테스트 실행"]
+        B2 --> C2{"통과?"}
+        C2 -->|"✅ Yes"| D2["안전하게 배포"]
+        C2 -->|"❌ No"| F2["즉시 수정"]
+        F2 --> A2
+    end
+```
+
+
 앱이 커질수록 "여기 고치면 저기가 깨지는" 상황이 빈번해집니다. Unit Test가 있으면 코드를 수정한 뒤 Cmd+U 한 번으로 전체 기능이 정상인지 바로 확인할 수 있죠. 실제로 많은 기업에서 테스트 커버리지를 채용 기준으로 삼을 만큼, 테스트 작성 능력은 프로 개발자의 필수 역량입니다.
 
 ## 핵심 개념
@@ -23,6 +44,20 @@
 > 💡 **비유**: Unit Test는 **자동차 출고 전 검수 라인**과 같습니다. 엔진, 브레이크, 에어백을 각각 따로 테스트해서, 조립 후에도 개별 부품이 제대로 동작하는지 확인하는 거죠.
 
 XCTest는 Apple이 제공하는 테스트 프레임워크입니다. Xcode에서 프로젝트를 만들 때 "Include Tests"를 체크하면 자동으로 테스트 타겟이 생성됩니다.
+
+> 📊 **그림 1**: XCTest 테스트 메서드 실행 라이프사이클
+
+```mermaid
+stateDiagram-v2
+    [*] --> setUp: 테스트 시작
+    setUp --> testMethod1: 초기화 완료
+    testMethod1 --> tearDown: 테스트 실행 완료
+    tearDown --> setUp: 다음 테스트
+    setUp --> testMethod2: 초기화 완료
+    testMethod2 --> tearDown: 테스트 실행 완료
+    tearDown --> [*]: 모든 테스트 완료
+```
+
 
 ```swift
 import XCTest
@@ -114,6 +149,24 @@ func testFetchUser() async throws {
 > 💡 **비유**: 영화 촬영에서 **스턴트 더블**이 위험한 장면을 대신하듯, Mock 객체는 실제 네트워크나 데이터베이스 대신 테스트에서 "대역"을 맡습니다.
 
 실제 서버에 요청을 보내면 테스트가 느려지고 불안정해집니다. 프로토콜로 의존성을 추상화하고, 테스트에서는 가짜(Mock) 구현을 주입하세요.
+
+> 📊 **그림 2**: 프로토콜 기반 Mocking — 프로덕션 vs 테스트 의존성 주입
+
+```mermaid
+flowchart TD
+    P["UserRepositoryProtocol\n(프로토콜)"] --> R["UserRepository\n(실제 구현)"]
+    P --> M["MockUserRepository\n(Mock 구현)"]
+    VM["UserViewModel"] --> P
+    R --> API["실제 서버 API"]
+    M --> FD["가짜 데이터 반환"]
+    subgraph 프로덕션
+        VM --> R
+    end
+    subgraph 테스트
+        VM --> M
+    end
+```
+
 
 ```swift
 // 1. 프로토콜로 인터페이스 정의

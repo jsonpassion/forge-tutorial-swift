@@ -6,6 +6,32 @@
 
 현실의 데이터는 혼자 존재하지 않습니다. 메모에는 태그가 붙고, 폴더에는 여러 메모가 담기고, 사용자에게는 여러 프로젝트가 있죠. 이렇게 **모델 간의 연결**을 다루는 것이 "관계(Relationship)"입니다. 이번 섹션에서는 `@Relationship`으로 모델을 연결하고, `#Predicate`와 `SortDescriptor`로 더 정교한 쿼리를 작성하는 방법을 배웁니다.
 
+> 📊 **그림 1**: Folder-Memo-Tag 관계 구조 전체도
+
+```mermaid
+classDiagram
+    class Folder {
+        name: String
+        icon: String
+        memos: [Memo]
+    }
+    class Memo {
+        title: String
+        content: String
+        isPinned: Bool
+        folder: Folder?
+        tags: [Tag]
+    }
+    class Tag {
+        name: String
+        color: String
+        memos: [Memo]
+    }
+    Folder "1" --> "*" Memo : 일대다
+    Memo "*" <--> "*" Tag : 다대다
+```
+
+
 **선수 지식**: [02. CRUD 구현](./02-crud.md)에서 배운 `@Query`, `#Predicate` 기초
 **학습 목표**:
 - 일대다(one-to-many), 다대다(many-to-many) 관계를 설정하는 방법
@@ -87,6 +113,22 @@ workFolder.memos.append(memo2)  // 양쪽 관계가 자동으로 설정됨
 
 #### 삭제 규칙 (Delete Rule)
 
+> 📊 **그림 2**: 삭제 규칙(Delete Rule)별 동작 비교
+
+```mermaid
+flowchart LR
+    subgraph cascade[".cascade"]
+        A1["폴더 삭제"] --> B1["메모도 함께 삭제"]
+    end
+    subgraph nullify[".nullify"]
+        A2["카테고리 삭제"] --> B2["할 일의 참조 → nil"]
+    end
+    subgraph deny[".deny"]
+        A3["고객 삭제 시도"] --> B3["주문 존재 → 삭제 거부"]
+    end
+```
+
+
 `@Relationship`의 `deleteRule`은 부모가 삭제될 때 자식들을 어떻게 처리할지 결정합니다:
 
 | 규칙 | 동작 | 사용 시나리오 |
@@ -156,6 +198,19 @@ memo.tags.append(contentsOf: [swiftTag, uiTag])
 
 ### 개념 3: #Predicate 복합 조건
 
+> 📊 **그림 3**: #Predicate 복합 조건 쿼리 흐름
+
+```mermaid
+flowchart TD
+    A["전체 Memo 데이터"] --> B{"#Predicate 필터"}
+    B -->|"isPinned == true"| C["고정된 메모"]
+    B -->|"folder?.name == 업무"| D["업무 폴더 메모"]
+    B -->|"&& 조합"| E["고정 + 업무 메모"]
+    E --> F["SortDescriptor 정렬"]
+    F -->|"createdAt .reverse"| G["최종 결과"]
+```
+
+
 이전 섹션에서 기본 `#Predicate`를 배웠는데, 여러 조건을 조합하면 더 강력한 쿼리를 만들 수 있습니다:
 
 ```swift
@@ -198,6 +253,22 @@ let combinedFilter = #Predicate<Memo> { memo in
 ### 개념 4: #Index와 #Unique (WWDC 2024)
 
 WWDC 2024에서 추가된 매크로로, 쿼리 성능을 크게 향상시킬 수 있습니다.
+
+> 📊 **그림 4**: 인덱스 유무에 따른 쿼리 탐색 비교
+
+```mermaid
+flowchart LR
+    subgraph no_index["인덱스 없음"]
+        A1["쿼리 요청"] --> B1["전체 데이터 순차 탐색"]
+        B1 --> C1["느림 O(n)"]
+    end
+    subgraph with_index["#Index 적용"]
+        A2["쿼리 요청"] --> B2["인덱스에서 위치 조회"]
+        B2 --> C2["해당 데이터 직접 접근"]
+        C2 --> D2["빠름 O(log n)"]
+    end
+```
+
 
 #### #Index — 자주 검색하는 프로퍼티에 인덱스 추가
 

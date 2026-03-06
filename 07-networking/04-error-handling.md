@@ -20,6 +20,25 @@
 
 ### 개념 1: 커스텀 네트워크 에러 타입 — 에러에도 이름을 붙여주세요
 
+> 📊 **그림 1**: URLError에서 커스텀 NetworkError로의 변환 흐름
+
+```mermaid
+flowchart TD
+    A["URLSession 요청"] --> B{"에러 발생?"}
+    B -->|No| C{"HTTP 상태 코드"}
+    B -->|Yes| D{"URLError 분류"}
+    D -->|notConnectedToInternet| E["noConnection"]
+    D -->|timedOut| F["timeout"]
+    D -->|기타| G["unknown"]
+    C -->|200~299| H["JSON 디코딩"]
+    C -->|401| I["unauthorized"]
+    C -->|404| J["notFound"]
+    C -->|500~599| K["serverError"]
+    H -->|실패| L["decodingFailed"]
+    H -->|성공| M["✅ 결과 반환"]
+```
+
+
 > 💡 **비유**: 병원에 가면 의사가 "어디가 아프세요?"라고 묻고 진단명을 내리죠. 네트워크 에러도 마찬가지입니다. "뭔가 잘못됨" 대신 "서버 연결 실패", "인증 만료", "데이터 형식 오류"처럼 **구체적인 진단명**을 붙여야 적절한 처방(복구)이 가능합니다.
 
 ```swift
@@ -143,6 +162,17 @@ extension NetworkError: LocalizedError {
 ```
 
 ### 개념 3: SwiftUI에서 에러 표시 — 세 가지 패턴
+
+> 📊 **그림 4**: 에러 심각도에 따른 UI 패턴 선택
+
+```mermaid
+flowchart LR
+    A["에러 발생"] --> B{"심각도 판단"}
+    B -->|"부분 실패\n(위젯 일부)"| C["인라인 메시지\n🔸 흐름 유지"]
+    B -->|"전체 실패\n(목록 비어있음)"| D["ContentUnavailableView\n🔶 전체 화면 안내"]
+    B -->|"치명적 에러\n(인증 만료 등)"| E["Alert\n🔴 즉시 주의 필요"]
+```
+
 
 **패턴 1: Alert — 간단한 에러 알림**
 
@@ -302,6 +332,24 @@ struct InlineErrorView: View {
 
 ### 개념 4: 재시도 로직 — 한 번 실패했다고 포기하지 않기
 
+> 📊 **그림 2**: 지수 백오프(Exponential Backoff) 재시도 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as 앱
+    participant Server as 서버
+    App->>Server: 1차 시도
+    Server--xApp: ❌ timeout
+    Note right of App: 1초 대기
+    App->>Server: 2차 시도
+    Server--xApp: ❌ serverError(503)
+    Note right of App: 2초 대기
+    App->>Server: 3차 시도
+    Server-->>App: ✅ 200 OK + 데이터
+    Note over App,Server: 재시도는 isRetryable한 에러만 대상
+```
+
+
 > 💡 **비유**: 전화가 안 될 때 한 번만 걸고 포기하진 않죠? 잠깐 기다렸다가 다시 걸어보고, 또 안 되면 조금 더 기다렸다가 다시 시도합니다. 이것이 바로 **지수 백오프(Exponential Backoff)** 전략입니다.
 
 ```swift
@@ -345,6 +393,19 @@ func requestWithRetry<T: Decodable>(
 > ⚠️ **흔한 오해**: "에러가 나면 무조건 재시도하면 된다" — 아닙니다! 인증 실패(401)나 잘못된 URL(400) 같은 에러는 아무리 재시도해도 결과가 같습니다. 재시도는 **일시적인 에러**(네트워크 끊김, 서버 과부하, 타임아웃)에만 의미가 있어요. 무분별한 재시도는 서버에 불필요한 부하만 줍니다.
 
 ### 개념 5: Loadable 패턴 — 상태를 타입으로 표현하기
+
+> 📊 **그림 3**: Loadable<T> 상태 전이 다이어그램
+
+```mermaid
+stateDiagram-v2
+    [*] --> idle
+    idle --> loading: loadPosts() 호출
+    loading --> loaded: 성공
+    loading --> failed: 에러 발생
+    failed --> loading: 재시도
+    loaded --> loading: 새로고침
+```
+
 
 로딩/성공/실패 상태를 enum으로 관리하면 뷰 코드가 깔끔해집니다:
 

@@ -14,6 +14,23 @@
 
 ## 왜 알아야 할까?
 
+> 📊 **그림 1**: StoreKit 2 인앱 구매 전체 아키텍처
+
+```mermaid
+flowchart LR
+    A["앱"] --> B["Product.products(for:)"]
+    B --> C["App Store Server"]
+    C --> B
+    A --> D["Product.purchase()"]
+    D --> E["결제 시트"]
+    E --> F["Transaction\n(JWS 서명)"]
+    F --> G["서명 검증"]
+    G --> H["콘텐츠 전달"]
+    H --> I["transaction.finish()"]
+    J["Transaction.updates"] -.->|"갱신/환불/\n다른 기기 구매"| A
+```
+
+
 무료 앱으로 시작해도, 결국 지속 가능한 수익 모델이 필요합니다. 인앱 구매는 App Store 매출의 핵심이고, 특히 구독 모델은 안정적인 반복 수익을 만들어줍니다. StoreKit 2는 기존의 복잡한 영수증 검증을 자동화하고, SwiftUI 전용 뷰로 구매 UI까지 제공해서 개발 부담을 크게 줄여줬어요. 앱 수익화를 고려하고 있다면 반드시 알아야 할 프레임워크입니다.
 
 ## 핵심 개념
@@ -30,6 +47,24 @@
 | **Non-renewing (비갱신 구독)** | 기간 만료 후 자동 갱신 안 됨 | 시즌 패스, 한시적 이용권 |
 
 ### 개념 2: 상품 조회와 구매 처리
+
+> 📊 **그림 2**: 구매 처리 흐름과 결과 분기
+
+```mermaid
+flowchart TD
+    A["product.purchase() 호출"] --> B{"PurchaseResult"}
+    B -->|".success"| C{"VerificationResult"}
+    B -->|".userCancelled"| D["사용자 취소\n→ nil 반환"]
+    B -->|".pending"| E["승인 대기\n(자녀 보호 등)"]
+    C -->|".verified"| F["검증 성공"]
+    C -->|".unverified"| G["검증 실패\n→ 에러 throw"]
+    F --> H["콘텐츠 전달"]
+    H --> I["transaction.finish()"]
+    style F fill:#2d6,color:#fff
+    style G fill:#d33,color:#fff
+    style D fill:#888,color:#fff
+```
+
 
 StoreKit 2는 `Product` 구조체와 async/await API로 구매 흐름을 깔끔하게 처리합니다.
 
@@ -97,6 +132,27 @@ func purchase(_ product: Product) async throws -> Transaction? {
 > ⚠️ **흔한 오해**: "finish()는 안 불러도 된다" — **절대 아닙니다!** `finish()`를 호출하지 않으면 해당 거래가 `Transaction.updates`에 계속 나타납니다. 이것은 의도된 안전장치예요. 콘텐츠를 전달한 **후에** 반드시 `finish()`를 호출하세요. 순서가 중요합니다: 콘텐츠 전달 → finish() 호출.
 
 ### 개념 3: Transaction 모니터링 — 실시간 구매 상태 추적
+
+> 📊 **그림 3**: Transaction 모니터링 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as 앱 (StoreManager)
+    participant TU as Transaction.updates
+    participant AS as App Store
+    participant CE as currentEntitlements
+
+    App->>TU: for await 감시 시작
+    AS-->>TU: 구독 갱신 알림
+    TU-->>App: update 수신
+    App->>CE: 활성 구매 조회
+    CE-->>App: 구매 목록 반환
+    App->>App: purchasedProductIDs 갱신
+    App->>TU: transaction.finish()
+
+    Note over AS,TU: 환불, 다른 기기 구매도 동일 흐름
+```
+
 
 앱이 실행 중일 때 다른 기기에서의 구매, 구독 갱신, 환불 등을 감지하려면 `Transaction.updates`를 관찰해야 합니다.
 
@@ -260,6 +316,24 @@ func checkSubscriptionActive(
 ```
 
 **구독 상태 종류:**
+
+> 📊 **그림 4**: 구독 상태 전이 다이어그램
+
+```mermaid
+stateDiagram-v2
+    [*] --> subscribed: 최초 구독
+    subscribed --> subscribed: 자동 갱신 성공
+    subscribed --> inGracePeriod: 결제 실패
+    inGracePeriod --> subscribed: 결제 성공
+    inGracePeriod --> inBillingRetryPeriod: 유예 기간 만료
+    inBillingRetryPeriod --> subscribed: 결제 성공
+    inBillingRetryPeriod --> expired: 재시도 실패
+    subscribed --> expired: 사용자 해지
+    subscribed --> revoked: 환불/취소
+    expired --> subscribed: 재구독
+    expired --> [*]
+```
+
 
 | 상태 | 의미 | 서비스 제공 |
 |------|------|-----------|

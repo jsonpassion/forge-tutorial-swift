@@ -6,6 +6,22 @@
 
 앱을 실제 iPhone에 설치하려면 "이 앱은 신뢰할 수 있는 개발자가 만들었습니다"라는 **디지털 서명**이 필요합니다. 인증서(Certificate), 프로비저닝 프로파일(Provisioning Profile), 코드 서명(Code Signing)은 이 신뢰 체계의 핵심 요소인데요, 처음에는 복잡하게 느껴지지만 한번 이해하면 간단합니다.
 
+> 📊 **그림 1**: 코드 서명 신뢰 체계 전체 구조
+
+```mermaid
+flowchart TD
+    A["Apple Developer Program\n(개발자 등록)"] --> B["Certificate\n(인증서 발급)"]
+    A --> C["App ID\n(앱 등록)"]
+    A --> D["Device UDID\n(기기 등록)"]
+    B --> E["Provisioning Profile\n(프로비저닝 프로파일)"]
+    C --> E
+    D --> E
+    E --> F["Code Signing\n(코드 서명)"]
+    F --> G["서명된 앱 바이너리"]
+    G --> H["실기기 설치 / App Store 배포"]
+```
+
+
 **선수 지식**: [앱 아이콘과 스크린샷](./01-app-icon-assets.md)
 **학습 목표**:
 - Apple Developer Program의 구성과 가입 과정을 이해할 수 있다
@@ -51,6 +67,22 @@
 4. Apple이 **인증서** 발급 (공개키 포함)
 5. Xcode가 자동으로 다운로드 및 설치
 
+> 📊 **그림 2**: 인증서 생성 및 발급 과정
+
+```mermaid
+sequenceDiagram
+    participant X as Xcode
+    participant K as Keychain Access
+    participant A as Apple Developer Portal
+    X->>K: 개인키 생성 요청
+    K-->>X: 개인키 + CSR 생성
+    X->>A: CSR 전송
+    A->>A: CSR 검증 및 인증서 생성
+    A-->>X: 인증서 발급 (공개키 포함)
+    X->>K: 인증서 + 개인키 저장
+```
+
+
 > ⚠️ **흔한 오해**: "인증서는 여러 Mac에서 공유할 수 없다" — 가능합니다! Keychain Access에서 인증서와 개인키를 `.p12` 파일로 내보내면 다른 Mac에서도 사용할 수 있어요. 팀 개발 시 필수 지식입니다.
 
 ### 개념 3: 프로비저닝 프로파일(Provisioning Profile) — 통행증
@@ -62,6 +94,21 @@
 - **누가**: 인증서 (개발자 신원)
 - **무엇을**: App ID + Bundle Identifier (어떤 앱)
 - **어디서**: 등록된 기기 UDID (어떤 기기, Development/Ad Hoc만 해당)
+
+> 📊 **그림 3**: 프로비저닝 프로파일의 3요소 결합
+
+```mermaid
+flowchart LR
+    A["🪪 인증서\n(누가)"] --> D["📋 Provisioning Profile\n(통행증)"]
+    B["📱 App ID\n(무엇을)"] --> D
+    C["💻 Device UDID\n(어디서)"] --> D
+    D --> E{"프로파일 종류"}
+    E --> F["Development\n기기 제한 O"]
+    E --> G["Ad Hoc\n기기 제한 O"]
+    E --> H["App Store\n기기 제한 X"]
+    E --> I["Enterprise\n기기 제한 X"]
+```
+
 
 | 프로파일 종류 | 기기 제한 | 용도 |
 |--------------|----------|------|
@@ -91,6 +138,19 @@ Xcode의 **Automatically manage signing** 옵션을 켜면, 위의 모든 과정
 **Capabilities(기능) 추가 시:**
 
 앱에서 Push Notifications, Sign in with Apple, HealthKit 등을 사용하려면 **Capabilities** 탭에서 해당 기능을 추가해야 합니다. 이때 App ID에 해당 Entitlement가 자동으로 등록되고, 프로비저닝 프로파일이 갱신됩니다.
+
+> 📊 **그림 4**: Xcode 자동 서명 — Capability 추가 시 흐름
+
+```mermaid
+flowchart TD
+    A["Capabilities 탭에서\n기능 추가"] --> B["App ID에\nEntitlement 등록"]
+    B --> C["Provisioning Profile\n자동 갱신"]
+    C --> D["Code Signing\n재수행"]
+    D --> E["앱 빌드 완료"]
+    style A fill:#f9f,stroke:#333
+    style E fill:#9f9,stroke:#333
+```
+
 
 ### 개념 5: 흔한 문제와 해결법
 

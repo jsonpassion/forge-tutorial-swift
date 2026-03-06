@@ -24,6 +24,30 @@
 
 ActivityKit의 핵심은 `ActivityAttributes` 프로토콜입니다. 변하지 않는 **정적 데이터**와 실시간으로 변하는 **동적 데이터(ContentState)**를 분리합니다.
 
+> 📊 **그림 1**: ActivityAttributes 아키텍처 — 정적 데이터와 동적 데이터 분리
+
+```mermaid
+classDiagram
+    class ActivityAttributes {
+        <<protocol>>
+    }
+    class DeliveryAttributes {
+        +orderNumber: String
+        +restaurantName: String
+    }
+    class ContentState {
+        +status: String
+        +estimatedDelivery: Date
+        +courierName: String
+        +progress: Double
+    }
+    ActivityAttributes <|-- DeliveryAttributes : 준수
+    DeliveryAttributes *-- ContentState : 내부 정의
+    note for DeliveryAttributes "정적 데이터\n생성 시 고정"
+    note for ContentState "동적 데이터\n실시간 업데이트"
+```
+
+
 ```swift
 import ActivityKit
 import Foundation
@@ -47,6 +71,23 @@ struct DeliveryAttributes: ActivityAttributes {
 ### 개념 2: Live Activity 시작, 업데이트, 종료
 
 Live Activity의 생명주기는 3단계입니다.
+
+> 📊 **그림 2**: Live Activity 생명주기 — 시작, 업데이트, 종료
+
+```mermaid
+stateDiagram-v2
+    [*] --> 시작: Activity.request()
+    시작 --> 활성: 성공
+    활성 --> 활성: update()
+    활성 --> 종료됨: end(.default)
+    활성 --> 제거됨: end(.immediate)
+    활성 --> 종료됨: 8시간 초과
+    종료됨 --> 제거됨: 최대 4시간 후
+    제거됨 --> [*]
+    note right of 시작: 포그라운드에서만 가능
+    note right of 활성: 포그라운드/백그라운드/푸시
+```
+
 
 | 단계 | 메서드 | 호출 위치 |
 |------|--------|----------|
@@ -134,6 +175,23 @@ func endDelivery(activity: Activity<DeliveryAttributes>) async {
 | **Compact** | Live Activity 1개일 때 | 왼쪽(leading) + 오른쪽(trailing) |
 | **Expanded** | 사용자가 길게 누를 때 | leading + trailing + center + bottom |
 | **Minimal** | Live Activity 여러 개일 때 | 작은 원형 아이콘 |
+
+> 📊 **그림 3**: Dynamic Island 3가지 표시 모드와 전환 조건
+
+```mermaid
+flowchart TD
+    A["Live Activity 실행"] --> B{"활성 LA 개수"}
+    B -->|1개| C["Compact 모드"]
+    B -->|2개 이상| D["Minimal 모드"]
+    C -->|길게 누름| E["Expanded 모드"]
+    D -->|길게 누름| E
+    C --- C1["leading: 아이콘"]
+    C --- C2["trailing: 타이머"]
+    E --- E1["leading + trailing"]
+    E --- E2["center + bottom"]
+    D --- D1["작은 원형 아이콘"]
+```
+
 
 ```swift
 import WidgetKit
@@ -233,6 +291,28 @@ struct DeliveryLiveActivity: Widget {
 ### 개념 4: 푸시 알림으로 원격 업데이트
 
 앱이 백그라운드에 있어도 서버에서 **APNs(Apple Push Notification service)**를 통해 Live Activity를 업데이트할 수 있습니다.
+
+> 📊 **그림 4**: APNs를 통한 Live Activity 원격 업데이트 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as 앱
+    participant System as iOS 시스템
+    participant Server as 서버
+    participant APNs as APNs
+    App->>System: Activity.request(pushType: .token)
+    System-->>App: 푸시 토큰 발급
+    App->>Server: 토큰 전송
+    Note over App: 앱이 백그라운드로 전환
+    Server->>APNs: liveactivity 페이로드 전송
+    APNs->>System: 푸시 알림 전달
+    System->>System: ContentState 업데이트
+    System-->>App: UI 자동 갱신
+    Server->>APNs: event: end
+    APNs->>System: 종료 알림
+    System->>System: Live Activity 종료
+```
+
 
 ```swift
 // 앱 시작 시 푸시 토큰을 관찰합니다

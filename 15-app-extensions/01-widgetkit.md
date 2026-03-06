@@ -22,6 +22,24 @@
 
 > 💡 **비유**: 위젯은 **전광판**입니다. 실시간으로 화면을 바꾸는 게 아니라, 미리 준비된 슬라이드를 정해진 시간에 보여주는 거죠. 시스템이 "다음 슬라이드 주세요"라고 요청하면, 앱이 앞으로 보여줄 슬라이드 묶음(타임라인)을 전달합니다.
 
+> 📊 **그림 1**: WidgetKit 타임라인 기반 업데이트 흐름
+
+```mermaid
+sequenceDiagram
+    participant S as 시스템(WidgetKit)
+    participant P as TimelineProvider
+    participant W as 위젯 뷰
+    S->>P: getTimeline 요청
+    P->>P: 데이터 조회
+    P-->>S: Timeline(entries, policy)
+    loop 각 Entry의 date 도달 시
+        S->>W: Entry 데이터 전달
+        W-->>S: SwiftUI 뷰 렌더링
+    end
+    Note over S,P: policy가 .atEnd이면<br/>타임라인 소진 후 재요청
+```
+
+
 WidgetKit은 세 가지 핵심 요소로 구성됩니다.
 
 | 요소 | 역할 |
@@ -157,6 +175,32 @@ struct WaterWidgetView: View {
 
 위젯은 **별도의 프로세스**에서 실행됩니다. 앱과 위젯이 데이터를 공유하려면 **App Groups**를 설정해야 해요.
 
+> 📊 **그림 2**: App Groups를 통한 앱-위젯 데이터 공유 구조
+
+```mermaid
+flowchart LR
+    subgraph APP["앱 프로세스"]
+        A1["데이터 변경"] --> A2["App Group에 저장"]
+        A2 --> A3["reloadTimelines 호출"]
+    end
+    subgraph SHARED["App Group 컨테이너"]
+        S1["UserDefaults\n(suiteName)"]
+        S2["SwiftData\n(groupContainer)"]
+        S3["FileManager\n(sharedContainerURL)"]
+    end
+    subgraph WIDGET["위젯 프로세스"]
+        W1["TimelineProvider"] --> W2["데이터 읽기"]
+        W2 --> W3["위젯 뷰 갱신"]
+    end
+    A2 --> S1
+    A2 --> S2
+    A2 --> S3
+    W2 --> S1
+    W2 --> S2
+    W2 --> S3
+```
+
+
 | 방법 | 장점 | 용도 |
 |------|------|------|
 | **UserDefaults (suiteName)** | 간단, 가벼운 데이터에 적합 | 설정값, 카운터, 플래그 |
@@ -185,6 +229,21 @@ func drinkWater() {
 > 💡 **비유**: 기존 위젯이 **읽기 전용 게시판**이었다면, 인터랙티브 위젯은 **터치스크린 키오스크**입니다. 직접 버튼을 눌러 주문(액션)을 실행할 수 있죠.
 
 인터랙티브 위젯은 `Button`과 `Toggle`만 지원하며, 반드시 `AppIntent`를 사용해야 합니다.
+
+> 📊 **그림 3**: 인터랙티브 위젯의 동작 흐름 (iOS 17+)
+
+```mermaid
+flowchart TD
+    A["사용자가 위젯 버튼 탭"] --> B["AppIntent.perform() 실행"]
+    B --> C["App Group 데이터 업데이트"]
+    C --> D["perform() 완료 반환"]
+    D --> E["WidgetKit이 자동으로\ngetTimeline 재요청"]
+    E --> F["새 Entry로 위젯 뷰 갱신"]
+    F --> G["업데이트된 UI 표시"]
+    style A fill:#0ea5e9,color:#fff
+    style G fill:#06b6d4,color:#fff
+```
+
 
 ```swift
 import AppIntents
@@ -232,6 +291,32 @@ struct InteractiveWaterView: View {
 ```
 
 ### 개념 5: 위젯 번들과 설정 가능한 위젯
+
+> 📊 **그림 4**: StaticConfiguration vs AppIntentConfiguration 비교
+
+```mermaid
+flowchart LR
+    subgraph STATIC["StaticConfiguration"]
+        direction TB
+        S1["TimelineProvider"] --> S2["고정된 데이터 제공"]
+        S2 --> S3["위젯 뷰 렌더링"]
+    end
+    subgraph CONFIGURABLE["AppIntentConfiguration"]
+        direction TB
+        C0["사용자 설정\n(WidgetConfigurationIntent)"] --> C1["Configurable Provider"]
+        C1 --> C2["설정값 반영 데이터 제공"]
+        C2 --> C3["위젯 뷰 렌더링"]
+    end
+    subgraph BUNDLE["WidgetBundle (@main)"]
+        direction TB
+        B1["WaterWidget"]
+        B2["StepWidget"]
+        B3["QuoteWidget"]
+    end
+    STATIC --> BUNDLE
+    CONFIGURABLE --> BUNDLE
+```
+
 
 여러 위젯을 하나의 익스텐션에서 제공하려면 `WidgetBundle`을 사용합니다.
 

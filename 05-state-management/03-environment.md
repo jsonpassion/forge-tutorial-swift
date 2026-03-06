@@ -22,6 +22,31 @@
 
 이렇게 5단계를 거쳐야 하는데, 중간 화면들은 사용자 정보를 쓰지도 않으면서 그냥 **전달만** 하고 있어요. 이걸 **"Prop Drilling"** 이라고 부르는데, 코드를 복잡하고 유지보수하기 어렵게 만드는 주범이죠.
 
+> 📊 **그림 1**: Prop Drilling vs @Environment — 데이터 전달 방식 비교
+
+```mermaid
+flowchart TD
+    subgraph Prop_Drilling["❌ Prop Drilling"]
+        direction TD
+        A1["앱 루트"] -->|"전달"| B1["탭뷰"]
+        B1 -->|"전달"| C1["네비게이션"]
+        C1 -->|"전달"| D1["리스트"]
+        D1 -->|"전달"| E1["상세화면"]
+        style B1 fill:#fdd,stroke:#c33
+        style C1 fill:#fdd,stroke:#c33
+        style D1 fill:#fdd,stroke:#c33
+    end
+    subgraph Environment["✅ @Environment"]
+        direction TD
+        A2["앱 루트"] -->|"주입"| ENV["Environment 공간"]
+        ENV -.->|"직접 접근"| B2["탭뷰"]
+        ENV -.->|"직접 접근"| E2["상세화면"]
+        ENV -.->|"직접 접근"| F2["프로필"]
+        style ENV fill:#d4edda,stroke:#28a745
+    end
+```
+
+
 `@Environment`는 이 문제를 우아하게 해결합니다. 데이터를 뷰 계층의 **상위에서 한 번만 주입**하면, 하위의 어떤 뷰든 중간 단계 없이 바로 접근할 수 있어요.
 
 ## 핵심 개념
@@ -31,6 +56,26 @@
 > 💡 **비유**: `@Environment`는 **건물의 중앙 냉난방 시스템**과 같아요. 각 방(뷰)에서 온도 조절기를 확인하면 현재 건물의 냉난방 상태를 알 수 있죠. 방마다 따로 보일러를 설치할 필요 없이, 건물 전체에서 관리하는 설정을 각 방에서 읽어올 수 있습니다.
 
 SwiftUI는 `@Environment`를 통해 수많은 시스템 값을 제공합니다. 시스템이 알아서 관리하는 값들이에요.
+
+> 📊 **그림 2**: @Environment 시스템 값의 흐름 — SwiftUI가 자동으로 관리하는 환경 값
+
+```mermaid
+flowchart LR
+    SYS["SwiftUI 시스템"] --> EV["EnvironmentValues"]
+    EV --> CS["colorScheme\n라이트/다크"]
+    EV --> DT["dynamicTypeSize\n글자 크기"]
+    EV --> SC["sizeClass\n화면 크기"]
+    EV --> DIS["dismiss\n화면 닫기"]
+    EV --> LOC["locale\n언어/지역"]
+    CS --> VIEW["내 뷰"]
+    DT --> VIEW
+    SC --> VIEW
+    DIS --> VIEW
+    LOC --> VIEW
+    style SYS fill:#e3f2fd,stroke:#1976d2
+    style VIEW fill:#fff3e0,stroke:#f57c00
+```
+
 
 ```swift
 import SwiftUI
@@ -205,6 +250,24 @@ struct ProfileView: View {
 
 `ContentRootView`는 `AuthManager`에 대해 **전혀 모릅니다**. 그런데도 `HomeView`와 `ProfileView`는 `@Environment`로 직접 접근할 수 있어요. 이것이 prop drilling을 해결하는 핵심입니다.
 
+> 📊 **그림 3**: @Observable 객체의 Environment 주입 흐름
+
+```mermaid
+flowchart TD
+    APP["MyApp\n@State authManager"] -->|".environment(authManager)"| CR["ContentRootView\n중간 뷰 — AuthManager 모름"]
+    CR --> TAB1["Tab: 홈"]
+    CR --> TAB2["Tab: 프로필"]
+    TAB1 --> HV["HomeView\n@Environment(AuthManager.self)"]
+    TAB2 --> PV["ProfileView\n@Environment(AuthManager.self)"]
+    AM["AuthManager\n@Observable"] -.->|"직접 접근"| HV
+    AM -.->|"직접 접근"| PV
+    style CR fill:#f5f5f5,stroke:#999
+    style HV fill:#e8f5e9,stroke:#4caf50
+    style PV fill:#e8f5e9,stroke:#4caf50
+    style AM fill:#e3f2fd,stroke:#1976d2
+```
+
+
 > ⚠️ **흔한 오해**: "`@Environment`로 읽으려면 반드시 상위에서 `.environment()`로 주입해야 한다" — 맞습니다! 주입하지 않고 읽으려 하면 **런타임 크래시**가 발생해요. 항상 루트 뷰나 적절한 상위 뷰에서 주입했는지 확인하세요. Preview에서도 `.environment()`를 넣어줘야 합니다.
 
 ### 개념 3: @Environment에서 바인딩 만들기
@@ -370,6 +433,22 @@ struct ItemListView: View {
 > 💡 **알고 계셨나요?**: `@Entry` 매크로는 WWDC 2024에서 소개되었는데, 내부적으로는 전통 방식의 코드를 **자동 생성**합니다. 컴파일 타임에 `EnvironmentKey` 구조체, `EnvironmentValues` extension의 getter/setter를 모두 만들어주는 거예요. 디플로이먼트 타겟과 관계없이 iOS 13까지도 지원됩니다!
 
 ### 개념 6: Environment 사용 패턴과 가이드라인
+
+> 📊 **그림 4**: Environment vs 파라미터 전달 — 판단 기준
+
+```mermaid
+flowchart TD
+    Q1{"여러 화면에서\n사용하는 데이터?"}
+    Q1 -->|"Yes"| Q2{"뷰 계층 2단계\n이상 전달?"}
+    Q1 -->|"No"| PARAM["@State + @Binding\n파라미터 전달"]
+    Q2 -->|"Yes"| ENV["@Environment\n환경 주입"]
+    Q2 -->|"No"| Q3{"앱 전역 설정\n또는 서비스?"}
+    Q3 -->|"Yes"| ENV
+    Q3 -->|"No"| PARAM
+    style ENV fill:#e8f5e9,stroke:#4caf50
+    style PARAM fill:#fff3e0,stroke:#f57c00
+```
+
 
 `@Environment`는 강력하지만, 모든 데이터를 Environment로 만들면 오히려 코드가 혼란스러워질 수 있어요.
 

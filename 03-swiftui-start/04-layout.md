@@ -23,6 +23,24 @@
 
 > 💡 **비유**: Stack은 **블록 쌓기**입니다. VStack은 블록을 **세로로** 쌓고, HStack은 **가로로** 나란히 놓고, ZStack은 블록을 **겹겹이** 쌓습니다. 이 세 가지 조합만으로 웬만한 레이아웃을 다 만들 수 있어요.
 
+> 📊 **그림 1**: Stack 3형제의 배치 방향 비교
+
+```mermaid
+graph TD
+    subgraph VStack["VStack (세로)"]
+        direction TB
+        V1["뷰 1"] --> V2["뷰 2"] --> V3["뷰 3"]
+    end
+    subgraph HStack["HStack (가로)"]
+        direction LR
+        H1["뷰 1"] --> H2["뷰 2"] --> H3["뷰 3"]
+    end
+    subgraph ZStack["ZStack (겹치기)"]
+        Z1["뷰 1 (맨 뒤)"] -.-> Z2["뷰 2 (중간)"] -.-> Z3["뷰 3 (맨 앞)"]
+    end
+```
+
+
 ```swift
 import SwiftUI
 
@@ -151,6 +169,26 @@ struct AlignmentDemoView: View {
 > 💡 **비유**: Spacer는 **스프링**입니다. 뷰 사이에 스프링을 넣으면 가능한 한 많이 늘어나면서 뷰들을 밀어내죠. 두 개를 넣으면 힘이 균등하게 분배되어 가운데 정렬 효과를 만들 수 있습니다.
 
 Spacer는 **사용 가능한 공간을 최대한 차지**하는 투명한 뷰입니다.
+
+> 📊 **그림 2**: Spacer의 동작 원리 — 스프링처럼 뷰를 밀어냄
+
+```mermaid
+flowchart LR
+    subgraph before["Spacer 없이"]
+        direction LR
+        A1["텍스트A"] --- A2["텍스트B"]
+    end
+    subgraph after1["Spacer 1개"]
+        direction LR
+        B1["텍스트A"] -. "⟷ Spacer 확장" .-> B2["텍스트B"]
+    end
+    subgraph after2["Spacer 2개"]
+        direction LR
+        C1["⟷"] -. "Spacer" .-> C2["텍스트"] -. "Spacer" .-> C3["⟷"]
+    end
+    before ~~~ after1 ~~~ after2
+```
+
 
 ```swift
 struct SpacerDemoView: View {
@@ -453,6 +491,22 @@ struct WeatherView: View {
 ### SwiftUI 레이아웃의 3단계 규칙
 
 SwiftUI의 레이아웃은 놀랍도록 논리적인 **3단계 협상** 과정을 거칩니다:
+
+> 📊 **그림 3**: SwiftUI 레이아웃 3단계 협상 과정
+
+```mermaid
+sequenceDiagram
+    participant P as 부모 뷰
+    participant C as 자식 뷰
+    P->>C: ① 크기 제안 (Proposed Size)
+    Note right of C: "200×200 공간이 있어"
+    C->>C: ② 자기 크기 결정
+    Note right of C: Text → 콘텐츠 크기만<br/>Color → 제안 전부 사용
+    C->>P: ③ 결정된 크기 반환
+    P->>P: ④ 자식 배치 (positioning)
+    Note left of P: alignment 규칙에 따라<br/>자식의 위치를 결정
+```
+
 
 1. **부모가 자식에게 제안**: "이만큼의 공간이 있어" (proposed size)
 2. **자식이 스스로 결정**: "나는 이만큼 필요해" (자식 뷰가 자기 크기를 결정)

@@ -29,6 +29,21 @@ Donald Knuth의 유명한 격언이 있죠: **"섣부른 최적화는 모든 악
 2. 빌드가 완료되면 Instruments 템플릿 선택 화면이 나타남
 3. 목적에 맞는 템플릿 선택 후 **Record** 버튼 클릭
 
+> 📊 **그림 1**: Instruments 프로파일링 기본 워크플로우
+
+```mermaid
+flowchart LR
+    A["Xcode에서\n⌘I 실행"] --> B["Release 빌드"]
+    B --> C["템플릿 선택"]
+    C --> D["Record 시작"]
+    D --> E["앱 조작\n(시나리오 재현)"]
+    E --> F["Stop & 분석"]
+    F --> G["병목 지점 확인"]
+    G --> H["코드 수정"]
+    H --> D
+```
+
+
 주요 템플릿:
 
 | 템플릿 | 용도 | 핵심 지표 |
@@ -59,6 +74,21 @@ Time Profiler를 실행하면 **콜 트리(Call Tree)**가 나타납니다.
 - **Hide System Libraries**: 시스템 코드를 숨기고 내 코드만 표시
 - **Invert Call Tree**: 가장 시간이 많이 걸린 함수를 위로 정렬
 - **Separate by Thread**: 스레드별로 분리해서 메인 스레드 부하 확인
+
+> 📊 **그림 2**: Time Profiler 콜 트리 분석 흐름
+
+```mermaid
+flowchart TD
+    A["콜 트리 확인"] --> B["Hide System Libraries"]
+    B --> C["Invert Call Tree"]
+    C --> D["Weight 높은 함수 식별"]
+    D --> E{"Self Weight 높은가?"}
+    E -->|"Yes"| F["해당 함수 자체가 병목"]
+    E -->|"No"| G["하위 호출 추적"]
+    G --> D
+    F --> H["소스 코드로 이동\n최적화 수행"]
+```
+
 
 ```swift
 // Time Profiler로 발견할 수 있는 병목 예시
@@ -154,6 +184,27 @@ class ImageProcessor {
 2. 앱에서 의심되는 화면을 열고 닫기를 반복
 3. 타임라인에 빨간 X 표시가 나타나면 누수 발견
 4. 하단의 **Cycles & Roots**를 클릭하면 순환 참조 시각화
+
+> 📊 **그림 3**: Leaks 탐지 워크플로우
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant A as 앱
+    participant L as Leaks 도구
+    U->>L: Record 시작
+    loop 화면 열기/닫기 반복
+        U->>A: 화면 진입
+        A->>L: 메모리 할당 기록
+        U->>A: 화면 나가기
+        A->>L: 해제 여부 확인
+    end
+    L->>L: 주기적 메모리 스캔
+    L-->>U: 빨간 X 표시 (누수 발견)
+    U->>L: Cycles & Roots 확인
+    L-->>U: 순환 참조 시각화
+```
+
 5. 화살표를 따라가면 어떤 객체가 서로를 잡고 있는지 확인
 
 > 💡 **알고 계셨나요?**: Xcode의 **Debug Navigator** (⌘6)에서 실시간 메모리 사용량을 모니터링할 수도 있습니다. 앱을 사용하면서 메모리가 계속 오르기만 하면 누수 신호예요.
@@ -163,6 +214,26 @@ class ImageProcessor {
 Apple은 WWDC 2019에서 앱의 첫 프레임을 **400ms 이내**에 렌더링할 것을 권장했습니다.
 
 앱 시작 시간은 두 단계로 나뉩니다:
+
+> 📊 **그림 4**: 앱 시작 시간의 두 단계
+
+```mermaid
+flowchart LR
+    subgraph PRE["Pre-main 단계"]
+        A["dyld 로딩"] --> B["동적 프레임워크\n링킹"]
+        B --> C["ObjC 런타임\n초기화"]
+        C --> D["static initializer\n실행"]
+    end
+    subgraph POST["Post-main 단계"]
+        E["AppDelegate\n초기화"] --> F["UI 구성"]
+        F --> G["첫 화면\n렌더링"]
+    end
+    D --> E
+    G --> H["✅ 사용자에게\n화면 표시"]
+    style PRE fill:#f3e8ff,stroke:#9333ea
+    style POST fill:#e0f2fe,stroke:#0284c7
+```
+
 
 | 단계 | 내용 | 최적화 방법 |
 |------|------|------------|

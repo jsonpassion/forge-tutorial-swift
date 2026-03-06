@@ -19,6 +19,19 @@
 
 SwiftData는 이 모든 복잡함을 Swift 네이티브 코드로 감싸서, **평범한 Swift 클래스를 작성하는 것만으로** 데이터베이스를 사용할 수 있게 만들어줍니다. SwiftUI와의 통합도 놀라울 정도로 자연스럽습니다.
 
+> 📊 **그림 1**: SwiftData의 3대 핵심 컴포넌트 관계
+
+```mermaid
+graph TD
+    A["@Model\n영속 모델 정의"] -->|저장 대상| B["ModelContainer\n데이터베이스 관리"]
+    B -->|작업 공간 제공| C["ModelContext\nCRUD 수행"]
+    C -->|insert / delete / save| B
+    D["SwiftUI View"] -->|@Environment| C
+    D -->|.modelContainer(for:)| B
+    A -->|@Query 자동 조회| D
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: @Model — 스마트 노트
@@ -54,6 +67,20 @@ class Memo {
 - `Observable` 프로토콜 자동 채택 (SwiftUI와 연동 — Ch5에서 배운 것처럼!)
 - 각 프로퍼티에 대한 **변경 추적(change tracking)** 코드 생성
 - 데이터베이스 스키마 자동 생성
+
+> 📊 **그림 2**: @Model 매크로가 컴파일 타임에 생성하는 것들
+
+```mermaid
+flowchart LR
+    A["일반 Swift 클래스"] -->|@Model 매크로| B["컴파일 타임 변환"]
+    B --> C["PersistentModel\n프로토콜 채택"]
+    B --> D["Observable\n프로토콜 채택"]
+    B --> E["변경 추적\n코드 생성"]
+    B --> F["DB 스키마\n자동 생성"]
+    C --> G["SwiftData가\n관리 가능"]
+    D --> H["SwiftUI 뷰\n자동 업데이트"]
+```
+
 
 > ⚠️ **흔한 오해**: "SwiftData 모델은 struct로도 만들 수 있다" — 아닙니다! `@Model`은 반드시 **class**에만 사용할 수 있습니다. 이는 SwiftData가 내부적으로 참조를 통해 변경을 추적하기 때문이에요. 하지만 걱정하지 마세요, `@Model` 클래스는 자동으로 `Observable`을 채택하므로 SwiftUI와 완벽하게 연동됩니다.
 
@@ -173,6 +200,24 @@ struct MemoApp: App {
 ### 개념 3: ModelContext — 작업 책상
 
 > 💡 **비유**: `ModelContainer`가 창고라면, `ModelContext`는 **작업 책상**입니다. 창고에서 물건을 꺼내서 책상 위에 올려놓고 작업하듯이, `ModelContext`는 데이터를 가져와서 생성, 수정, 삭제하는 작업 공간이에요. 작업이 끝나면 변경사항이 창고(데이터베이스)에 반영됩니다.
+
+> 📊 **그림 3**: ModelContext의 데이터 조작 흐름
+
+```mermaid
+sequenceDiagram
+    participant V as SwiftUI View
+    participant C as ModelContext
+    participant DB as ModelContainer(DB)
+    V->>C: modelContext.insert(memo)
+    Note over C: 메모리에 변경사항 기록
+    C-->>V: 뷰 자동 업데이트
+    Note over C: autosave 타이밍 도달
+    C->>DB: 자동 저장 (디스크 반영)
+    V->>C: modelContext.delete(memo)
+    Note over C: 삭제 마킹
+    C->>DB: 자동 저장
+```
+
 
 `ModelContext`는 실제로 데이터를 생성, 읽기, 수정, 삭제하는 인터페이스입니다. SwiftUI에서는 `@Environment`를 통해 자동으로 주입됩니다:
 
@@ -323,6 +368,21 @@ struct MemoApp: App {
 ```
 
 이 코드에서 주목할 점:
+
+> 📊 **그림 4**: 메모 앱의 SwiftData 계층 구조
+
+```mermaid
+flowchart TD
+    A["MemoApp\n(@main)"] -->|.modelContainer for: Memo.self| B["ModelContainer"]
+    B -->|자동 주입| C["ModelContext"]
+    A --> D["MemoListView"]
+    D -->|@Environment 접근| C
+    D -->|@Query 자동 조회| E["[Memo] 배열"]
+    C -->|insert| F["새 메모 생성"]
+    C -->|delete| G["메모 삭제"]
+    C -->|autosave| B
+```
+
 
 **→ App 레벨**: `.modelContainer(for: Memo.self)` — 단 한 줄로 데이터베이스 설정 완료
 

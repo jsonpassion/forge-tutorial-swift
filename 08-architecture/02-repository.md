@@ -6,6 +6,23 @@
 
 앞서 MVVM에서 ViewModel이 직접 `URLSession`을 호출하고 데이터를 가져왔습니다. 작동은 하지만, 한 가지 문제가 있어요 — ViewModel이 **어디서 데이터를 가져오는지** 너무 잘 알고 있다는 겁니다. API가 바뀌면 ViewModel을 고쳐야 하고, 테스트할 때도 실제 네트워크가 필요하죠. Repository 패턴은 이 의존성을 **프로토콜 뒤에 숨기는** 기법입니다.
 
+> 📊 **그림 1**: Repository 패턴 적용 전후 비교
+
+```mermaid
+flowchart LR
+    subgraph before["❌ 적용 전"]
+        VM1["ViewModel"] --> API1["URLSession"]
+        VM1 --> DB1["SwiftData"]
+    end
+    subgraph after["✅ 적용 후"]
+        VM2["ViewModel"] --> P["Repository\n프로토콜"]
+        P --> API2["API Repository"]
+        P --> DB2["SwiftData Repository"]
+        P --> Mock["Mock Repository"]
+    end
+```
+
+
 **선수 지식**: [01. MVVM 패턴](./01-mvvm.md)에서 배운 ViewModel 구현, [프로토콜과 익스텐션](../02-swift-types/03-protocols-extensions.md)
 **학습 목표**:
 - Repository 패턴의 목적과 구조 이해
@@ -35,6 +52,37 @@ Repository는 데이터의 **출처를 숨기는 계층**입니다:
 | `repository.fetchArticles()` | 테스트용 더미 데이터 반환 |
 
 호출하는 쪽(ViewModel)은 **항상 같은 메서드**를 호출합니다. 뒤에서 무슨 일이 일어나는지는 관심사가 아닌 거죠.
+
+> 📊 **그림 2**: Repository 패턴의 계층 구조
+
+```mermaid
+classDiagram
+    class ArticleRepository {
+        <<protocol>>
+        +fetchAll() async throws [Article]
+        +fetchById(id) async throws Article?
+    }
+    class APIArticleRepository {
+        -baseURL: String
+        +fetchAll() async throws [Article]
+        +fetchById(id) async throws Article?
+    }
+    class MockArticleRepository {
+        +mockArticles: [Article]
+        +shouldThrowError: Bool
+        +fetchAll() async throws [Article]
+        +fetchById(id) async throws Article?
+    }
+    class ArticleListViewModel {
+        -repository: any ArticleRepository
+        +articles: [Article]
+        +loadArticles() async
+    }
+    ArticleRepository <|.. APIArticleRepository
+    ArticleRepository <|.. MockArticleRepository
+    ArticleListViewModel --> ArticleRepository
+```
+
 
 ### 개념 2: 프로토콜로 추상화하기
 
@@ -110,6 +158,30 @@ struct MockArticleRepository: ArticleRepository {
 ### 개념 5: ViewModel에서 Repository 사용하기
 
 ViewModel은 **구체적인 구현이 아닌 프로토콜에 의존**합니다.
+
+> 📊 **그림 3**: 앱 실행 vs 테스트 시 의존성 주입 흐름
+
+```mermaid
+sequenceDiagram
+    participant App as 앱 실행
+    participant VM as ViewModel
+    participant Repo as Repository 프로토콜
+    participant API as APIRepository
+    participant Mock as MockRepository
+
+    Note over App,API: 실제 앱 실행 시
+    App->>VM: init(repository: APIRepository)
+    VM->>Repo: fetchAll()
+    Repo->>API: URLSession 네트워크 호출
+    API-->>VM: [Article] 실제 데이터
+
+    Note over App,Mock: 테스트/Preview 시
+    App->>VM: init(repository: MockRepository)
+    VM->>Repo: fetchAll()
+    Repo->>Mock: 더미 데이터 반환
+    Mock-->>VM: [Article] 테스트 데이터
+```
+
 
 ```swift
 import SwiftUI

@@ -17,6 +17,21 @@
 
 대부분의 iOS 앱은 **탭 바**를 기본 구조로 사용해요. Instagram, Twitter, App Store, 음악 앱 등 거의 모든 앱에서 하단 탭을 볼 수 있죠. 그리고 모달은 사용자의 주의를 집중시켜야 할 때 — 새 글 작성, 설정 변경, 삭제 확인 등 — 필수적인 패턴입니다.
 
+> 📊 **그림 1**: SwiftUI 화면 전환 패턴 전체 구조
+
+```mermaid
+flowchart TD
+    A["SwiftUI 화면 전환"] --> B["NavigationStack"]
+    A --> C["TabView"]
+    A --> D["모달 프레젠테이션"]
+    B --> B1["push/pop\n앞뒤 이동"]
+    C --> C1["탭 전환\n좌우 이동"]
+    D --> D1["sheet\n카드형 모달"]
+    D --> D2["fullScreenCover\n전체 화면 모달"]
+    D --> D3["alert / confirmationDialog\n확인 다이얼로그"]
+```
+
+
 ## 핵심 개념
 
 ### 개념 1: TabView — 탭으로 화면 전환
@@ -104,6 +119,18 @@ struct SelectableTabView: View {
 ```
 
 ### 개념 3: sheet — 카드형 모달
+
+> 📊 **그림 2**: sheet 모달의 상태 흐름
+
+```mermaid
+stateDiagram-v2
+    [*] --> 닫힘: 초기 상태
+    닫힘 --> 열림: isPresented = true
+    열림 --> 닫힘: dismiss() 호출
+    열림 --> 닫힘: 스와이프 다운
+    열림 --> 닫힘: isPresented = false
+```
+
 
 > 💡 **비유**: sheet는 **메모지를 화면 위에 올려놓는 것**입니다. 아래 화면이 살짝 보이고, 위에 새 내용이 떠오르죠. 아래로 스와이프하면 메모지를 치울 수 있어요.
 
@@ -201,6 +228,23 @@ struct HalfSheetDemo: View {
 - `.height(200)` — 고정 200pt 높이
 
 ### 개념 5: fullScreenCover — 전체 화면 모달
+
+> 📊 **그림 3**: sheet vs fullScreenCover 비교
+
+```mermaid
+flowchart LR
+    subgraph sheet
+        S1["카드형 표시"] --> S2["스와이프 닫기 ✅"]
+        S1 --> S3["presentationDetents\n높이 조절 가능"]
+        S1 --> S4["뒤 화면 일부 보임"]
+    end
+    subgraph fullScreenCover
+        F1["전체 화면 표시"] --> F2["스와이프 닫기 ❌"]
+        F1 --> F3["높이 조절 불가"]
+        F1 --> F4["닫기 버튼 필수"]
+    end
+```
+
 
 sheet가 카드 스타일이라면, fullScreenCover는 화면 전체를 덮는 모달이에요. 스와이프로 닫을 수 없어서, 사용자가 반드시 "닫기" 버튼을 탭해야 합니다. 로그인 화면이나 온보딩 같은 중요한 흐름에 적합합니다.
 
