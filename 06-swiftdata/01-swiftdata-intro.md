@@ -373,14 +373,14 @@ struct MemoApp: App {
 
 ```mermaid
 flowchart TD
-    A["MemoApp<br/>(@main)"] -->|.modelContainer for: Memo.self| B["ModelContainer"]
-    B -->|자동 주입| C["ModelContext"]
+    A["MemoApp<br/>(@main)"] -->|".modelContainer(for: Memo.self)"| B["ModelContainer"]
+    B -->|"자동 주입"| C["ModelContext"]
     A --> D["MemoListView"]
-    D -->|@Environment 접근| C
-    D -->|@Query 자동 조회| E["[Memo] 배열"]
-    C -->|insert| F["새 메모 생성"]
-    C -->|delete| G["메모 삭제"]
-    C -->|autosave| B
+    D -->|"@Environment 접근"| C
+    D -->|"@Query 자동 조회"| E["[Memo] 배열"]
+    C -->|"insert"| F["새 메모 생성"]
+    C -->|"delete"| G["메모 삭제"]
+    C -->|"autosave"| B
 ```
 
 
